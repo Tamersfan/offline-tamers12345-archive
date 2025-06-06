@@ -31,8 +31,8 @@ app.whenReady()
     console.log('   ↳ app.whenReady resolved');
     createWindow();
 
-    // Check for updates on startup
-    autoUpdater.checkForUpdates();
+    // ── Changed here: autoUpdater.checkForUpdatesAndNotify() ────────────────────────────────
+    autoUpdater.checkForUpdatesAndNotify();
   })
   .catch(err => console.error('   ✖ app.whenReady error:', err));
 
@@ -77,7 +77,7 @@ ipcMain.handle('read-image-files', async () => {
   return files.map(filename => ({ filename, path: path.join(folder, filename) }));
 });
 
-// Handler for reading Tumblr HTML files
+// Handler for reading your archived Tumblr HTML files
 ipcMain.handle('read-tumblr-html', async () => {
   const folder = path.join(__dirname, 'tumblr');
   if (!fs.existsSync(folder)) return [];
@@ -98,47 +98,26 @@ autoUpdater.on('update-available', (info) => {
 // 2) When the update has been downloaded
 autoUpdater.on('update-downloaded', (info) => {
   console.log('   ↳ Update downloaded:', info);
-
-  // Build the release notes string
-  let releaseNotes = '';
-  if (Array.isArray(info.releaseNotes)) {
-    info.releaseNotes.forEach(item => {
-      if (typeof item === 'string') {
-        releaseNotes += item + '\n\n';
-      } else if (item.releaseName && item.releaseNotes) {
-        releaseNotes += `Version ${item.version}:\n${item.releaseNotes}\n\n`;
-      }
-    });
-  } else if (typeof info.releaseNotes === 'string') {
-    releaseNotes = info.releaseNotes;
-  }
-
-  const detailMessage = releaseNotes.length > 0
-    ? `What’s new:\n\n${releaseNotes.trim()}\n\nDo you want to install the update now?`
-    : 'An update is ready to install. Would you like to quit and install now?';
-
   dialog.showMessageBox({
-    type: 'info',
-    title: 'Update Ready',
-    message: `Version ${info.version} has been downloaded.`,
-    detail: detailMessage,
-    buttons: ['Install Now', 'Later'],
-    defaultId: 0
+    type: 'question',
+    buttons: ['Restart & Install', 'Later'],
+    defaultId: 0,
+    title: 'Install Updates',
+    message: 'An update has been downloaded. Restart the app to apply the updates.',
+    detail: info.releaseNotes || ''
   }).then(result => {
     if (result.response === 0) {
       autoUpdater.quitAndInstall();
-    } else {
-      console.log('   ↳ User deferred the update installation.');
     }
   });
 });
 
-// 3) If there’s an error during update checking or downloading
+// 3) If there’s an error during update
 autoUpdater.on('error', (err) => {
-  console.error('   ↳ Auto-updater error:', err);
+  console.error('   ↳ Auto‐updater error:', err);
 });
 
-// 4) Optional: track update download progress
+// 4) (Optional) Progress reporting
 autoUpdater.on('download-progress', (progressObj) => {
-  console.log(`   ↳ Downloading update: ${Math.floor(progressObj.percent)}%`);
+  console.log(`   ↳ Download speed: ${progressObj.bytesPerSecond} - Downloaded ${Math.round(progressObj.percent)}%`);
 });
