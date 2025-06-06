@@ -1,0 +1,70 @@
+{
+  "name": "offline-tamers12345-archive",
+  "version": "1.0.0",
+  "description": "Offline YouTube + DeviantArt + Tumblr archive",
+  "main": "main.js",
+
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder"
+  },
+
+  "build": {
+    "appId": "com.tamersfan.offline-tamers12345-archive",
+    "productName": "Offline Tamers12345 Archive",
+    "icon": "build-icon/archive.ico",
+    "files": [
+      "**/*"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    },
+
+    "win": {
+      "icon": "build-icon/archive.ico",
+      "target": [
+        "nsis"
+      ]
+    },
+
+    "nsis": {
+      "oneClick": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Offline Tamers12345 Archive"
+    },
+
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    },
+
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "Tamersfan",
+        "repo": "offline-tamers12345-archive"
+      }
+    ]
+  },
+
+  "dependencies": {
+    "electron-updater": "^6.6.2"
+  },
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^26.0.12"
+  }
+}

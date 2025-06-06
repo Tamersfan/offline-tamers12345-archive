@@ -1,0 +1,245 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #111;
+  color: #eee;
+  margin: 0;
+  padding: 0;
+}
+
+#channel-header {
+  background-color: #222;
+  text-align: center;
+}
+
+#channel-banner {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+#video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+  padding: 10px;
+}
+
+.video-thumbnail {
+  background-color: #333;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.video-thumbnail img {
+  width: 100%;
+  border-radius: 5px;
+}
+
+#video-player {
+  padding: 20px;
+}
+
+#player-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+#player-layout {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+#video-wrapper {
+  flex: 3;
+}
+
+#chat-pane {
+  flex: 1;
+  background-color: #1e1e1e;
+  padding: 10px;
+  border-radius: 5px;
+  overflow-y: auto;
+  height: 600px;
+}
+
+.chat-message {
+  margin-bottom: 5px;
+  font-size: 0.9em;
+}
+
+video.normal {
+  width: 960px;
+  height: 540px;
+}
+
+video.theater {
+  width: 1280px;
+  height: 720px;
+}
+
+.thumbnail-container {
+  position: relative;
+}
+
+.chat-badge {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  background-color: #d22;
+  color: white;
+  font-size: 0.65em;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 3px;
+  pointer-events: none;
+}
+
+/* Favorite star styling */
+.video-thumbnail {
+  position: relative;
+}
+
+.favorite-star {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: pointer;
+  font-size: 24px;
+  user-select: none;
+  color: gray;
+}
+
+.favorite-star.favorited {
+  color: gold;
+}
+
+/* DeviantArt Gallery Grid */
+#deviantart-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-gap: 10px;
+}
+
+#deviantart-gallery .grid-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* DevArt Modal */
+.da-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.da-modal-content {
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+  overflow: auto !important;
+  padding: 60px 20px 20px 20px !important;
+}
+
+.da-modal-content img {
+  max-width: none !important;
+  max-height: none !important;
+  display: block !important;
+  width: auto !important;
+  height: auto !important;
+  transform-origin: center center;
+  transition: transform 0.2s ease;
+}
+
+.da-modal-close,
+.da-modal-zoom {
+  position: fixed !important;
+  z-index: 1001 !important;
+  background-color: rgba(0, 0, 0, 0.6) !important;
+  border: 2px solid #fff !important;
+  border-radius: 4px !important;
+  padding: 8px !important;
+  box-shadow: 0 0 8px rgba(0,0,0,0.8) !important;
+  transition: background-color 0.2s ease, transform 0.1s ease !important;
+  color: #fff !important;
+  font-size: 28px !important;
+  cursor: pointer !important;
+}
+
+.da-modal-close {
+  top: 20px !important;
+  right: 20px !important;
+}
+
+#da-modal-zoom-in {
+  bottom: 20px !important;
+  right: 20px !important;
+}
+
+#da-modal-zoom-out {
+  bottom: 20px !important;
+  right: 80px !important;
+}
+
+/* ── Tumblr Blog 1 Styles ───────────────────────────────────────── */
+#tumblr-container {
+  width: 100%;
+  /* reserve just enough for nav: iframe taller */
+  height: calc(100vh - 100px);
+  overflow: hidden;
+  position: relative;
+}
+
+#tumblr-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.tumblr-nav {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  padding: 4px 0;
+  background: transparent;
+  text-align: center;
+}
+
+.tumblr-nav button {
+  margin: 0 0.5rem;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+/* ── Tumblr Blog 2 Styles ───────────────────────────────────────── */
+#tumblr2-container {
+  width: 100%;
+  height: calc(100vh - 100px);
+  overflow: hidden;
+  position: relative;
+}
+
+#tumblr2-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Reuse the same .tumblr-nav and button rules for Blog 2 */

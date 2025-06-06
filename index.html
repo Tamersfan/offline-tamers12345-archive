@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Offline Tamers12345 Archive</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="tab-container">
+    <button id="tab-youtube" class="tab-button active">YouTube</button>
+    <button id="tab-deviantart" class="tab-button">DeviantArt</button>
+    <button id="tab-tumblr" class="tab-button">Tumblr Blog 1</button>
+    <button id="tab-tumblr2" class="tab-button">Tumblr Blog 2</button>
+  </div>
+
+  <div id="startup-screen">
+    <h2>Please select where your videos are stored.</h2>
+    <p><em>Make sure you select the folder that <strong>CONTAINS</strong> the "videos" folder — not the videos folder itself.</em></p>
+    <button id="select-folder">Select Folder</button>
+  </div>
+
+  <div id="app-content" style="display:none;">
+    <div id="channel-header">
+      <img id="channel-banner" src="banner.png" alt="Channel Banner">
+    </div>
+
+    <div style="padding: 10px;">
+      <input type="text" id="searchInput" placeholder="Search videos by title..." style="margin-right: 10px;">
+
+      <label for="sortOrder">Sort by:</label>
+      <select id="sortOrder">
+        <option value="newest" selected>Newest</option>
+        <option value="oldest">Oldest</option>
+      </select>
+
+      <label style="margin-left: 10px;"><input type="checkbox" id="badge-toggle" checked> Show Live Chat Badges</label>
+
+      <label style="margin-left: 10px;"><input type="checkbox" id="favoritesToggle"> Show Favorites</label>
+
+      <label style="margin-left: 10px;" for="tagFilter">Filter:</label>
+      <select id="tagFilter">
+        <option value="all">Everything</option>
+        <option value="no-mlp">Everything but MLP</option>
+        <option value="only-mlp">Only MLP</option>
+      </select>
+
+      <label style="margin-left: 10px;" for="playlistSelect">Playlist:</label>
+      <select id="playlistSelect">
+        <option value="all">All</option>
+      </select>
+
+      <button id="change-folder-btn" style="margin-left: 10px;">Change Video Folder</button>
+    </div>
+
+    <div id="video-grid"></div>
+
+    <div id="video-player" style="display:none;">
+      <div id="player-controls">
+        <button onclick="closePlayer()">Back</button>
+        <label for="sizeSelector">Size:</label>
+        <select id="sizeSelector" onchange="resizePlayer(this.value)">
+          <option value="normal">Normal</option>
+          <option value="theater">Theater</option>
+        </select>
+        <label for="volumeSlider">Volume:</label>
+        <input type="range" id="volumeSlider" min="0" max="1" step="0.01" onchange="setVolume(this.value)">
+        <label for="speedSelector">Speed:</label>
+        <select id="speedSelector" onchange="setPlaybackSpeed(this.value)">
+          <option value="0.5">0.5x</option>
+          <option value="1" selected>1x</option>
+          <option value="1.5">1.5x</option>
+          <option value="2">2x</option>
+        </select>
+        <button onclick="toggleChat()">Toggle Chat</button>
+      </div>
+
+      <div id="player-layout">
+        <div id="video-wrapper">
+          <h2 id="player-title"></h2>
+          <video id="player-video" controls>
+            <track id="video-subtitle" kind="subtitles" label="English" srclang="en">
+          </video>
+          <p id="player-description"></p>
+          <p><span id="player-date"></span></p>
+        </div>
+
+        <div id="chat-pane">
+          <div id="chat-messages"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+
+  <div id="deviantart-section" style="display:none;">
+    <div class="controls">
+      <label for="sort-select-da">Sort by:</label>
+      <select id="sort-select-da">
+        <option value="date-desc">Date: Newest</option>
+        <option value="date-asc">Date: Oldest</option>
+        <option value="size">Size</option>
+      </select>
+    </div>
+    <div id="deviantart-gallery" class="grid"></div>
+
+    <!-- DeviantArt Fullscreen Modal -->
+    <div id="da-modal" class="da-modal" style="display:none;">
+      <div class="da-modal-content">
+        <button id="da-modal-close" class="da-modal-close">✕</button>
+        <button id="da-modal-zoom-in" class="da-modal-zoom btn-zoom">＋</button>
+        <button id="da-modal-zoom-out" class="da-modal-zoom btn-zoom">－</button>
+        <img id="da-modal-img" alt="Full-size image" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Tumblr Blog 1 section -->
+  <div id="tumblr-section" style="display:none;">
+    <div id="tumblr-container">
+      <iframe id="tumblr-frame" sandbox="allow-same-origin allow-scripts"></iframe>
+    </div>
+    <div class="tumblr-nav">
+      <button id="tumblr-prev">&larr; Previous</button>
+      <button id="tumblr-next">Next &rarr;</button>
+    </div>
+  </div>
+
+  <!-- Tumblr Blog 2 section -->
+  <div id="tumblr2-section" style="display:none;">
+    <div id="tumblr2-container">
+      <iframe id="tumblr2-frame" sandbox="allow-same-origin allow-scripts"></iframe>
+    </div>
+    <div class="tumblr-nav">
+      <button id="tumblr2-prev">&larr; Previous</button>
+      <button id="tumblr2-next">Next &rarr;</button>
+    </div>
+  </div>
+
+  <script src="deviantart.js"></script>
+  <script src="tumblr.js"></script>
+  <script src="tumblr2.js"></script>
+</body>
+</html>
