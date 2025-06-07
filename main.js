@@ -21,17 +21,19 @@ function createWindow() {
     }
   });
 
-  win.loadFile('index.html')
-     .then(() => console.log('   ↳ index.html loaded'))
-     .catch(err => console.error('   ✖ failed to load index.html:', err));
+  win
+    .loadFile('index.html')
+    .then(() => console.log('   ↳ index.html loaded'))
+    .catch(err => console.error('   ✖ failed to load index.html:', err));
 }
 
-app.whenReady()
+app
+  .whenReady()
   .then(() => {
     console.log('   ↳ app.whenReady resolved');
     createWindow();
 
-    // ── Changed here: autoUpdater.checkForUpdatesAndNotify() ────────────────────────────────
+    // ── Trigger the auto‐updater check
     autoUpdater.checkForUpdatesAndNotify();
   })
   .catch(err => console.error('   ✖ app.whenReady error:', err));
@@ -81,7 +83,8 @@ ipcMain.handle('read-image-files', async () => {
 ipcMain.handle('read-tumblr-html', async () => {
   const folder = path.join(__dirname, 'tumblr');
   if (!fs.existsSync(folder)) return [];
-  const files = fs.readdirSync(folder)
+  const files = fs
+    .readdirSync(folder)
     .filter(f => f.toLowerCase().endsWith('.html'))
     .sort();
   return files.map(f => path.join('tumblr', f));
@@ -90,34 +93,43 @@ ipcMain.handle('read-tumblr-html', async () => {
 // ─── Auto‐Updater Events ──────────────────────────────────────────────────
 
 // 1) When an update is available
-autoUpdater.on('update-available', (info) => {
+autoUpdater.on('update-available', info => {
   console.log('   ↳ Update available:', info);
   // We wait for 'update-downloaded' before prompting the user
 });
 
 // 2) When the update has been downloaded
-autoUpdater.on('update-downloaded', (info) => {
+autoUpdater.on('update-downloaded', info => {
   console.log('   ↳ Update downloaded:', info);
-  dialog.showMessageBox({
-    type: 'question',
-    buttons: ['Restart & Install', 'Later'],
-    defaultId: 0,
-    title: 'Install Updates',
-    message: 'An update has been downloaded. Restart the app to apply the updates.',
-    detail: info.releaseNotes || ''
-  }).then(result => {
-    if (result.response === 0) {
-      autoUpdater.quitAndInstall();
-    }
-  });
+
+  // Show a dialog with “Install update now” / “Do it later”
+  dialog
+    .showMessageBox({
+      type: 'question',
+      buttons: ['Install update now', 'Do it later'],
+      defaultId: 0,
+      cancelId: 1,
+      title: 'Install Updates',
+      message: 'It looks like there is a new update. Would you like to install it now?',
+      detail: info.releaseNotes || ''
+    })
+    .then(result => {
+      // If they chose “Install update” (index 0), restart & install
+      if (result.response === 0) {
+        autoUpdater.quitAndInstall();
+      }
+      // If they chose “Do it later” (index 1), do nothing now.
+      // The next time they start the app, this same event will fire again.
+    });
 });
 
 // 3) If there’s an error during update
-autoUpdater.on('error', (err) => {
+autoUpdater.on('error', err => {
   console.error('   ↳ Auto‐updater error:', err);
 });
 
-// 4) (Optional) Progress reporting
-autoUpdater.on('download-progress', (progressObj) => {
-  console.log(`   ↳ Download speed: ${progressObj.bytesPerSecond} - Downloaded ${Math.round(progressObj.percent)}%`);
+// 4) (Optional) Show download progress in console
+autoUpdater.on('download-progress', progressObj => {
+  const percent = Math.round(progressObj.percent);
+  console.log(`   ↳ Download speed: ${progressObj.bytesPerSecond} - Downloaded ${percent}%`);
 });
