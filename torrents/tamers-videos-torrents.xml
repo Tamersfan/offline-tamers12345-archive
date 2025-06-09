@@ -16,26 +16,5 @@
         type="application/x-bittorrent"/>
     </item>
 
-    <item>
-      <title>Archive PNG Torrent</title>
-      <link>https://raw.githubusercontent.com/Tamersfan/offline-tamers12345-archive/main/torrents/archive.png.torrent</link>
-      <pubDate>Fri, 13 Jun 2025 12:00:00 GMT</pubDate>
-      <enclosure
-        url="https://raw.githubusercontent.com/Tamersfan/offline-tamers12345-archive/main/torrents/archive.png.torrent"
-        length="123456" 
-        type="application/x-bittorrent" />
-    </item>
-
   </channel>
 </rss>
-
-
-    <item>
-      <title>Archive PNG Torrent</title>
-      <link>https://raw.githubusercontent.com/Tamersfan/offline-tamers12345-archive/main/torrents/archive.png.torrent</link>
-      <pubDate>Fri, 13 Jun 2025 12:00:00 GMT</pubDate>
-      <enclosure
-        url="https://raw.githubusercontent.com/Tamersfan/offline-tamers12345-archive/main/torrents/archive.png.torrent"
-        length="123456" 
-        type="application/x-bittorrent" />
-    </item>
