@@ -68,6 +68,20 @@ async function init() {
       renderVideoGrid();
     });
   }
+
+  // ── New: Check for missing videos on startup ────────────────────────────────
+  const missing = await window.electronAPI.checkMissingVideos();
+  console.log('▶ Missing videos (renderer):', missing);
+  if (missing.length) {
+    if (confirm(`You’re missing ${missing.length} videos. Download them now?`)) {
+      try {
+        await window.electronAPI.downloadVideos(missing);
+        alert('All missing videos have been downloaded!');
+      } catch (e) {
+        alert('Failed to download videos: ' + e.message);
+      }
+    }
+  }
 }
 
 // === Populate playlist select with unique tags (except "mlp"), in custom order ===
@@ -75,22 +89,16 @@ function populatePlaylistOptions() {
   const playlistSelect = document.getElementById('playlistSelect');
   if (!playlistSelect || !Array.isArray(rawVideoData)) return;
 
-  // 1) Collect all tags (except "mlp") into a Set
   const tagSet = new Set();
   rawVideoData.forEach(video => {
     if (Array.isArray(video.tags)) {
       video.tags.forEach(t => {
-        if (t !== 'mlp') {
-          tagSet.add(t);
-        }
+        if (t !== 'mlp') tagSet.add(t);
       });
     }
   });
 
-  // 2) Turn that Set into an array
   const tagArray = Array.from(tagSet);
-
-  // 3) Define desired order
   const customOrder = [
     'SU Lore Arc 1 (The Prophecy/The Boys)',
     'Parodies',
@@ -105,22 +113,14 @@ function populatePlaylistOptions() {
     '9/11'
   ];
 
-  // 4) Sort tagArray by the index in customOrder
   tagArray.sort((a, b) => {
-    const ai = customOrder.indexOf(a);
-    const bi = customOrder.indexOf(b);
-    // If both tags appear in customOrder, compare their indices
-    if (ai !== -1 && bi !== -1) {
-      return ai - bi;
-    }
-    // If only one appears in customOrder, it comes first
+    const ai = customOrder.indexOf(a), bi = customOrder.indexOf(b);
+    if (ai !== -1 && bi !== -1) return ai - bi;
     if (ai !== -1) return -1;
     if (bi !== -1) return 1;
-    // Otherwise (tag not in customOrder), sort alphabetically
     return a.localeCompare(b, undefined, { sensitivity: 'base' });
   });
 
-  // 5) Append each tag as an <option>, preserving the “All” that’s already in HTML
   tagArray.forEach(tag => {
     const opt = document.createElement('option');
     opt.value = tag;
@@ -134,35 +134,29 @@ function renderVideoGrid() {
   const grid = document.getElementById('video-grid');
   grid.innerHTML = '';
 
-  const searchEl = document.getElementById('searchInput');
-  const query = (searchEl && searchEl.value || '').toLowerCase();
-
+  const query = (document.getElementById('searchInput')?.value || '').toLowerCase();
   let videos = rawVideoData.filter(video =>
     video.title.toLowerCase().includes(query)
   );
 
-  // Favorites filtering
-  const favEl = document.getElementById('favoritesToggle');
-  const showFavOnly = favEl && favEl.checked;
-  if (showFavOnly) {
+  if (document.getElementById('favoritesToggle').checked) {
     videos = videos.filter(video => {
       const id = video.filename.split('/').pop().replace(/\.[^/.]+$/, '');
       return favorites.has(id);
     });
   }
 
-  // Sort newest/oldest
   videos.sort((a, b) =>
     sortOrder === 'oldest'
       ? a.date.localeCompare(b.date)
       : b.date.localeCompare(a.date)
   );
 
-  // Playlist filter first (overrides tagFilter if not 'all')
   if (selectedPlaylist !== 'all') {
-    videos = videos.filter(v => Array.isArray(v.tags) && v.tags.includes(selectedPlaylist));
+    videos = videos.filter(v =>
+      Array.isArray(v.tags) && v.tags.includes(selectedPlaylist)
+    );
   } else {
-    // Only apply the earlier tagFilter if no specific playlist selected
     if (tagFilter === 'only-mlp') {
       videos = videos.filter(v => Array.isArray(v.tags) && v.tags.includes('mlp'));
     } else if (tagFilter === 'no-mlp') {
@@ -170,7 +164,6 @@ function renderVideoGrid() {
     }
   }
 
-  // Create thumbnails
   videos.forEach(video => {
     const baseName = video.filename.split('/').pop().replace(/\.[^/.]+$/, '');
     const hasChat = chatFiles.has(baseName);
@@ -188,7 +181,6 @@ function renderVideoGrid() {
     div.onclick = () => showPlayer(video);
     grid.appendChild(div);
 
-    // Favorite star
     const star = document.createElement('span');
     star.className = 'favorite-star' + (favorites.has(baseName) ? ' favorited' : '');
     star.textContent = favorites.has(baseName) ? '★' : '☆';
@@ -253,7 +245,6 @@ function showPlayer(video) {
     chatBox.innerHTML = msgs.map(m =>
       `<div class='chat-message'><strong>${m.author}:</strong> ${m.message}</div>`
     ).join('');
-    // Auto-scroll the chat container
     chatPane.scrollTop = chatPane.scrollHeight;
   };
 }
@@ -312,6 +303,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     };
   }
+
   document.getElementById('change-folder-btn').addEventListener('click', async () => {
     const p = await window.electronAPI.selectVideoFolder();
     if (p) {

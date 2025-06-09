@@ -2,9 +2,13 @@
 const { app, BrowserWindow, dialog, ipcMain } = require('electron');
 const path = require('path');
 const fs = require('fs');
+const https = require('https');
 const { autoUpdater } = require('electron-updater');
 
 const settingsPath = path.join(app.getPath('userData'), 'settings.json');
+
+// ── Only check for missing videos uploaded after this date ───────────────
+const MISSING_SINCE_DATE = "20250606";  // YYYYMMDD cutoff
 
 console.log('▶️  Starting Electron main process');
 
@@ -85,9 +89,17 @@ ipcMain.handle('read-tumblr-html', async () => {
   return files.map(f => path.join('tumblr', f));
 });
 
+ipcMain.handle('read-tumblr2-html', async () => {
+  const folder = path.join(__dirname, 'tumblr2');
+  if (!fs.existsSync(folder)) return [];
+  const files = fs.readdirSync(folder)
+    .filter(f => f.toLowerCase().endsWith('.html'))
+    .sort();
+  return files.map(f => path.join('tumblr2', f));
+});
+
 // ── Auto‐Updater Events ──────────────────────────────────────────────────
 
-// 1) Update is available: ask the user if they want to download it now
 autoUpdater.on('update-available', info => {
   console.log('   ↳ Update available:', info);
   dialog.showMessageBox({
@@ -108,11 +120,8 @@ autoUpdater.on('update-available', info => {
   });
 });
 
-// 2) When the update has been downloaded: prompt to install
 autoUpdater.on('update-downloaded', info => {
   console.log('   ↳ Update downloaded:', info);
-
-  // strip HTML tags from releaseNotes
   const plainNotes = (info.releaseNotes || '')
     .replace(/<[^>]+>/g, '')
     .replace(/\s{2,}/g, ' ')
@@ -139,12 +148,97 @@ autoUpdater.on('update-downloaded', info => {
   });
 });
 
-// 3) If there’s an error during update
 autoUpdater.on('error', err => {
   console.error('   ↳ Auto‐updater error:', err);
 });
 
-// 4) Progress reporting (optional)
 autoUpdater.on('download-progress', progressObj => {
   console.log(`   ↳ Download speed: ${progressObj.bytesPerSecond} — ${Math.round(progressObj.percent)}%`);
+});
+
+// ── Check for missing videos ───────────────────────────────────────────
+ipcMain.handle('check-missing-videos', async () => {
+  console.log('▶ check-missing-videos called; cutoff:', MISSING_SINCE_DATE);
+  try {
+    const settings = fs.existsSync(settingsPath)
+      ? JSON.parse(fs.readFileSync(settingsPath, 'utf-8'))
+      : {};
+    const videoDir = settings.videoPath;
+    if (!videoDir || !fs.existsSync(videoDir)) return [];
+
+    const allVids = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'videos.json'), 'utf-8'));
+    const recent = allVids.filter(v => v.date && v.date >= MISSING_SINCE_DATE);
+    const have = new Set(fs.readdirSync(videoDir).map(f => f.replace(/\.[^/.]+$/, '')));
+    const missing = recent
+      .map(v => v.filename.split('/').pop().replace(/\.[^/.]+$/, ''))
+      .filter(base => !have.has(base));
+
+    console.log('▶ missing-videos:', missing);
+    return missing;
+  } catch (e) {
+    console.error('   ✖ check-missing-videos error:', e);
+    return [];
+  }
+});
+
+// ── Download missing videos from GitHub assets (handles redirects) ───
+ipcMain.handle('download-videos', async (event, filenames) => {
+  const settings = fs.existsSync(settingsPath)
+    ? JSON.parse(fs.readFileSync(settingsPath, 'utf-8'))
+    : {};
+  const videoDir = settings.videoPath;
+  if (!videoDir || !fs.existsSync(videoDir)) {
+    throw new Error('Video folder not set or not found');
+  }
+
+  const allVids = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'videos.json'), 'utf-8'));
+  const urlMap = {};
+  allVids.forEach(v => {
+    if (v.downloadUrl) {
+      const base = v.filename.split('/').pop().replace(/\.[^/.]+$/, '');
+      urlMap[base] = v.downloadUrl;
+    }
+  });
+
+  async function fetchWithRedirect(url, dest, redirects = 0) {
+    if (redirects > 5) throw new Error('Too many redirects');
+    return new Promise((resolve, reject) => {
+      const file = fs.createWriteStream(dest);
+      https.get(url, res => {
+        if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+          // follow redirect
+          file.close();
+          fs.unlink(dest, () => {
+            const nextUrl = res.headers.location.startsWith('http')
+              ? res.headers.location
+              : new URL(res.headers.location, url).toString();
+            resolve(fetchWithRedirect(nextUrl, dest, redirects + 1));
+          });
+        } else if (res.statusCode !== 200) {
+          file.close();
+          fs.unlink(dest, () => {});
+          reject(new Error(`Failed to download ${path.basename(dest)}: ${res.statusCode}`));
+        } else {
+          res.pipe(file);
+          file.on('finish', () => file.close(resolve));
+        }
+      }).on('error', err => {
+        file.close();
+        fs.unlink(dest, () => reject(err));
+      });
+    });
+  }
+
+  await Promise.all(filenames.map(name => {
+    const downloadUrl = urlMap[name];
+    if (!downloadUrl) {
+      return Promise.reject(new Error(`No downloadUrl for ${name}`));
+    }
+    const urlObj = new URL(downloadUrl);
+    const ext = path.extname(urlObj.pathname);
+    const dest = path.join(videoDir, `${name}${ext}`);
+    return fetchWithRedirect(downloadUrl, dest);
+  }));
+
+  return true;
 });
