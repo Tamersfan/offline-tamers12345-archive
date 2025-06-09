@@ -1,30 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0">
   <channel>
-    <title>All of Tamers&#8217; Videos</title>
+    <title>All of Tamers’ Videos</title>
     <link>https://github.com/Tamersfan/offline-tamers12345-archive</link>
     <description>Auto-download new video batches via torrent</description>
 
     <!-- Newest batch first -->
     <item>
       <title>Videos Batch 2025-06-09</title>
-      <link>
-        https://raw.githubusercontent.com/Tamersfan/offline-tamers12345-archive/main/torrents/tamers%20videos%2007-01-25.torrent
-      </link>
+      <link>https://raw.githubusercontent.com/Tamersfan/offline-tamers12345-archive/main/torrents/tamers%20videos%206-9-25.torrent</link>
       <pubDate>Mon, 09 Jun 2025 00:00:00 GMT</pubDate>
-      <enclosure
-        url="https://raw.githubusercontent.com/Tamersfan/offline-tamers12345-archive/main/torrents/tamers%20videos%2007-01-25.torrent"
-        length="1234567"
-        type="application/x-bittorrent"/>
-    </item>
-
-    <item>
-      <title>Videos Batch 2025-06-09</title>
-      <link>
-        https://raw.githubusercontent.com/Tamersfan/offline-tamers12345-archive/main/torrents/tamers%20videos%206-9-25.torrent
-      </link>
-      <pubDate>Mon, 09 Jun 2025 00:00:00 GMT</pubDate>
-      <enclosure
+      <enclosure 
         url="https://raw.githubusercontent.com/Tamersfan/offline-tamers12345-archive/main/torrents/tamers%20videos%206-9-25.torrent"
         length="2345678"
         type="application/x-bittorrent"/>
