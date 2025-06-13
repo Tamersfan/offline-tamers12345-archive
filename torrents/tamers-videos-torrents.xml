@@ -16,5 +16,15 @@
         type="application/x-bittorrent"/>
     </item>
 
+    <item>
+      <title>Videos Batch 2025-06-13</title>
+      <link>https://raw.githubusercontent.com/Tamersfan/offline-tamers12345-archive/main/torrents/tamers%20videos%206-13-25.torrent</link>
+      <pubDate>Fri, 13 Jun 2025 00:00:00 GMT</pubDate>
+      <enclosure 
+        url="https://raw.githubusercontent.com/Tamersfan/offline-tamers12345-archive/main/torrents/tamers%20videos%206-13-25.torrent"
+        length="2345678"
+        type="application/x-bittorrent"/>
+    </item>
+
   </channel>
 </rss>
