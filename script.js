@@ -235,7 +235,7 @@ function populatePlaylistOptions() {
 
   const tagArray = Array.from(tagSet);
   const customOrder = [
-    'SU Episode',
+    'SU Episodes',
     'SU Lore Arc 1 (The Prophecy/The Boys)',
     'Obama Arc',
     'Parodies',
