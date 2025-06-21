@@ -1,26 +1,28 @@
 // main.js
-const { app, BrowserWindow, dialog, ipcMain } = require('electron');
+const { app, BrowserWindow, dialog, ipcMain, shell } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const https = require('https');
 const { autoUpdater } = require('electron-updater');
 
-const settingsPath = path.join(app.getPath('userData'), 'settings.json');
-
-// ── Only check for missing videos uploaded after this date ───────────────
-const MISSING_SINCE_DATE = "20250606";  // YYYYMMDD cutoff
+const userData = app.getPath('userData');
+const settingsPath = path.join(userData, 'settings.json');
+const versionsPath = path.join(userData, 'versions.json');
 
 console.log('▶️  Starting Electron main process');
 
+let win = null;
+
 function createWindow() {
   console.log('   ↳ createWindow() called');
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
     width: 1280,
     height: 720,
     autoHideMenuBar: true,
     webPreferences: {
       contextIsolation: true,
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'preload.js'),
+      webSecurity: false // ✅ Allow local subtitle files to load
     }
   });
 
@@ -51,24 +53,35 @@ app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) createWindow();
 });
 
-// ── IPC Handlers ───────────────────────────────────────────────────────────
-ipcMain.handle('get-settings', async () => {
+// Utility: load or init a JSON file
+function loadJSON(filePath, defaultVal) {
   try {
-    if (fs.existsSync(settingsPath)) {
-      const data = fs.readFileSync(settingsPath, 'utf-8');
-      return JSON.parse(data);
+    if (fs.existsSync(filePath)) {
+      return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
     }
   } catch (e) {
-    console.error('   ✖ failed to read settings:', e);
+    console.error(`Failed to load ${filePath}:`, e);
   }
-  return {};
+  return defaultVal;
+}
+function saveJSON(filePath, obj) {
+  try {
+    fs.writeFileSync(filePath, JSON.stringify(obj, null, 2));
+  } catch (e) {
+    console.error(`Failed to save ${filePath}:`, e);
+  }
+}
+
+// ── IPC Handlers ───────────────────────────────────────────────────────────
+ipcMain.handle('get-settings', async () => {
+  return loadJSON(settingsPath, {});
 });
 
 ipcMain.handle('select-video-folder', async () => {
   const result = await dialog.showOpenDialog({ properties: ['openDirectory'] });
-  if (!result.canceled && result.filePaths.length > 0) {
+  if (!result.canceled && result.filePaths.length) {
     const folderPath = result.filePaths[0];
-    fs.writeFileSync(settingsPath, JSON.stringify({ videoPath: folderPath }, null, 2));
+    saveJSON(settingsPath, { videoPath: folderPath });
     return folderPath;
   }
   return null;
@@ -77,29 +90,33 @@ ipcMain.handle('select-video-folder', async () => {
 ipcMain.handle('read-image-files', async () => {
   const folder = path.join(__dirname, 'deviantart', 'deviantart art framed');
   const files = fs.readdirSync(folder).filter(f => /\.(png|jpe?g|gif)$/i.test(f));
-  return files.map(filename => ({ filename, path: path.join(folder, filename) }));
+  return files.map(f => ({ filename: f, path: path.join(folder, f) }));
 });
 
 ipcMain.handle('read-tumblr-html', async () => {
   const folder = path.join(__dirname, 'tumblr');
   if (!fs.existsSync(folder)) return [];
-  const files = fs.readdirSync(folder)
+  return fs.readdirSync(folder)
     .filter(f => f.toLowerCase().endsWith('.html'))
-    .sort();
-  return files.map(f => path.join('tumblr', f));
+    .sort()
+    .map(f => path.join('tumblr', f));
 });
 
 ipcMain.handle('read-tumblr2-html', async () => {
   const folder = path.join(__dirname, 'tumblr2');
   if (!fs.existsSync(folder)) return [];
-  const files = fs.readdirSync(folder)
+  return fs.readdirSync(folder)
     .filter(f => f.toLowerCase().endsWith('.html'))
-    .sort();
-  return files.map(f => path.join('tumblr2', f));
+    .sort()
+    .map(f => path.join('tumblr2', f));
+});
+
+// ── Open external link in user's default browser ─────────────
+ipcMain.handle('open-external', async (_event, url) => {
+  await shell.openExternal(url);
 });
 
 // ── Auto‐Updater Events ──────────────────────────────────────────────────
-
 autoUpdater.on('update-available', info => {
   console.log('   ↳ Update available:', info);
   dialog.showMessageBox({
@@ -154,91 +171,130 @@ autoUpdater.on('error', err => {
 
 autoUpdater.on('download-progress', progressObj => {
   console.log(`   ↳ Download speed: ${progressObj.bytesPerSecond} — ${Math.round(progressObj.percent)}%`);
+  if (win && win.webContents) {
+    win.webContents.send('update-download-progress', progressObj);
+  }
 });
 
-// ── Check for missing videos ───────────────────────────────────────────
+// ── Check for updated or missing videos ───────────────────────────────────
 ipcMain.handle('check-missing-videos', async () => {
-  console.log('▶ check-missing-videos called; cutoff:', MISSING_SINCE_DATE);
+  console.log('▶ check-missing-videos called');
   try {
-    const settings = fs.existsSync(settingsPath)
-      ? JSON.parse(fs.readFileSync(settingsPath, 'utf-8'))
-      : {};
+    const settings = loadJSON(settingsPath, {});
     const videoDir = settings.videoPath;
     if (!videoDir || !fs.existsSync(videoDir)) return [];
 
-    const allVids = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'videos.json'), 'utf-8'));
-    const recent = allVids.filter(v => v.date && v.date >= MISSING_SINCE_DATE);
-    const have = new Set(fs.readdirSync(videoDir).map(f => f.replace(/\.[^/.]+$/, '')));
-    const missing = recent
-      .map(v => v.filename.split('/').pop().replace(/\.[^/.]+$/, ''))
-      .filter(base => !have.has(base));
+    // load remote manifest & local version map
+    const allVids = loadJSON(path.join(__dirname, 'data', 'videos.json'), []);
+    const localVer = loadJSON(versionsPath, {});
 
-    console.log('▶ missing-videos:', missing);
-    return missing;
+    // find files that either don't exist, or have bumped version
+    const toFetch = allVids.filter(v => {
+      const base = path.basename(v.filename, path.extname(v.filename));
+      const remoteV = v.version || 1;
+      const haveFile = fs.existsSync(path.join(videoDir, v.filename));
+      const localV   = localVer[base] || 1;
+      return (!haveFile) || (remoteV > localV);
+    }).map(v => v.filename);
+
+    console.log('▶ toFetch:', toFetch);
+    return toFetch;
   } catch (e) {
     console.error('   ✖ check-missing-videos error:', e);
     return [];
   }
 });
 
-// ── Download missing videos from GitHub assets (handles redirects) ───
+// ── Download videos from GitHub assets & update versions map ─────────────
 ipcMain.handle('download-videos', async (event, filenames) => {
-  const settings = fs.existsSync(settingsPath)
-    ? JSON.parse(fs.readFileSync(settingsPath, 'utf-8'))
-    : {};
+  console.log('▶ download-videos:', filenames);
+  const settings = loadJSON(settingsPath, {});
   const videoDir = settings.videoPath;
   if (!videoDir || !fs.existsSync(videoDir)) {
     throw new Error('Video folder not set or not found');
   }
 
-  const allVids = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'videos.json'), 'utf-8'));
-  const urlMap = {};
+  const allVids = loadJSON(path.join(__dirname, 'data', 'videos.json'), []);
+  const localVer = loadJSON(versionsPath, {});
+
+  // build map of base→downloadUrl & version
+  const map = {};
   allVids.forEach(v => {
-    if (v.downloadUrl) {
-      const base = v.filename.split('/').pop().replace(/\.[^/.]+$/, '');
-      urlMap[base] = v.downloadUrl;
-    }
+    const base = path.basename(v.filename, path.extname(v.filename));
+    if (v.downloadUrl) map[base] = { url: v.downloadUrl, version: v.version || 1, filename: v.filename };
   });
 
-  async function fetchWithRedirect(url, dest, redirects = 0) {
+  // helper to handle HTTP redirects and send progress
+  async function fetchWithRedirectAndProgress(url, dest, onProgress, redirects = 0) {
     if (redirects > 5) throw new Error('Too many redirects');
     return new Promise((resolve, reject) => {
       const file = fs.createWriteStream(dest);
       https.get(url, res => {
         if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-          // follow redirect
           file.close();
           fs.unlink(dest, () => {
-            const nextUrl = res.headers.location.startsWith('http')
-              ? res.headers.location
-              : new URL(res.headers.location, url).toString();
-            resolve(fetchWithRedirect(nextUrl, dest, redirects + 1));
+            const next = new URL(res.headers.location, url).toString();
+            resolve(fetchWithRedirectAndProgress(next, dest, onProgress, redirects + 1));
           });
         } else if (res.statusCode !== 200) {
-          file.close();
-          fs.unlink(dest, () => {});
+          file.close(); fs.unlink(dest, ()=>{});
           reject(new Error(`Failed to download ${path.basename(dest)}: ${res.statusCode}`));
         } else {
+          const total = parseInt(res.headers['content-length'] || '0', 10);
+          let received = 0;
+          res.on('data', chunk => {
+            received += chunk.length;
+            if (onProgress) onProgress(received, total);
+          });
           res.pipe(file);
           file.on('finish', () => file.close(resolve));
         }
       }).on('error', err => {
-        file.close();
-        fs.unlink(dest, () => reject(err));
+        file.close(); fs.unlink(dest, ()=>{});
+        reject(err);
       });
     });
   }
 
-  await Promise.all(filenames.map(name => {
-    const downloadUrl = urlMap[name];
-    if (!downloadUrl) {
-      return Promise.reject(new Error(`No downloadUrl for ${name}`));
-    }
-    const urlObj = new URL(downloadUrl);
-    const ext = path.extname(urlObj.pathname);
-    const dest = path.join(videoDir, `${name}${ext}`);
-    return fetchWithRedirect(downloadUrl, dest);
-  }));
+  // download each and update localVer
+  for (const fname of filenames) {
+    const base = path.basename(fname, path.extname(fname));
+    const entry = map[base];
+    if (!entry) throw new Error(`No downloadUrl for ${base}`);
+    const dest = path.join(videoDir, entry.filename);
 
+    await fetchWithRedirectAndProgress(entry.url, dest, (received, total) => {
+      if (win && win.webContents) {
+        win.webContents.send('video-download-progress', {
+          filename: entry.filename,
+          received,
+          total,
+          percent: total ? (received / total) * 100 : 0
+        });
+      }
+    });
+    localVer[base] = entry.version;
+  }
+
+  // save updated versions map
+  saveJSON(versionsPath, localVer);
+
+  // Signal completion (final progress 100%)
+  if (win && win.webContents) {
+    win.webContents.send('video-download-progress', { percent: 100 });
+  }
   return true;
+});
+
+// ── Alt Video IPC for Renderer (no fs in preload) ─────────────
+ipcMain.handle('file-exists', async (_event, fullPath) => {
+  try {
+    await fs.promises.access(fullPath, fs.constants.F_OK);
+    return true;
+  } catch {
+    return false;
+  }
+});
+ipcMain.handle('save-alt-video', async (_event, fullPath, arrayBuffer) => {
+  await fs.promises.writeFile(fullPath, Buffer.from(arrayBuffer));
 });

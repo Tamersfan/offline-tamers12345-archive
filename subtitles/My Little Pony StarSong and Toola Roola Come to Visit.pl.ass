@@ -1,0 +1,410 @@
+﻿[Script Info]
+; This is an Advanced Sub Station Alpha v4+ script.
+Title: 
+ScriptType: v4.00+
+PlayDepth: 0
+ScaledBorderAndShadow: Yes
+PlayResX: 1920
+PlayResY: 1080
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default,Arial,50,&H00FFFFFF,&H0000FFFF,&H39000000,&HFF000000,0,0,0,0,100,100,0,0,3,1.0,1,2,10,10,10,1
+Style: miejsce,Arial,80,&H00FFFFFF,&H0000FFFF,&H00000000,&HFF000000,0,0,0,0,100,100,0,0,3,1.0,1,7,10,10,10,1
+Style: piosenka,Arial,50,&H00FFCDF2,&H0000FFFF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,1.5,1,8,10,10,10,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:02.00,0:00:03.91,Default,,0,0,0,,Zamawiasz coś, Twilight?
+Dialogue: 0,0:00:04.20,0:00:06.58,Default,,0,0,0,,Nie dzisiaj, przyniosłam własną przekąskę.
+Dialogue: 0,0:00:06.87,0:00:07.52,Default,,0,0,0,, Co?
+Dialogue: 0,0:00:07.55,0:00:08.95,Default,,0,0,0,,Myślałam, że stawiasz!
+Dialogue: 0,0:00:08.98,0:00:12.70,Default,,0,0,0,,Nie, zapytałam, czy chcesz przyjść na lunch, a to mój lunch.
+Dialogue: 0,0:00:16.41,0:00:18.08,Default,,0,0,0,,Będziesz jeść Lunchly?
+Dialogue: 0,0:00:18.47,0:00:18.99,Default,,0,0,0,,Tak.
+Dialogue: 0,0:00:19.72,0:00:22.76,Default,,0,0,0,,Nie słyszałaś, co mówią o tym w końskim internecie?
+Dialogue: 0,0:00:22.79,0:00:23.92,Default,,0,0,0,,Ten ser ma pleśń!
+Dialogue: 0,0:00:24.56,0:00:27.26,Default,,0,0,0,,Nic się nie stanie, jeśli ser ma odrobinę pleśni.
+Dialogue: 0,0:00:27.53,0:00:29.14,Default,,0,0,0,,No nie wiem.
+Dialogue: 0,0:00:29.75,0:00:31.66,Default,,0,0,0,,Czy to w zestawie ma chociaż Carpi Sun?
+Dialogue: 0,0:00:31.69,0:00:32.93,Default,,0,0,0,,Ma Prime’a.
+Dialogue: 0,0:00:33.06,0:00:34.82,Default,,0,0,0,,Lunchly nie jest przypadkiem dla 8-latków?
+Dialogue: 0,0:00:34.84,0:00:37.31,Default,,0,0,0,,Na chuj źrebakom napój energetyczny?
+Dialogue: 0,0:00:39.38,0:00:41.36,Default,,0,0,0,,Chuj mi w moją różową, gładką dupę!
+Dialogue: 0,0:00:41.38,0:00:43.30,Default,,0,0,0,,Nie mogę otworzyć tej saszetki z sosem!
+Dialogue: 0,0:00:43.40,0:00:44.93,Default,,0,0,0,,Czy to w ogóle ma linię do rozerwania?
+Dialogue: 0,0:00:45.09,0:00:47.50,Default,,0,0,0,,Może jest po prostu zajebiście trudna do zauważenia?
+Dialogue: 0,0:00:54.71,0:00:56.20,Default,,0,0,0,,Ten ser jest niebieski.
+Dialogue: 0,0:00:56.54,0:00:58.17,Default,,0,0,0,,Ma taki być.
+Dialogue: 0,0:00:59.13,0:01:00.11,Default,,0,0,0,,Nie.
+Dialogue: 0,0:01:00.81,0:01:02.42,Default,,0,0,0,,Siemanko, dziewczynki!
+Dialogue: 0,0:01:02.44,0:01:04.48,Default,,0,0,0,,Czas rozruszać te cipki!
+Dialogue: 0,0:01:05.04,0:01:07.19,Default,,0,0,0,,Hej, Twilight, czy to Lunchle?
+Dialogue: 0,0:01:08.37,0:01:09.54,Default,,0,0,0,,No, nie.
+Dialogue: 0,0:01:10.15,0:01:12.82,Default,,0,0,0,,Hej, Rainbow Dash, przymierzałaś ostatnio jakieś nowe sukienki?
+Dialogue: 0,0:01:13.06,0:01:14.06,Default,,0,0,0,,Hahahaha!
+Dialogue: 0,0:01:14.31,0:01:14.79,Default,,0,0,0,,Co?
+Dialogue: 0,0:01:14.95,0:01:15.39,Default,,0,0,0,,Nie!
+Dialogue: 0,0:01:15.41,0:01:17.20,Default,,0,0,0,,Dlaczego w ogóle coś takiego mówisz?!
+Dialogue: 0,0:01:19.52,0:01:23.31,Default,,0,0,0,,Joł, Rainbow Dash, słyszałam od pewnego kucyka,\Nże kiedyś ubierałaś się z klasą.
+Dialogue: 0,0:01:23.33,0:01:26.09,Default,,0,0,0,,To prawda, ty wykwintna, mała suko?
+Dialogue: 0,0:01:26.78,0:01:29.57,Default,,0,0,0,,{\i1} O mój boże, nie, kurwa, Celestio, NIE!
+Dialogue: 0,0:01:29.59,0:01:33.73,Default,,0,0,0,,{\i1}Jakim cudem te suki się dowiedziały o mojej mrocznej przeszłości,\Nktórą chcę pogrzebać?
+Dialogue: 0,0:01:33.87,0:01:37.64,Default,,0,0,0,,Dlaczego w ogóle takie rzeczy gadają?\NWszyscy wiedzą, że chodzisz nago
+Dialogue: 0,0:01:37.66,0:01:41.41,Default,,0,0,0,,i wystawiasz wszystko na wiatr,\Nżeby twój kobiecy sprzęt poczuł chłodne powiewy.
+Dialogue: 0,0:01:41.77,0:01:45.66,Default,,0,0,0,,Nie pytaj mnie, przecież wiesz, że nienawidzę ubrań i mody.
+Dialogue: 0,0:01:45.68,0:01:48.11,Default,,0,0,0,,Co za przeklęta, końska maszkara tu się odgrywa?!
+Dialogue: 0,0:01:49.61,0:01:50.84,Default,,0,0,0,,Przepraszam!
+Dialogue: 0,0:01:51.35,0:01:54.77,Default,,0,0,0,,Przepraszam, śmierdzące suki,\Nwidziałyście gdzieś tego niebieskiego kucyka?
+Dialogue: 0,0:01:55.27,0:01:59.92,Default,,0,0,0,,To ikona mody, urodzona i wychowana tu, w Ponyville!
+Dialogue: 0,0:02:00.13,0:02:04.75,Default,,0,0,0,,Ikona mody? Nie, to Rainbow Dash…\Nno, przynajmniej wygląda jak ona.
+Dialogue: 0,0:02:04.93,0:02:07.62,Default,,0,0,0,,Ale Rainbow Dash wolałaby zginąć, niż założyć sukienkę.
+Dialogue: 0,0:02:08.00,0:02:13.45,Default,,0,0,0,,To niemożliwe, wszyscy wiedzą,\Nże Rainbow Dash zawsze ubiera się z klasą.
+Dialogue: 0,0:02:13.48,0:02:15.04,Default,,0,0,0,,Jesteś upośledzona?
+Dialogue: 0,0:02:15.35,0:02:16.19,Default,,0,0,0,, No… trochę.
+Dialogue: 0,0:02:16.21,0:02:17.12,Default,,0,0,0,,Okej.
+Dialogue: 0,0:02:17.49,0:02:19.62,Default,,0,0,0,,Wybacz, nie pomogę ci z niebieskim kucykiem,
+Dialogue: 0,0:02:19.86,0:02:23.21,Default,,0,0,0,, ale poznaję tam Pinkie Pie, jeśli chcesz o niej pogadać.
+Dialogue: 0,0:02:23.24,0:02:25.79,Default,,0,0,0,, Czy pytaliśmy się o Pinkie Pie?
+Dialogue: 0,0:02:26.12,0:02:27.09,Default,,0,0,0,,Nie bardzo.
+Dialogue: 0,0:02:27.12,0:02:30.51,Default,,0,0,0,,Powinnaś… no nie wiem… skoczyć z bardzo wysokiego budynku.
+Dialogue: 0,0:02:31.92,0:02:33.88,Default,,0,0,0,,Kurwa, Ponyville śmierdzi gównem.
+Dialogue: 0,0:02:34.15,0:02:37.11,Default,,0,0,0,,Przysięgam, że nie śmierdziało tu tak, kiedy jeszcze tu mieszkaliśmy.
+Dialogue: 0,0:02:37.13,0:02:39.68,Default,,0,0,0,,Szczerze, cieszę się, że spierdoliliśmy z tej zasranej dziury.
+Dialogue: 0,0:02:39.70,0:02:43.13,Default,,0,0,0,,Cóż, tak robi każdy kucyk z Ponyville,
+Dialogue: 0,0:02:43.16,0:02:49.08,Default,,0,0,0,,gdy zaczyna zarabiać więcej niż minimalną stawkę,\Nktóra tutaj wynosi tylko 75 centów.
+Dialogue: 0,0:02:49.11,0:02:54.78,Default,,0,0,0,,Dobra uwaga. Ta modna, asymetryczna fryzura "miska" kosztowała mnie wczoraj 2000 dolarów w salonie.
+Dialogue: 0,0:02:55.17,0:02:57.53,Default,,0,0,0,,Cholera, chyba znów nadepnęłam na końskie gówno!
+Dialogue: 0,0:02:57.83,0:03:02.46,Default,,0,0,0,,Słodka Celestio... Czy te konie serio\Nsrają gdzie popadnie w tym mieście?
+Dialogue: 0,0:03:02.64,0:03:05.84,Default,,0,0,0,,Hej dziewczyny, odwróćcie się i nie patrzcie, muszę się wysrać.
+Dialogue: 0,0:03:06.09,0:03:07.21,Default,,0,0,0,, Ja też muszę.
+Dialogue: 0,0:03:07.32,0:03:08.62,Default,,0,0,0,, Zrobię to tutaj.
+Dialogue: 0,0:03:09.07,0:03:10.91,Default,,0,0,0,,Możemy to zrobić razem!
+Dialogue: 0,0:03:11.29,0:03:14.26,Default,,0,0,0,,Okej, zobaczymy, która z nas zrobi największą kupę!
+Dialogue: 0,0:03:15.36,0:03:20.26,Default,,0,0,0,,O mój boże, Rainbow Dash, Pinkie Pie, w końcu was znalazłyśmy!
+Dialogue: 0,0:03:20.29,0:03:22.62,Default,,0,0,0,,Gdzieście były, wy szalone kucykowe dziewczyny?
+Dialogue: 0,0:03:28.68,0:03:30.64,Default,,0,0,0,, O rany, nie wierzę!
+Dialogue: 0,0:03:30.67,0:03:34.77,Default,,0,0,0,,Toola Roola i Starsong, cała stara paczka znowu razem!
+Dialogue: 0,0:03:35.14,0:03:37.12,Default,,0,0,0,,Co was sprowadza z powrotem do domu?
+Dialogue: 0,0:03:37.31,0:03:39.65,Default,,0,0,0,,Cóż, akurat przejeżdżałyśmy w pobliżu i pomyślałyśmy,
+Dialogue: 0,0:03:39.67,0:03:42.74,Default,,0,0,0,,że fajnie byłoby się spotkać i powspominać stare czasy.
+Dialogue: 0,0:03:42.76,0:03:44.90,Default,,0,0,0,,Mam nadzieję, że to nie zbyt nagłe.
+Dialogue: 0,0:03:45.06,0:03:49.19,Default,,0,0,0,,Em… Rainbow Dash, kim dokładnie są\Nte dwie dwudziestokilkuletnie kobiety?
+Dialogue: 0,0:03:49.53,0:03:51.28,Default,,0,0,0,, A, no tak, ty ich nie znasz.
+Dialogue: 0,0:03:51.42,0:03:54.75,Default,,0,0,0,,To były nasze kumpele na długo przed tobą i resztą dziewczyn.
+Dialogue: 0,0:03:55.11,0:03:59.42,Default,,0,0,0,,To jest Toola Roola. Najlepsza malarka w całej Equestrii.
+Dialogue: 0,0:03:59.67,0:04:03.46,Default,,0,0,0,, Pewnie widziałaś gdzieś jej prace, nawet nie zdając sobie z tego sprawy.
+Dialogue: 0,0:04:03.71,0:04:05.08,Default,,0,0,0,, Jest po prostu taka sławna.
+Dialogue: 0,0:04:05.23,0:04:07.81,Default,,0,0,0,, A jej ulubione jedzenie to tartaletki jajeczne.
+Dialogue: 0,0:04:08.12,0:04:10.12,Default,,0,0,0,,No i jest jebaną milionerką.
+Dialogue: 0,0:04:10.34,0:04:13.35,Default,,0,0,0,, Technicznie rzecz biorąc, miliarderką, ale kto by tam liczył?
+Dialogue: 0,0:04:13.92,0:04:16.59,Default,,0,0,0,,A ta z wielkimi cyckami to Starsong.
+Dialogue: 0,0:04:16.61,0:04:20.61,Default,,0,0,0,,To ogromna idolka, znana w całym kraju, z fan clubami i w ogóle.
+Dialogue: 0,0:04:20.64,0:04:22.39,Default,,0,0,0,, Ludzie płacą jej, żeby na nich pluła.
+Dialogue: 0,0:04:22.70,0:04:25.90,Default,,0,0,0,,Księżniczka Celestia każe mi na nią pluć i nic za to nie dostaję!
+Dialogue: 0,0:04:26.32,0:04:28.94,Default,,0,0,0,,Więc Rainbow, jak tam twój biznes?
+Dialogue: 0,0:04:29.14,0:04:31.62,Default,,0,0,0,,Od wieków nic od ciebie nie słyszałyśmy!
+Dialogue: 0,0:04:31.73,0:04:32.59,Default,,0,0,0,,Biznes?
+Dialogue: 0,0:04:32.82,0:04:34.85,Default,,0,0,0,,Firma modowa Rainbow Dash.
+Dialogue: 0,0:04:34.88,0:04:37.36,Default,,0,0,0,,To najbardziej oczywista rzecz pod słońcem.
+Dialogue: 0,0:04:37.71,0:04:41.36,Default,,0,0,0,,Od pierwszego dnia było widać, że jest stworzona do wielkości na wybiegu,
+Dialogue: 0,0:04:41.38,0:04:44.44,Default,,0,0,0,,kiedy przychodziła na nasze pikniki w gigantycznych kapeluszach.
+Dialogue: 0,0:04:44.46,0:04:47.29,Default,,0,0,0,,No wiecie, rozwijam swoją markę.
+Dialogue: 0,0:04:47.44,0:04:49.74,Default,,0,0,0,,Właśnie wchodzę w świat wysokiej mody.
+Dialogue: 0,0:04:49.76,0:04:52.40,Default,,0,0,0,,Więc gdzie się zatrzymałyście w Ponyville?
+Dialogue: 0,0:04:52.64,0:04:57.97,Default,,0,0,0,,Nie pytam, żeby się dzisiaj zakraść do waszego\Npokoju hotelowego i patrzeć, jak śpicie, hi hi.
+Dialogue: 0,0:04:57.99,0:05:00.05,Default,,0,0,0,, I co ważniejsze, kiedy wyjeżdżacie?
+Dialogue: 0,0:05:00.24,0:05:02.95,Default,,0,0,0,, Toola Roola ma tu w przyszłym tygodniu wystawę sztuki.
+Dialogue: 0,0:05:02.97,0:05:06.60,Default,,0,0,0,,Jak przeczytałyśmy w gazecie o sukcesie Sugarcube Corner,
+Dialogue: 0,0:05:06.63,0:05:11.64,Default,,0,0,0,,od razu wiedziałyśmy, że to idealna wymówka, żeby wpaść się przywitać.
+Dialogue: 0,0:05:11.66,0:05:14.90,Default,,0,0,0,,Kto by pomyślał, że jeden mały kucyk z wielką dupą
+Dialogue: 0,0:05:14.93,0:05:17.83,Default,,0,0,0,,może robić ciasta konkurujące z najlepszymi z Manehattanu?
+Dialogue: 0,0:05:17.85,0:05:19.58,Default,,0,0,0,,Co mogę powiedzieć, suki?
+Dialogue: 0,0:05:19.61,0:05:21.03,Default,,0,0,0,,Po prostu umiem piec.
+Dialogue: 0,0:05:21.21,0:05:24.22,Default,,0,0,0,,Niesamowite, ty różowa, mała suko.
+Dialogue: 0,0:05:24.39,0:05:26.20,Default,,0,0,0,,Cieszę się, że wszystkie zostałyśmy milionerkami.
+Dialogue: 0,0:05:26.23,0:05:30.12,Default,,0,0,0,,Bo to potwierdza, że był sens spotykania się ze sobą.
+Dialogue: 0,0:05:30.15,0:05:32.79,Default,,0,0,0,,Widocznie wielkość przyciąga wielkość.
+Dialogue: 0,0:05:33.11,0:05:36.80,Default,,0,0,0,, Ja jestem multi-miliarderką, z naciskiem na multi.
+Dialogue: 0,0:05:38.84,0:05:42.06,Default,,0,0,0,,Więc, Pinkie, zabierzesz nas do swojej piekarni, czy jak?
+Dialogue: 0,0:05:42.29,0:05:44.97,Default,,0,0,0,, Eee, może zamiast tam iść,
+Dialogue: 0,0:05:45.05,0:05:48.44,Default,,0,0,0,,wpadniemy do butiku Rainbow Dash?
+Dialogue: 0,0:05:48.72,0:05:50.61,Default,,0,0,0,,Pinkie, co ty odpierdalasz?
+Dialogue: 0,0:05:50.63,0:05:52.46,Default,,0,0,0,,Wiesz przecież, że już nie mam butiku!
+Dialogue: 0,0:05:52.48,0:05:53.75,Default,,0,0,0,,No to się zastanów.
+Dialogue: 0,0:05:53.97,0:05:57.19,Default,,0,0,0,,Miałaś tyle czasu, żeby się przygotować na tę chwilę.
+Dialogue: 0,0:05:57.21,0:06:00.55,Default,,0,0,0,,Myślisz, że po co w ogóle otworzyłam piekarnię?
+Dialogue: 0,0:06:00.84,0:06:03.58,Default,,0,0,0,,Może czas się przyznać przed wszystkimi przyjaciółmi.
+Dialogue: 0,0:06:03.84,0:06:07.25,Default,,0,0,0,,Że nigdy nie zostałam projektantką mody, a ty nigdy nie nauczyłaś się piec
+Dialogue: 0,0:06:07.27,0:06:12.09,Default,,0,0,0,,i wszystkie twoje ciasta są importowane\Nz Manehattan i sprzedajesz je z 200% marżą.
+Dialogue: 0,0:06:12.43,0:06:15.33,Default,,0,0,0,,Nie ma mowy, moje kłamstwo jeszcze się trzyma!
+Dialogue: 0,0:06:15.36,0:06:18.21,Default,,0,0,0,,To ty powinnaś była lepiej zatrzeć ślady!
+Dialogue: 0,0:06:18.54,0:06:20.86,Default,,0,0,0,,Czekaj, Pinkie Pie, ty nie umiesz piec?
+Dialogue: 0,0:06:20.88,0:06:22.82,Default,,0,0,0,,I Rainbow Dash, wiedziałaś o tym?
+Dialogue: 0,0:06:22.85,0:06:24.95,Default,,0,0,0,,Czy reszta naszych przyjaciół też o tym wie?
+Dialogue: 0,0:06:25.10,0:06:27.01,Default,,0,0,0,,Wiele rzeczy nie wiesz, skarbie.
+Dialogue: 0,0:06:27.03,0:06:29.66,Default,,0,0,0,,Wiesz, że Cheerilee jest siostrą Scootaloo?
+Dialogue: 0,0:06:30.10,0:06:32.41,Default,,0,0,0,,Co?! Nie, to... to nie może być prawda!
+Dialogue: 0,0:06:32.43,0:06:35.87,Default,,0,0,0,,Nie zadawaj pytań, jeśli nie jesteś gotowa na odpowiedź!
+Dialogue: 0,0:06:35.89,0:06:37.05,Default,,0,0,0,,Chodźmy, Dashie.
+Dialogue: 0,0:06:42.29,0:06:44.24,Default,,0,0,0,,Rarity, co ty tu robisz?
+Dialogue: 0,0:06:44.62,0:06:47.16,Default,,0,0,0,,Stoję pośrodku własnego salonu.
+Dialogue: 0,0:06:47.35,0:06:49.58,Default,,0,0,0,,Dlaczego wchodzisz do mojego domu bez zaproszenia?
+Dialogue: 0,0:06:49.74,0:06:51.52,Default,,0,0,0,,Wynoś się z mojego domu!
+Dialogue: 0,0:06:53.84,0:06:55.00,Default,,0,0,0,,Dorwij tę zdzirę!
+Dialogue: 0,0:06:55.02,0:06:57.00,Default,,0,0,0,,Daj jej popalić, Rainbow Dash!
+Dialogue: 0,0:06:57.03,0:06:58.14,Default,,0,0,0,,Rainbow Dash?
+Dialogue: 0,0:06:58.17,0:06:59.77,Default,,0,0,0,,Raczej zjedz moją dupę!
+Dialogue: 0,0:07:12.28,0:07:16.51,Default,,0,0,0,,Cholera, Twilight Sparkle, twoi przyjaciele zawsze się tak zachowują?
+Dialogue: 0,0:07:16.69,0:07:18.06,Default,,0,0,0,,Nie zawsze.
+Dialogue: 0,0:07:26.93,0:07:29.62,Default,,0,0,0,,Rainbow, dlaczego w twojej szafie jest dziecko?
+Dialogue: 0,0:07:31.14,0:07:34.17,Default,,0,0,0,,Jestem pedofilem, zamknij drzwi i zablokuj je.
+Dialogue: 0,0:07:34.40,0:07:37.89,Default,,0,0,0,,Jesteśmy z ciebie takie dumne, że jesteś szczera, Rainbow Dash!
+Dialogue: 0,0:07:37.91,0:07:40.35,Default,,0,0,0,,Na pewno trudno ci o tym mówić.
+Dialogue: 0,0:07:40.37,0:07:42.34,Default,,0,0,0,,Jak w ogóle stać cię na takie miejsce?
+Dialogue: 0,0:07:42.37,0:07:44.49,Default,,0,0,0,,Pewnie kosztuje majątek.
+Dialogue: 0,0:07:44.90,0:07:45.81,Default,,0,0,0,,Nie stać nas.
+Dialogue: 0,0:07:45.84,0:07:48.14,Default,,0,0,0,,Dlatego Rarity je straci.
+Dialogue: 0,0:07:48.33,0:07:49.77,Default,,0,0,0,,Zbankrutowaliśmy!
+Dialogue: 0,0:07:50.29,0:07:52.95,Default,,0,0,0,,Więc, oprowadzisz nas po swoim mieszkaniu?
+Dialogue: 0,0:07:53.07,0:07:54.35,Default,,0,0,0,,Nie planowałam.
+Dialogue: 0,0:07:54.72,0:07:56.28,Default,,0,0,0,,To po co tu jesteśmy?
+Dialogue: 0,0:07:56.45,0:07:57.32,Default,,0,0,0,,Nieważne.
+Dialogue: 0,0:07:57.34,0:07:59.43,Default,,0,0,0,,Chodźmy po prostu do Cukrowego Kącika,
+Dialogue: 0,0:07:59.45,0:08:03.83,Default,,0,0,0,,żeby Pinkie Pie pokazała nam, jak robi swoje słynne ciasta.
+Dialogue: 0,0:08:04.27,0:08:07.61,Default,,0,0,0,,Ta, to dziwne, że robi ciasta, skoro nazywa się Pie.
+Dialogue: 0,0:08:07.92,0:08:10.61,Default,,0,0,0,,Eee, może zamiast tego
+Dialogue: 0,0:08:10.63,0:08:15.02,Default,,0,0,0,,pójdziemy do muzeum i zobaczymy niesamowitą sztukę Tooli Rooli?
+Dialogue: 0,0:08:15.16,0:08:16.76,Default,,0,0,0,,Mój Boże, muzeum sztuki?
+Dialogue: 0,0:08:16.78,0:08:18.93,Default,,0,0,0,,Nie byłam tam od bardzo dawna,
+Dialogue: 0,0:08:18.96,0:08:22.43,Default,,0,0,0,,pewnie od kiedy zabrali mnie tam rodzice,\Ngdy byłam jeszcze źrebakiem.
+Dialogue: 0,0:08:22.60,0:08:25.03,Default,,0,0,0,,Em, nikt cię o to nie pytał.
+Dialogue: 0,0:08:25.14,0:08:25.96,Default,,0,0,0,,Wiem.
+Dialogue: 0,0:08:25.98,0:08:30.21,Default,,0,0,0,,Po prostu chciałam się tym podzielić,\Nżebyśmy mogły zostać bliższymi przyjaciółkami.
+Dialogue: 0,0:08:30.24,0:08:32.88,Default,,0,0,0,, Twilight, to nasza paczka przyjaciół, nie twoja.
+Dialogue: 0,0:08:44.33,0:08:48.32,Default,,0,0,0,,Hej, pamiętacie tamten Festiwal Zimowych Życzeń,
+Dialogue: 0,0:08:48.34,0:08:52.05,Default,,0,0,0,,kiedy Pinkie Pie próbowała ćwiczyć składanie jebanych życzeń?
+Dialogue: 0,0:08:52.07,0:08:55.93,Default,,0,0,0,, I myślała, że jak będzie wrzeszczeć wystarczająco głośno,
+Dialogue: 0,0:08:55.95,0:08:58.36,Default,,0,0,0,,to życzenie szybciej się spełni?
+Dialogue: 0,0:08:59.23,0:09:01.36,Default,,0,0,0,,O mój Boże, nie przypominaj mi.
+Dialogue: 0,0:09:01.38,0:09:03.21,Default,,0,0,0,,To było takie żenujące!
+Dialogue: 0,0:09:03.36,0:09:04.32,Default,,0,0,0,,Ja pierdolę!
+Dialogue: 0,0:09:04.34,0:09:06.19,Default,,0,0,0,,Totalnie o tym zapomniałam!
+Dialogue: 0,0:09:06.67,0:09:07.70,Default,,0,0,0,,Co jest takiego śmiesznego?
+Dialogue: 0,0:09:07.73,0:09:09.00,Default,,0,0,0,,Nie zrozumiesz.
+Dialogue: 0,0:09:09.03,0:09:10.33,Default,,0,0,0,,Ciebie tam nie było!
+Dialogue: 0,0:09:10.35,0:09:12.81,Default,,0,0,0,,Hej, chodząca reklamo Hot Topic,
+Dialogue: 0,0:09:12.84,0:09:17.30,Default,,0,0,0,,idź do stoiska i kup nam trochę truskawkowej lemoniady.
+Dialogue: 0,0:09:17.49,0:09:21.77,Default,,0,0,0,,Toola Roola i ja robimy się strasznie spragnione!
+Dialogue: 0,0:09:22.32,0:09:24.32,Default,,0,0,0,,Nie powinnyście to raczej wy nas częstować?
+Dialogue: 0,0:09:24.34,0:09:26.22,Default,,0,0,0,,Mówiłyście, że jesteście milionerkami!
+Dialogue: 0,0:09:26.62,0:09:28.49,Default,,0,0,0,,Nie, mówiłam, że jestem miliarderką.
+Dialogue: 0,0:09:29.39,0:09:34.06,Default,,0,0,0,,W każdym razie, jest nas pięć,\Na mam tylko wystarczająco bitów na cztery lemoniady.
+Dialogue: 0,0:09:34.56,0:09:36.74,Default,,0,0,0,,W porządku. Ty nie musisz pić.
+Dialogue: 0,0:09:37.52,0:09:39.34,Default,,0,0,0,,To moja najnowsza praca.
+Dialogue: 0,0:09:39.55,0:09:43.02,Default,,0,0,0,,Muzeum kupiło ją ode mnie za siedem milionów bitów.
+Dialogue: 0,0:09:43.44,0:09:45.21,Default,,0,0,0,,To takie zajebiste, Toola Roola.
+Dialogue: 0,0:09:45.40,0:09:47.55,Default,,0,0,0,,A może powinnam powiedzieć, 20% fajniejsze?
+Dialogue: 0,0:09:47.77,0:09:49.53,Default,,0,0,0,,20% fajniejsze niż co?
+Dialogue: 0,0:09:49.79,0:09:52.52,Default,,0,0,0,,Oh, to... tak tylko mówię.
+Dialogue: 0,0:09:52.91,0:09:54.25,Default,,0,0,0,,Cóż, powinnaś przestać.
+Dialogue: 0,0:09:55.17,0:09:58.39,Default,,0,0,0,,Wiesz, dlaczego na tym obrazie jest tylko kolor żółty?
+Dialogue: 0,0:09:58.51,0:10:00.93,Default,,0,0,0,,Bo zrobiłam go swoimi jebanymi szczynami.
+Dialogue: 0,0:10:03.61,0:10:05.10,Default,,0,0,0,,Uh… Serio?
+Dialogue: 0,0:10:05.12,0:10:10.45,Default,,0,0,0,,To proces, który sama wymyśliłam. Sikam na całe jebane płótno,
+Dialogue: 0,0:10:10.47,0:10:13.63,Default,,0,0,0,,zostawiam je, żeby trochę postało i zrobiło się błotnisto żółto-brązowe,
+Dialogue: 0,0:10:13.85,0:10:17.38,Default,,0,0,0,, a potem sikam na nie znowu, żeby dodać jaśniejsze tony.
+Dialogue: 0,0:10:17.68,0:10:21.57,Default,,0,0,0,,Na końcu zanurzam gotowe dzieło w żywicy, żeby utrwalić kolory tak, jak lubię.
+Dialogue: 0,0:10:22.38,0:10:24.09,Default,,0,0,0,,Więc… ty po prostu kurwa sikasz?
+Dialogue: 0,0:10:24.79,0:10:27.16,Default,,0,0,0,, I muzeum to kupuje?
+Dialogue: 0,0:10:27.34,0:10:29.23,Default,,0,0,0,,Wyrosłam ponad farby.
+Dialogue: 0,0:10:29.26,0:10:31.67,Default,,0,0,0,,Teraz większość moich obrazów powstaje przy użyciu szczynów.
+Dialogue: 0,0:10:31.80,0:10:33.79,Default,,0,0,0,,Masz jakiś fetysz sikania?
+Dialogue: 0,0:10:35.13,0:10:36.17,Default,,0,0,0,,Nie.
+Dialogue: 0,0:10:36.19,0:10:39.63,Default,,0,0,0,,Po prostu ma fetysz tworzenia.
+Dialogue: 0,0:10:39.82,0:10:41.28,Default,,0,0,0,,Właśnie, dokładnie tak!
+Dialogue: 0,0:10:41.86,0:10:43.61,Default,,0,0,0,,Daj mi cztery lemoniady.
+Dialogue: 0,0:10:51.63,0:10:53.96,Default,,0,0,0,,Kurwa, dlaczego dziś wszystko idzie nie tak?
+Dialogue: 0,0:11:04.66,0:11:06.59,Default,,0,0,0,,Wow, czy to obraz Tooli Rooli?
+Dialogue: 0,0:11:06.81,0:11:07.91,Default,,0,0,0,,Jest taki piękny!
+Dialogue: 0,0:11:07.93,0:11:11.30,Default,,0,0,0,,Ta Wykwintna wyjątkowość i zastosowanie tylko jednego koloru
+Dialogue: 0,0:11:11.33,0:11:15.07,Default,,0,0,0,,nadaje dziełu niemal synestetyczną głębię, przepełniając je ciepłem,
+Dialogue: 0,0:11:15.09,0:11:17.31,Default,,0,0,0,,które wykracza poza zwykły wybór kolorystyczny.
+Dialogue: 0,0:11:17.62,0:11:19.14,Default,,0,0,0,,Chwila, gdzie wy wszystkie idziecie?
+Dialogue: 0,0:11:19.16,0:11:21.24,Default,,0,0,0,,Chciałabym jeszcze pospacerować po muzeum!
+Dialogue: 0,0:11:21.42,0:11:22.68,Default,,0,0,0,,Nie przejmuj się!
+Dialogue: 0,0:11:22.96,0:11:24.99,Default,,0,0,0,,I tak nie chcę, żebyś oglądała moją sztukę.
+Dialogue: 0,0:11:25.17,0:11:29.12,Default,,0,0,0,,Po nierównych pasemkach tandetnej farby we włosach widać,
+Dialogue: 0,0:11:29.14,0:11:31.65,Default,,0,0,0,,że tak naprawdę nie masz oka do sztuki.
+Dialogue: 0,0:11:31.94,0:11:32.42,Default,,0,0,0,,Ha!
+Dialogue: 0,0:11:32.71,0:11:33.11,Default,,0,0,0,,Ha!
+Dialogue: 0,0:11:33.37,0:11:34.12,Default,,0,0,0,,To prawda!
+Dialogue: 0,0:11:34.14,0:11:35.53,Default,,0,0,0,,Co ona może wiedzieć o sztuce?
+Dialogue: 0,0:11:35.55,0:11:37.73,Default,,0,0,0,,Ta suka czyta książki bez obrazków!
+Dialogue: 0,0:11:37.96,0:11:40.18,Default,,0,0,0,,No dobrze, ale przynajmniej weźcie swoją lemoniadę.
+Dialogue: 0,0:11:40.21,0:11:41.73,Default,,0,0,0,,Nawodnienie jest ważne!
+Dialogue: 0,0:11:42.73,0:11:44.81,Default,,0,0,0,,O mój Boże, Twilight, przestań!
+Dialogue: 0,0:11:44.84,0:11:47.05,Default,,0,0,0,, Jesteś dziś wyjątkowo irytująca!
+Dialogue: 0,0:11:47.41,0:11:50.51,Default,,0,0,0,,Chodźmy już, najwyższy czas zajrzeć do Cukrowego Kącika
+Dialogue: 0,0:11:50.54,0:11:52.35,Default,,0,0,0,,i zobaczyć, nad czym tam Pinkie pracuję!
+Dialogue: 0,0:11:52.37,0:11:57.59,Default,,0,0,0,,Eee, może zamiast tego pójdziemy na ten plenerowy koncert?
+Dialogue: 0,0:11:57.97,0:11:59.66,Default,,0,0,0,,Brzmi jak plan!
+Dialogue: 0,0:11:59.95,0:12:04.60,Default,,0,0,0,,I tak muszę przygotować się na koncert, który będę tam grać wieczorem,
+Dialogue: 0,0:12:04.62,0:12:08.06,Default,,0,0,0,,bo jestem, zajebiście sławna!
+Dialogue: 0,0:12:08.85,0:12:10.80,Default,,0,0,0,,O kurwa, patrzcie na frekwencję!
+Dialogue: 0,0:12:10.83,0:12:12.34,Default,,0,0,0,,Zawsze jest tak tłoczno?
+Dialogue: 0,0:12:15.06,0:12:16.83,Default,,0,0,0,,Są tu dwa konie.
+Dialogue: 0,0:12:17.16,0:12:19.39,Default,,0,0,0,,To dwa razy więcej niż ostatnio.
+Dialogue: 0,0:12:19.95,0:12:23.01,Default,,0,0,0,,Nic dziwnego, że jesteś taka bogata, Starsong!
+Dialogue: 0,0:12:23.36,0:12:26.74,Default,,0,0,0,,Sprzedaję bilety po siedem dolarów za sztukę.
+Dialogue: 0,0:12:26.76,0:12:32.48,Default,,0,0,0,,Czyli przy takiej ilości kucyków zarobię całe czternaście dolarów.
+Dialogue: 0,0:12:32.72,0:12:34.38,Default,,0,0,0,,Lepiej już pójdę na scenę.
+Dialogue: 0,0:12:34.41,0:12:37.18,Default,,0,0,0,,Koncert zaczyna się za 57 minut.
+Dialogue: 0,0:12:37.31,0:12:39.42,Default,,0,0,0,,Będziemy siedzieć w pierwszym rzędzie.
+Dialogue: 0,0:12:39.64,0:12:43.92,Default,,0,0,0,, Pod warunkiem, że te miejsca nie są już zajęte przez moich uwielbiających fanów.
+Dialogue: 0,0:12:44.05,0:12:44.68,Default,,0,0,0,,Nie są.
+Dialogue: 0,0:12:44.71,0:12:46.50,Default,,0,0,0,,Jest tu tylko dwóch innych kucyków.
+Dialogue: 0,0:12:52.29,0:13:00.97,piosenka,,0,0,0,,To pierwszy raz, gdy odchodzę od ciebie
+Dialogue: 0,0:13:02.95,0:13:13.99,piosenka,,0,0,0,,Ale już trzeci raz łamiesz coś nowego w sobie.
+Dialogue: 0,0:13:14.01,0:13:15.05,Default,,0,0,0,,Gdzie idziesz?
+Dialogue: 0,0:13:15.08,0:13:18.08,Default,,0,0,0,,Mówiłaś, że to twoja przyjaciółka, której dawno nie widziałaś!
+Dialogue: 0,0:13:14.16,0:13:24.67,piosenka,,0,0,0,,Nie płacz - powtarzam sobie, że to tylko w mojej głowie
+Dialogue: 0,0:13:18.74,0:13:19.66,Default,,0,0,0,,Spadam, suko.
+Dialogue: 0,0:13:19.69,0:13:23.15,Default,,0,0,0,,Nie mogę tu siedzieć i patrzeć,\Njak Starsong jest odnoszącą sukces milionerką.
+Dialogue: 0,0:13:23.79,0:13:25.92,Default,,0,0,0,,Nie kiedy ja jestem do niczego.
+Dialogue: 0,0:13:24.80,0:13:35.58,piosenka,,0,0,0,,Nie płacz – powtarzam sobie, że ty się w końcu obudzisz
+Dialogue: 0,0:13:27.66,0:13:29.86,Default,,0,0,0,,Ależ, skarbie, wcale nie jesteś do niczego!
+Dialogue: 0,0:13:29.88,0:13:31.01,Default,,0,0,0,,Właśnie że jest!
+Dialogue: 0,0:13:31.03,0:13:32.46,Default,,0,0,0,,Ja też idę.
+Dialogue: 0,0:13:32.48,0:13:37.25,Default,,0,0,0,,Muszę wrócić do Cukrowego Kącika, żeby rozładować ciasta z Manehattan.
+Dialogue: 0,0:13:37.27,0:13:39.60,Default,,0,0,0,,Znaczy się, upiec moje domowe ciasta.
+Dialogue: 0,0:13:55.00,0:14:01.94,miejsce,,0,0,0,,{\fad(500,500}Wiele lat temu...
+Dialogue: 0,0:14:03.58,0:14:05.09,Default,,0,0,0,,Wieczór, kumpelo!
+Dialogue: 0,0:14:05.11,0:14:07.21,Default,,0,0,0,,Czym mogę wam dziś służyć, moje drogie?
+Dialogue: 0,0:14:07.66,0:14:11.78,Default,,0,0,0,,Toola Roola chce pastelowy szalik na Festiwal Jesieni.
+Dialogue: 0,0:14:11.96,0:14:14.68,Default,,0,0,0,,Zrób coś zajebistego dla tej szmaty!
+Dialogue: 0,0:14:16.88,0:14:18.55,Default,,0,0,0,,Co za mała dziwka i kurwa!
+Dialogue: 0,0:14:18.57,0:14:22.85,Default,,0,0,0,,Moim zdaniem już wygląda wystarczająco szykownie,\Nale zobaczę, co da się zrobić.
+Dialogue: 0,0:14:24.55,0:14:25.98,Default,,0,0,0,,O mój boże!
+Dialogue: 0,0:14:26.00,0:14:28.14,Default,,0,0,0,,O mój boże!
+Dialogue: 0,0:14:42.68,0:14:43.62,Default,,0,0,0,,Wróciłam, moje drogie!
+Dialogue: 0,0:14:43.64,0:14:44.56,Default,,0,0,0,,Co o tym myślicie?
+Dialogue: 0,0:14:44.59,0:14:45.94,Default,,0,0,0,,Czy to nie wygląda po prostu oszałamiająco?
+Dialogue: 0,0:14:46.66,0:14:49.89,Default,,0,0,0,,Trochę drogo, ale dokładnie tego chciałam!
+Dialogue: 0,0:14:50.06,0:14:51.64,Default,,0,0,0,,Podziękujesz mi po zapłaceniu.
+Dialogue: 0,0:14:52.53,0:14:55.99,Default,,0,0,0,,Rainbow naprawdę potrafi robić ciuchy w tej dziurze.
+Dialogue: 0,0:14:56.01,0:15:00.10,Default,,0,0,0,,To jedyna dobra rzecz, jaką uszyła w ciągu ostatniego roku.
+Dialogue: 0,0:15:00.13,0:15:01.50,Default,,0,0,0,,Tak, jest tak dobra,
+Dialogue: 0,0:15:01.67,0:15:04.36,Default,,0,0,0,,to prawie jakby ta lezba jej nie zrobiła.
+Dialogue: 0,0:15:06.57,0:15:08.11,Default,,0,0,0,,{\i1}Jest tak dobra.
+Dialogue: 0,0:15:08.14,0:15:11.17,Default,,0,0,0,,{\i1}To prawie jakby ta lezba jej nie zrobiła.
+Dialogue: 0,0:15:31.36,0:15:37.30,miejsce,,0,0,0,,{\fad(500,500}Następnego dnia...
+Dialogue: 0,0:15:31.86,0:15:33.96,Default,,0,0,0,, Łoo, czy to ten sam balon
+Dialogue: 0,0:15:33.98,0:15:36.65,Default,,0,0,0,,w którym lataliśmy podczas tej przygody z Twinkle Wish?
+Dialogue: 0,0:15:36.67,0:15:38.12,Default,,0,0,0,,Co to jest Twinkle Wish?
+Dialogue: 0,0:15:38.14,0:15:39.64,Default,,0,0,0,,Dlaczego ciągle o tym mówisz?
+Dialogue: 0,0:15:39.89,0:15:40.99,Default,,0,0,0,,Tak samo.
+Dialogue: 0,0:15:41.01,0:15:45.19,Default,,0,0,0,,Kupiłam ją w lombardzie, gdy Pinkie zastawiła ją za paczkę miętowych cukierków.
+Dialogue: 0,0:15:45.21,0:15:47.88,Default,,0,0,0,,Dlaczego nie wejdziesz na pokład jak za dawnych czasów?
+Dialogue: 0,0:15:48.18,0:15:49.28,Default,,0,0,0,,O tak, z przyjemnością!
+Dialogue: 0,0:15:49.50,0:15:52.84,Default,,0,0,0,,Wiesz, możesz zawsze polecieć z nami.
+Dialogue: 0,0:15:53.17,0:15:55.77,Default,,0,0,0,,Dzięki za ofertę, ale my-
+Dialogue: 0,0:15:55.80,0:15:56.80,Default,,0,0,0,,Na prawdę?
+Dialogue: 0,0:15:56.83,0:15:58.05,Default,,0,0,0,,Byłoby świetnie!
+Dialogue: 0,0:15:58.46,0:16:01.88,Default,,0,0,0,, Ale Rainbow, co z Twilight i resztą?
+Dialogue: 0,0:16:01.90,0:16:03.46,Default,,0,0,0,, Zawsze możesz napisać listy.
+Dialogue: 0,0:16:03.48,0:16:05.07,Default,,0,0,0,, Nie bądź nudną suką.
+Dialogue: 0,0:16:05.33,0:16:10.16,Default,,0,0,0,,No i mam jeszcze apartamentowiec w Las Pegasus, który tylko zbiera kurz.
+Dialogue: 0,0:16:10.18,0:16:12.23,Default,,0,0,0,,Możesz tam mieszkać, jeśli chcesz.
+Dialogue: 0,0:16:12.25,0:16:13.69,Default,,0,0,0,,Pokochałabyś widoki.
+Dialogue: 0,0:16:13.87,0:16:15.04,Default,,0,0,0,, Słyszysz, Pinkie?
+Dialogue: 0,0:16:15.07,0:16:16.46,Default,,0,0,0,,Apartament w górach!
+Dialogue: 0,0:16:16.60,0:16:18.32,Default,,0,0,0,,Ale ja boję się wysokości!
+Dialogue: 0,0:16:18.34,0:16:21.03,Default,,0,0,0,,A co z Applejack i Fluttershy?
+Dialogue: 0,0:16:21.28,0:16:22.44,Default,,0,0,0,,Kim jest Fluttershy?
+Dialogue: 0,0:16:23.09,0:16:25.83,Default,,0,0,0,,Pinkie, te dwie suki były naszymi pierwszymi przyjaciółkami!
+Dialogue: 0,0:16:26.16,0:16:28.66,Default,,0,0,0,, Jeśli chcesz lecieć, nie będę cię powstrzymywać.
+Dialogue: 0,0:16:28.69,0:16:31.51,Default,,0,0,0,,Znaczy, wiedziałam, że chciałaś więcej eksplorować
+Dialogue: 0,0:16:31.53,0:16:34.47,Default,,0,0,0,,Liczyłam tylko, że zrobisz to mojej dupie
+Dialogue: 0,0:16:34.49,0:16:35.75,Default,,0,0,0,,Ale jeśli naprawdę-
+Dialogue: 0,0:16:35.77,0:16:37.63,Default,,0,0,0,,Spoko, nara suko!
+Dialogue: 0,0:16:37.65,0:16:40.58,Default,,0,0,0,,Zadzwonię, gdy dotrę do swojego zajebistego apartamentu.
+Dialogue: 0,0:16:40.61,0:16:44.40,Default,,0,0,0,,A jeśli nie, to pewnie dlatego, że kupię nowy telefon, bo będę mieć kupę kasy.
+Dialogue: 0,0:16:52.53,0:16:55.52,Default,,0,0,0,,Hej Twilight, widziałaś Rainbow Dash?
+Dialogue: 0,0:16:55.55,0:16:57.76,Default,,0,0,0,,Wisi mi 12 dolarów.
+Dialogue: 0,0:16:57.97,0:16:59.44,Default,,0,0,0,,Odeszła, Applejack.
+Dialogue: 0,0:16:59.47,0:17:00.68,Default,,0,0,0,,Odeszła?
+Dialogue: 0,0:17:00.70,0:17:01.35,Default,,0,0,0,,Co?
+Dialogue: 0,0:17:01.37,0:17:02.71,Default,,0,0,0,,Gdzie poszła?
+Dialogue: 0,0:17:02.93,0:17:04.06,Default,,0,0,0,,Po prostu zniknęła.
+Dialogue: 0,0:17:04.34,0:17:06.91,Default,,0,0,0,,Co masz na myśli, że zniknęła?
+Dialogue: 0,0:17:06.93,0:17:08.50,Default,,0,0,0,,Czy wszystko z nią w porządku?
+Dialogue: 0,0:17:08.63,0:17:11.07,Default,,0,0,0,,Wyleciała z Toolą Roolą i Starsong.
+Dialogue: 0,0:17:11.10,0:17:12.89,Default,,0,0,0,,Kim do chuja jest Toola Roola?
+Dialogue: 0,0:17:13.03,0:17:16.25,Default,,0,0,0,,Te imię brzmi jak płatki śniadaniowe.
+Dialogue: 0,0:17:16.49,0:17:19.38,Default,,0,0,0,,Nie chcę tego słyszeć od kogoś, kto nazywa się Applejack.
+Dialogue: 0,0:17:19.67,0:17:21.41,Default,,0,0,0,,To koniec z żywiołem lojalności.
+Dialogue: 0,0:17:21.70,0:17:23.80,Default,,0,0,0,,Nawet jeśli zmieni zdanie za tydzień,
+Dialogue: 0,0:17:23.82,0:17:28.42,Default,,0,0,0,, i tak powinniśmy odebrać jej ten tytuł i dać go mnie.
+Dialogue: 0,0:17:28.80,0:17:30.54,Default,,0,0,0,,Przecież mogę mieć dwa.
+Dialogue: 0,0:17:30.96,0:17:35.03,Default,,0,0,0,,Fluttershy, przestań traktować żywioły harmonii jak sprawności harcerskie.
+Dialogue: 0,0:17:35.05,0:17:36.18,Default,,0,0,0,,A dlaczego nie mogę?
+Dialogue: 0,0:17:36.47,0:17:38.61,Default,,0,0,0,,Dlaczego ty masz element magii?
+Dialogue: 0,0:17:38.63,0:17:40.19,Default,,0,0,0,,Bo potrafię używać magii.
+Dialogue: 0,0:17:40.35,0:17:42.43,Default,,0,0,0,,Ale Rarity też potrafi używać magii.
+Dialogue: 0,0:17:42.46,0:17:44.03,Default,,0,0,0,,Dlaczego ona go też nie może mieć?
+Dialogue: 0,0:17:44.35,0:17:46.21,Default,,0,0,0,,Bo tak to nie działa.
+Dialogue: 0,0:17:46.36,0:17:47.36,Default,,0,0,0,,A powinno.
+Dialogue: 0,0:17:47.94,0:17:51.75,Default,,0,0,0,,Teraz rozumiem, dlaczego Rainbow Dash nie pożegnała się z tobą.
+Dialogue: 0,0:17:54.58,0:17:57.12,Default,,0,0,0,,Biedna Pinkie Pie, wygląda na taką smutną.
+Dialogue: 0,0:17:58.56,0:18:00.97,Default,,0,0,0,,Zawsze możesz ją odwiedzić, kiedy tylko zechcesz.
+Dialogue: 0,0:18:01.19,0:18:02.34,Default,,0,0,0,,Chyba masz rację.
+Dialogue: 0,0:18:02.66,0:18:08.48,Default,,0,0,0,, I nawet jeśli nie jest tak, jakbyśmy chcieli,\Ni wszystkie jej ciasta są importowane z Manehattan,
+Dialogue: 0,0:18:08.51,0:18:11.57,Default,,0,0,0,,dobrze wiedzieć, że jest stabilna finansowo.
+Dialogue: 0,0:18:11.59,0:18:13.78,Default,,0,0,0,,Czekaj, czyli wy wiedziałyście o tym przez cały ten czas?
+Dialogue: 0,0:18:14.06,0:18:16.42,Default,,0,0,0,,W takim razie chyba i moja ściema się wydała.
+Dialogue: 0,0:18:16.44,0:18:18.81,Default,,0,0,0,,Ten butik, który wam pokazałam, nie był naprawdę mój.
+Dialogue: 0,0:18:18.84,0:18:23.00,Default,,0,0,0,,Należał do mojej przyjaciółki Rarity, a ta dziewczynka w szafie to jej siostra.
+Dialogue: 0,0:18:23.02,0:18:24.66,Default,,0,0,0,,Nie jestem tak naprawdę pedofilem.
+Dialogue: 0,0:18:25.08,0:18:26.12,Default,,0,0,0,,To dobrze.
+Dialogue: 0,0:18:26.14,0:18:29.51,Default,,0,0,0,,Nie potrzebujemy dwóch pedofilów w tym balonie, haha.
+Dialogue: 0,0:18:30.28,0:18:31.69,Default,,0,0,0,,Ale jest nas tutaj trzy.
+Dialogue: 0,0:18:32.39,0:18:33.98,Default,,0,0,0,,Czekaj, czy któraś z was...?
+Dialogue: 0,0:20:45.66,0:20:48.40,Default,,0,0,0,,Dzięki jeszcze raz, że mogłam się z wami spotkać.
+Dialogue: 0,0:20:48.69,0:20:50.50,Default,,0,0,0,, To było wszystko, czego zawsze chciałam.
+Dialogue: 0,0:20:50.89,0:20:53.92,Default,,0,0,0,,Hej, nie ma problemu, wiesz, że zawsze cię lubiłyśmy.
+Dialogue: 0,0:20:54.16,0:20:56.75,Default,,0,0,0,,Kto chce zagrać teraz w Candyland?
+Dialogue: 0,0:20:56.78,0:20:58.19,Default,,0,0,0,, Brzmi super!
+Dialogue: 0,0:20:58.22,0:21:02.08,Default,,0,0,0,,Uwielbiam Candyland, bo ma dużo kolorów!
+Dialogue: 0,0:21:02.63,0:21:06.09,Default,,0,0,0,,Derpy, miałaś powiedzieć "nie", tak jak zawsze robiła Rainbow Dash.
+Dialogue: 0,0:21:06.34,0:21:09.68,Default,,0,0,0,, Zaczynam myśleć, że spotykacie się ze mną
+Dialogue: 0,0:21:09.70,0:21:12.66,Default,,0,0,0,,tylko jako zastępstwo za Rainbow Dash.
+Dialogue: 0,0:21:12.68,0:21:13.47,Default,,0,0,0,,I wiecie co?
+Dialogue: 0,0:21:13.49,0:21:14.75,Default,,0,0,0,,Nie mam z tym problemu!
+Dialogue: 0,0:21:16.57,0:21:17.75,Default,,0,0,0,,Rainbow Dash!
+Dialogue: 0,0:21:17.77,0:21:18.43,Default,,0,0,0,, Dashie!
+Dialogue: 0,0:21:18.81,0:21:24.15,Default,,0,0,0,,Nie myślałyście chyba serio, że zostawię\Nwas same w tym zasranym mieście Ponyville, co?
+Dialogue: 0,0:21:26.08,0:21:27.74,Default,,0,0,0,,Derpy, możesz już iść do domu.
+Dialogue: 0,0:21:27.76,0:21:29.71,Default,,0,0,0,,Twoja przydatność dobiegła końca.
+Dialogue: 0,0:21:30.10,0:21:32.59,Default,,0,0,0,,Co, będziecie grać w Candyland?
+Dialogue: 0,0:21:32.62,0:21:34.51,Default,,0,0,0,,Uwielbiam tę grę w chuj!
+Dialogue: 0,0:21:34.84,0:21:37.65,Default,,0,0,0,, Zróbcie miejsce też dla mnie, suki!
+Dialogue: 0,0:21:37.67,0:21:40.58,Default,,0,0,0,,Applejack, Rarity, wy dwie też możecie iść do domu.
+Dialogue: 0,0:21:40.70,0:21:41.39,Default,,0,0,0,,Dlaczego my?
+Dialogue: 0,0:21:41.99,0:21:44.87,Default,,0,0,0,,Wiecie, że lubimy spotykać się tylko w szóstkę.
+Dialogue: 0,0:21:45.87,0:21:49.17,Default,,0,0,0,,Chodź, Rarity, chodźmy, zanim nas zje.
+Dialogue: 0,0:21:52.12,0:21:55.41,Default,,0,0,0,,Chcecie wpaść do mnie i zjeść popcorn?
+Dialogue: 0,0:21:55.44,0:21:59.99,Default,,0,0,0,,Mam taką metalową puszkę, jaką sprzedają w święta,
+Dialogue: 0,0:22:00.02,0:22:04.60,Default,,0,0,0,,podzieloną na trzy części, zwykły popcorn, karmelowy
+Dialogue: 0,0:22:04.63,0:22:08.44,Default,,0,0,0,,i ten serowy cheddarowy, którego nikt nigdy nie je.
+Dialogue: 0,0:22:08.47,0:22:11.37,Default,,0,0,0,,Założę się, że we trzy mogłybyśmy go zjeść!
+Dialogue: 0,0:22:11.75,0:22:13.40,Default,,0,0,0,,Nie lubię popcornu cheddarowego.
+Dialogue: 0,0:22:13.70,0:22:15.28,Default,,0,0,0,,Właśnie dlatego o nim mówię.
+Dialogue: 0,0:22:15.38,0:22:16.91,Default,,0,0,0,,Muszę się go pozbyć.
+Dialogue: 0,0:22:17.29,0:22:22.69,Default,,0,0,0,,Bez urazy, Derpy, ale wolałabym się zabić, niż spędzić z tobą więcej czasu.
+Dialogue: 0,0:22:22.72,0:22:25.58,Default,,0,0,0,,Patrzenie na twoje oczy trochę mnie obrzydza.
+Dialogue: 0,0:22:25.60,0:22:27.43,Default,,0,0,0,,Na pewno rozumiesz.
+Dialogue: 0,0:22:27.84,0:22:31.61,Default,,0,0,0,,Ja... ja też nie patrzę często na własną twarz,
+Dialogue: 0,0:22:31.64,0:22:34.67,Default,,0,0,0,,bo ciężko mi się patrzy na siebie w lustrze.
+Dialogue: 0,0:22:35.18,0:22:37.21,Default,,0,0,0,,Kurde, skoro tak to u ciebie wygląda,
+Dialogue: 0,0:22:37.23,0:22:39.43,Default,,0,0,0,,to wyobraź sobie, jak beznadziejnie jest dla nas.

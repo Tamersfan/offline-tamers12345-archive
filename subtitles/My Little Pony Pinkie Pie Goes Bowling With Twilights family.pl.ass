@@ -1,0 +1,600 @@
+﻿[Script Info]
+; This is an Advanced Sub Station Alpha v4+ script.
+Title: 
+ScriptType: v4.00+
+PlayDepth: 0
+ScaledBorderAndShadow: Yes
+PlayResX: 1920
+PlayResY: 1080
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default,Arial,50,&H00FFFFFF,&H0000FFFF,&H39000000,&HFF000000,0,0,0,0,100,100,0,0,3,1.0,1,2,10,10,10,1
+Style: czas,Arial,90,&H00FFFFFF,&H0000FFFF,&H00000000,&HFF000000,0,0,0,0,100,100,0,0,3,1.0,1,7,10,10,10,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:03.12,0:00:04.03,Default,,0,0,0,,To nie moja wina!
+Dialogue: 0,0:00:04.37,0:00:05.10,Default,,0,0,0,,Przysięgam!
+Dialogue: 0,0:00:05.68,0:00:09.00,Default,,0,0,0,,Kiedy w końcu zrozumiecie kucyki,\Nże nie ma znaczenia, co kurwa mówicie?
+Dialogue: 0,0:00:09.21,0:00:11.63,Default,,0,0,0,,Jeśli powiesz, że tego nie zrobiłaś, to ja powiem, że zrobiłaś,
+Dialogue: 0,0:00:11.66,0:00:15.15,Default,,0,0,0,,a ludzie mi uwierzą, bo jestem jebaną księżniczką Celestią.
+Dialogue: 0,0:00:15.39,0:00:17.98,Default,,0,0,0,,Strażnicy, zakujcie ją z dyby obok lampy grzewczej!
+Dialogue: 0,0:00:18.15,0:00:19.46,Default,,0,0,0,,Tak jest!
+Dialogue: 0,0:00:19.93,0:00:23.62,Default,,0,0,0,,Chcę, żeby ta suka była gorąca i gotowa jak Little Caesars Pizza.
+Dialogue: 0,0:00:25.73,0:00:28.11,Default,,0,0,0,,O kurczę, czy jakiś kucyk powidział pizza?
+Dialogue: 0,0:00:28.56,0:00:32.28,Default,,0,0,0,,Twilight Sparkle, moja posłuszna kurewko,\Nzjawiłaś się w dobrym momencie,
+Dialogue: 0,0:00:32.31,0:00:38.31,Default,,0,0,0,,by móc ujrzeć brutalne lanie, które za chwilę rozegra się na tych\Nzdradzieckich, śmierdzących pośladkach kucyka.
+Dialogue: 0,0:00:38.33,0:00:40.87,Default,,0,0,0,,Będzie musiała spać na brzuchu, kiedy skończę z nią.
+Dialogue: 0,0:00:41.05,0:00:42.08,Default,,0,0,0,,Co ona zrobiła?
+Dialogue: 0,0:00:42.15,0:00:43.71,Default,,0,0,0,,Szczerze mówiąc, nie pamiętam.
+Dialogue: 0,0:00:43.83,0:00:47.45,Default,,0,0,0,,Ale musiała zrobić coś, co mi strasznie utrudniło życie.
+Dialogue: 0,0:00:47.48,0:00:52.83,Default,,0,0,0,,Na przykład dobudować pokój, w którym drzwi są za niskie, żebym mogła przejść.
+Dialogue: 0,0:00:53.11,0:00:54.78,Default,,0,0,0,,Nie torturujesz jej, prawda?
+Dialogue: 0,0:00:54.80,0:00:56.91,Default,,0,0,0,,Oj, nie rzucaj takimi słówkami, skarbie.
+Dialogue: 0,0:00:56.94,0:01:01.21,Default,,0,0,0,,Kiedy jest spragniona, dostaje schłodzoną\Nszklankę z moimi jebanymi szczynami
+Dialogue: 0,0:01:01.23,0:01:03.46,Default,,0,0,0,,zmieszanymi z sokiem owocowym i wódką.
+Dialogue: 0,0:01:03.59,0:01:05.62,Default,,0,0,0,,A jeśli dalej będzie się zachowywać,
+Dialogue: 0,0:01:05.64,0:01:09.22,Default,,0,0,0,,dostanie dwa ziarna z beczki co sześć godzin.
+Dialogue: 0,0:01:09.25,0:01:11.42,Default,,0,0,0,,Posłuchaj, Księżniczko, nie chcę cię zawstydzać,
+Dialogue: 0,0:01:11.44,0:01:13.92,Default,,0,0,0,,ale czy nie masz dla mnie jakiś ważniejszych próśb?
+Dialogue: 0,0:01:13.95,0:01:14.67,Default,,0,0,0,,Nie.
+Dialogue: 0,0:01:14.91,0:01:16.75,Default,,0,0,0,,Czy to kolejna gra o władzę?
+Dialogue: 0,0:01:17.10,0:01:18.23,Default,,0,0,0,,Oo właśnie, zapomniałam.
+Dialogue: 0,0:01:18.26,0:01:21.51,Default,,0,0,0,,Dziś rano doszły mnie słuchy o jakiejś pojebanej anomalii w Ponyville,
+Dialogue: 0,0:01:21.54,0:01:23.91,Default,,0,0,0,,dokładniej koło szkoły w Ponyville.
+Dialogue: 0,0:01:24.31,0:01:25.03,Default,,0,0,0,,Anomalii?
+Dialogue: 0,0:01:25.28,0:01:28.16,Default,,0,0,0,,Czy to kolejny złoczyńca próbujący zniszczyć świat?
+Dialogue: 0,0:01:28.19,0:01:31.73,Default,,0,0,0,,Nie, to bardziej taki zjebany, upośledzony alikorn.
+Dialogue: 0,0:01:31.92,0:01:36.22,Default,,0,0,0,,Ale myślałam, że ty i księżniczka luna jesteście\Njedynymi istniejącymi alikornami!
+Dialogue: 0,0:01:33.56,0:01:35.53,czas,,0,0,0,,(i Cadance)
+Dialogue: 0,0:01:36.54,0:01:40.57,Default,,0,0,0,,Ja też, dlatego chcę, żebyś to zbadała, mój mały kucyku-gówniarzu.
+Dialogue: 0,0:01:40.83,0:01:43.75,Default,,0,0,0,,Wysłałabym siostrę, ale w niedziele ze mną nie rozmawia,
+Dialogue: 0,0:01:43.78,0:01:46.48,Default,,0,0,0,,bo wyśmiewam jej mniejszą, czarną koronę.
+Dialogue: 0,0:01:50.32,0:01:51.65,Default,,0,0,0,,Pinkie Pie, wiesz co?
+Dialogue: 0,0:01:51.75,0:01:54.50,Default,,0,0,0,,Księżniczka Celestia dała mi kolejne zadanie do zrobienia!
+Dialogue: 0,0:01:54.87,0:01:56.32,Default,,0,0,0,,To świetnie, Twilight!
+Dialogue: 0,0:01:56.64,0:02:00.23,Default,,0,0,0,,Teraz znów możesz być monotonnie wychwalana\Nprzez naszego boga słońca,
+Dialogue: 0,0:02:00.25,0:02:05.44,Default,,0,0,0,,zamiast faktycznie wpływać pozytywnie\Nna naszą społeczność własnymi decyzjami.
+Dialogue: 0,0:02:07.17,0:02:08.76,Default,,0,0,0,,Tylko jest mały problem.
+Dialogue: 0,0:02:08.78,0:02:13.05,Default,,0,0,0,,Moja rodzina też się spotyka na wspólnym wyjściu w kręgielni w Ponyville.
+Dialogue: 0,0:02:13.07,0:02:17.11,Default,,0,0,0,,To nasza tradycja, bo wszyscy dzielimy miłość do dużych kul.
+Dialogue: 0,0:02:17.13,0:02:20.03,Default,,0,0,0,,A ja mam być tam gwiazdą wieczoru,
+Dialogue: 0,0:02:20.05,0:02:24.14,Default,,0,0,0,,bo zawsze, gdy się pojawiam, kucyki się mnie pytają,\Ndlaczego mieszkam w gigantycznym drzewie,
+Dialogue: 0,0:02:24.46,0:02:26.51,Default,,0,0,0,,Dom w drzewie i wielkie kule?
+Dialogue: 0,0:02:26.53,0:02:32.51,Default,,0,0,0,,Jesteś chyba najszczęśliwszym kucykiem na świecie,\Nale chwila, jak możesz być w dwóch miejscach naraz?
+Dialogue: 0,0:02:32.93,0:02:34.70,Default,,0,0,0,,I tu wkraczasz ty, Pinkie Pie.
+Dialogue: 0,0:02:35.12,0:02:37.95,Default,,0,0,0,,Chcę, żebyś spotkała się z moimi rodzicami i udawać mnie.
+Dialogue: 0,0:02:38.29,0:02:39.51,Default,,0,0,0,,Udawać ciebie?
+Dialogue: 0,0:02:39.54,0:02:40.68,Default,,0,0,0,,Ale jestem różowa!
+Dialogue: 0,0:02:40.77,0:02:42.28,Default,,0,0,0,,Jak niby mam...
+Dialogue: 0,0:02:42.31,0:02:46.10,Default,,0,0,0,,Ooo, czyżbyś miała jakieś super hiper zaklęcie przemiany?
+Dialogue: 0,0:02:53.52,0:02:56.37,Default,,0,0,0,,Pinkie, właśnie ochlapałaś mi całą twarz!
+Dialogue: 0,0:02:56.64,0:03:01.35,Default,,0,0,0,,Hehe, przepraszam, trochę mi się gazuje,\Ngdy ktoś łaskocze mnie po pośladkach.
+Dialogue: 0,0:03:01.90,0:03:03.62,Default,,0,0,0,,To powinno być wystarczająco akceptowalne.
+Dialogue: 0,0:03:03.76,0:03:05.40,Default,,0,0,0,,Co z moja ogromną fryzurą?
+Dialogue: 0,0:03:05.93,0:03:09.66,Default,,0,0,0,,Twoja fryzura jest równie dzika jak ty, tej bestii nie da się okiełznać.
+Dialogue: 0,0:03:09.69,0:03:14.59,Default,,0,0,0,,Teraz muszę cię tak jakby przeprosić,\N bo muszę stopić się jak lody i wybanananiać stąd.
+Dialogue: 0,0:03:15.21,0:03:18.23,Default,,0,0,0,,Twilight, czemu po prostu nie powiesz mamie i tacie,
+Dialogue: 0,0:03:18.25,0:03:20.36,Default,,0,0,0,,że nie chcesz się już bawić ich kulami?
+Dialogue: 0,0:03:20.88,0:03:23.28,Default,,0,0,0,,Nic dziwnego, że nie rozumiesz rodzinnych dramatów,
+Dialogue: 0,0:03:23.31,0:03:25.71,Default,,0,0,0,,skoro twoi rodzice zostawili cię na obcym progu.
+Dialogue: 0,0:03:25.98,0:03:28.29,Default,,0,0,0,,Zazwyczaj rodzice mają coś takiego jak testament,
+Dialogue: 0,0:03:28.40,0:03:29.90,Default,,0,0,0,,Wiesz, co to testament, Pinkie?
+Dialogue: 0,0:03:30.03,0:03:32.62,Default,,0,0,0,,To coś, czego się używa do odtykania toalety!
+Dialogue: 0,0:03:32.99,0:03:34.24,Default,,0,0,0,,Nie, to przepychaczka.
+Dialogue: 0,0:03:34.26,0:03:35.68,Default,,0,0,0,,Testament, to dokument prawny
+Dialogue: 0,0:03:35.70,0:03:39.17,Default,,0,0,0,,który określa, co stanie się z własnością kucyka po jego śmierci.
+Dialogue: 0,0:03:39.19,0:03:42.41,Default,,0,0,0,,Jeśli nie będę się dobrze z nimi dogadywała, mogą mnie z niego wypisać.
+Dialogue: 0,0:03:43.09,0:03:46.27,Default,,0,0,0,,Wygląda na to, że całkiem sporo ryzykujesz, wiesz?
+Dialogue: 0,0:03:46.64,0:03:48.30,Default,,0,0,0,,Najlepsze w hazardzie jest to,
+Dialogue: 0,0:03:48.33,0:03:51.19,Default,,0,0,0,,że jeśli gra się wystarczająco długo, w końcu trafi się główną wygraną.
+Dialogue: 0,0:03:51.35,0:03:53.90,Default,,0,0,0,,Więc, czy ja coś z tego będę miała?
+Dialogue: 0,0:03:53.92,0:03:57.64,Default,,0,0,0,,Na przykład ciasto albo pyszne cukierki z Canterlot?
+Dialogue: 0,0:03:58.22,0:04:02.20,Default,,0,0,0,,Cóż, różowa dziwko, dostajesz coś o wiele cenniejszego niż cukierki.
+Dialogue: 0,0:04:02.22,0:04:04.39,Default,,0,0,0,,Dostajesz dreszczyk emocji mając świadomość,
+Dialogue: 0,0:04:04.41,0:04:06.70,Default,,0,0,0,, że rozkazywała ci uczennica samej wielkiej księżniczki.
+Dialogue: 0,0:04:06.81,0:04:08.82,Default,,0,0,0,,Jak często kucyki mogą się tym pochwalić?
+Dialogue: 0,0:04:09.20,0:04:10.33,Default,,0,0,0,,Dosyć często,
+Dialogue: 0,0:04:10.36,0:04:11.91,Default,,0,0,0,,Jesteś trochę apodyktyczna.
+Dialogue: 0,0:04:13.69,0:04:14.60,Default,,0,0,0,,Co tam, suko?
+Dialogue: 0,0:04:15.14,0:04:17.80,Default,,0,0,0,,Shining Armor, co ci się stało w oko?
+Dialogue: 0,0:04:18.19,0:04:20.56,Default,,0,0,0,,Książe Blueblood uderzył mnie w twarz.
+Dialogue: 0,0:04:21.07,0:04:26.56,Default,,0,0,0,,Wiesz, nie ważne ile razy się kłóciliśmy,\Nnigdy nie podniosłam na ciebie kopyta.
+Dialogue: 0,0:04:27.00,0:04:29.20,Default,,0,0,0,,Twilight jeszcze nigdy nie spóźniła się tak bardzo!
+Dialogue: 0,0:04:29.22,0:04:32.15,Default,,0,0,0,,Co jeśli coś jej się stało? Powinniśmy iść na policję?
+Dialogue: 0,0:04:32.56,0:04:36.29,Default,,0,0,0,,Jeśli tak się stało, będziemy musieli uprawiać dużo seksu,\Naż doczekamy się kolejnej córki.
+Dialogue: 0,0:04:36.31,0:04:40.68,Default,,0,0,0,,Dla ogiera takiego jak ja to nic trudnego, bo jestem świetny w ruchaniu i w ogóle.
+Dialogue: 0,0:04:41.08,0:04:43.99,Default,,0,0,0,,Nie martw się mamo, na pewno jest po prostu zajęta pracą.
+Dialogue: 0,0:04:44.20,0:04:46.39,Default,,0,0,0,,Bycie członkiem rodziny królewskiej nie jest proste, wiesz?
+Dialogue: 0,0:04:46.61,0:04:50.66,Default,,0,0,0,,Za każdym razem chce mi się śmiać, gdy słyszę,\Njak narzekacie na swoje problemy, będąc cholernie bogatymi,
+Dialogue: 0,0:04:50.74,0:04:53.35,Default,,0,0,0,,Podczas gry my wegetujemy w tym\Nrozpadającym się mieszkaniu w Canterlocie.
+Dialogue: 0,0:04:53.37,0:04:55.15,Default,,0,0,0,,Nie przejmuj się swoim tatą.
+Dialogue: 0,0:04:55.30,0:04:57.74,Default,,0,0,0,,Wciąż uważam, że jesteś wspaniałym ogierem.
+Dialogue: 0,0:04:57.78,0:05:01.30,Default,,0,0,0,,Nawet jeśli rzuciłeś mnie dla jakiegoś przypadkowego sugar daddy'ego.
+Dialogue: 0,0:05:01.46,0:05:03.22,Default,,0,0,0,,Cadence, jakby to powiedzieć...
+Dialogue: 0,0:05:03.45,0:05:06.86,Default,,0,0,0,,Zawsze byłaś dla mnie taka dobra, niezależnie od tego,\Nczy byliśmy razem, czy nie.
+Dialogue: 0,0:05:07.16,0:05:09.32,Default,,0,0,0,,A ja tylko traktowałem cię jak gówno.
+Dialogue: 0,0:05:09.35,0:05:10.19,Default,,0,0,0,,Shiny.
+Dialogue: 0,0:05:10.48,0:05:12.19,Default,,0,0,0,,Nie, pozwól mi to powiedzieć, Cadence.
+Dialogue: 0,0:05:12.47,0:05:16.89,Default,,0,0,0,,Wiem, że faceci jak ja nie zasługują na drugą szanse.\NWiem, że zjebałem, ale ja...
+Dialogue: 0,0:05:16.91,0:05:20.53,Default,,0,0,0,,Co ja ci kurwa mówiłem o odzywaniu się\Npod moją nieobecność, Shining Armor?
+Dialogue: 0,0:05:20.80,0:05:21.50,Default,,0,0,0,,Blueblood,
+Dialogue: 0,0:05:21.75,0:05:22.58,Default,,0,0,0,,ja tylko...
+Dialogue: 0,0:05:22.60,0:05:25.15,Default,,0,0,0,,Nie masz prawa się odzywać, dopóki ci nie pozwolę!
+Dialogue: 0,0:05:25.64,0:05:28.41,Default,,0,0,0,,Twoją jedyną rolą jest bycie widzianym, nie słyszanym.
+Dialogue: 0,0:05:28.64,0:05:31.42,Default,,0,0,0,,Słuchaj, to tylko małe spotkanie, okej?
+Dialogue: 0,0:05:31.58,0:05:33.32,Default,,0,0,0,,Rozumiem, że to moja była i w ogóle, ale...
+Dialogue: 0,0:05:33.34,0:05:35.50,Default,,0,0,0,,Czy koniecznie musisz z nią rozmawiać?
+Dialogue: 0,0:05:35.83,0:05:38.62,Default,,0,0,0,,Przecież wyraźnie widzi, że stoisz tam jak jakiś głupi pedał.
+Dialogue: 0,0:05:38.79,0:05:40.06,Default,,0,0,0,,Czyżby ta dziwka była ślepa?
+Dialogue: 0,0:05:40.22,0:05:41.99,Default,,0,0,0,,Jest upośledzona, czy ślepa?
+Dialogue: 0,0:05:42.02,0:05:43.04,Default,,0,0,0,,Shining Armor!
+Dialogue: 0,0:05:43.17,0:05:46.10,Default,,0,0,0,,Z tą swoją idiotyczną fryzurą to na pewno jedno albo drugie.
+Dialogue: 0,0:05:46.26,0:05:49.25,Default,,0,0,0,,Nie, jeśli chodzi o ślepotę, co do upośledzenia, może.
+Dialogue: 0,0:05:49.28,0:05:50.63,Default,,0,0,0,,Czyli to nie jest konieczne.
+Dialogue: 0,0:05:50.65,0:05:52.97,Default,,0,0,0,,Za to konieczne jest to, byś znał swoje miejsce!
+Dialogue: 0,0:05:52.99,0:05:54.64,Default,,0,0,0,,Ty nie jesteś od podejmowania decyzji!
+Dialogue: 0,0:05:54.75,0:05:56.87,Default,,0,0,0,,Jesteś od wyglądania ładnie i bycia cicho!
+Dialogue: 0,0:05:56.89,0:05:58.92,Default,,0,0,0,,Nie jesteś ważny, Shining Armor.
+Dialogue: 0,0:05:59.02,0:06:00.53,Default,,0,0,0,,A na pewno nie w taki sposób jak myślisz!
+Dialogue: 0,0:06:00.55,0:06:02.03,Default,,0,0,0,,Twoje opinie nic nie znaczą!
+Dialogue: 0,0:06:02.23,0:06:04.68,Default,,0,0,0,,I spodziewam się, że teraz chcesz, żebym przeprosił?
+Dialogue: 0,0:06:04.77,0:06:06.82,Default,,0,0,0,,Przeprosiny nie cofną twojego braku szacunku!
+Dialogue: 0,0:06:07.00,0:06:09.27,Default,,0,0,0,,Powinieneś być wdzięczny, że cię nie odrzucam.
+Dialogue: 0,0:06:09.55,0:06:12.64,Default,,0,0,0,,Jest mnóstwo kucyków, które byłyby zachwycone, by zająć twoje miejsce.
+Dialogue: 0,0:06:12.76,0:06:14.34,Default,,0,0,0,,Nawet jeśli nie mieliby prawa głosu.
+Dialogue: 0,0:06:15.95,0:06:18.03,Default,,0,0,0,,W drogę, moja rodzinko!
+Dialogue: 0,0:06:18.06,0:06:21.12,Default,,0,0,0,,Przygotujcie skargi za publiczne zgorszenie,
+Dialogue: 0,0:06:21.15,0:06:24.02,Default,,0,0,0,,bo ta dziewczyna ma ochotę pobawić się swoimi kulami!
+Dialogue: 0,0:06:24.23,0:06:25.83,Default,,0,0,0,,O, cześć Pinkie Pie!
+Dialogue: 0,0:06:25.94,0:06:28.78,Default,,0,0,0,,Nie widziałaś przypadkiem Twilight po drodze?
+Dialogue: 0,0:06:29.27,0:06:30.72,Default,,0,0,0,,Ci za pierdolona bzdura!
+Dialogue: 0,0:06:30.85,0:06:32.78,Default,,0,0,0,,Za każdym razem, gdy organizujemy takie spotkanie,
+Dialogue: 0,0:06:32.81,0:06:35.33,Default,,0,0,0,,Twilight przysyła tę głupią różową sukę zamiast siebie!
+Dialogue: 0,0:06:35.81,0:06:38.81,Default,,0,0,0,,W takim razie możemy już zacząć ją zapraszać.
+Dialogue: 0,0:06:38.83,0:06:41.03,Default,,0,0,0,,I tak spędziliśmy z nią więcej świąt.
+Dialogue: 0,0:06:41.05,0:06:43.09,Default,,0,0,0,,A ja nawet kupiłam jej PS5!
+Dialogue: 0,0:06:43.33,0:06:44.33,Default,,0,0,0,,Zaraz, ty też?
+Dialogue: 0,0:06:45.21,0:06:48.34,Default,,0,0,0,,{\pos(859,349)\an5}Ostatnia Wola\Ni\NTestament\N\NBędąc przy zdrowych zmysłach i ciele, niniejszym oświadczam, \Nże to jest moja ostatnia wola i testament.
+Dialogue: 0,0:06:48.58,0:06:49.44,Default,,0,0,0,,No dobra, ekipo!
+Dialogue: 0,0:06:49.46,0:06:51.95,Default,,0,0,0,,Stopmy się jak lody, i zbananiajmy stąd!
+Dialogue: 0,0:06:52.29,0:06:54.56,Default,,0,0,0,,Chyba miałeś na myśli banan i spadajmy!
+Dialogue: 0,0:06:54.80,0:06:56.21,Default,,0,0,0,,Wiem co powiedziałem, chłopcze!
+Dialogue: 0,0:06:56.69,0:06:58.71,Default,,0,0,0,,Poproszę dużą porcję nachosów.
+Dialogue: 0,0:06:58.88,0:07:00.19,Default,,0,0,0,,Bez sera, jeśli można.
+Dialogue: 0,0:07:00.21,0:07:02.89,Default,,0,0,0,,Moje problemy z trawieniem sprawiają,\Nże mogę zajebiście pierdzieć.
+Dialogue: 0,0:07:04.39,0:07:07.43,Default,,0,0,0,,Poproszę wielką, pierdoloną porcję nachosów z serem.
+Dialogue: 0,0:07:07.70,0:07:09.33,Default,,0,0,0,,Właściwie będzie bez nachosów.
+Dialogue: 0,0:07:09.55,0:07:12.53,Default,,0,0,0,,Dajcie mi po prostu wielki, jebany kubeł sera.
+Dialogue: 0,0:07:12.55,0:07:15.01,Default,,0,0,0,,{\i1}O boże, prawie dotykamy się ramionami,
+Dialogue: 0,0:07:15.03,0:07:16.76,Default,,0,0,0,,{\i1}Praktycznie mnie gwałci!
+Dialogue: 0,0:07:20.22,0:07:21.13,Default,,0,0,0,,{\i1}Czy on właśnie?
+Dialogue: 0,0:07:21.16,0:07:23.29,Default,,0,0,0,,{\i1}Kurwa, ty obrzydliwa suko!
+Dialogue: 0,0:07:23.45,0:07:26.83,Default,,0,0,0,,{\i1}Ten pokręcony biały chłopak może mi już równie\Ndobrze wyruchać twarz pod prysznicem.
+Dialogue: 0,0:07:26.91,0:07:28.35,Default,,0,0,0,,O, cześć Chrysalis!
+Dialogue: 0,0:07:28.37,0:07:29.93,Default,,0,0,0,,Jak miło cię tu spotkać.
+Dialogue: 0,0:07:29.95,0:07:31.64,Default,,0,0,0,,Nie wiedziałam, że lubisz kręgle.
+Dialogue: 0,0:07:31.78,0:07:34.92,Default,,0,0,0,,Wygląda na to, że jednak mamy coś wspólnego.
+Dialogue: 0,0:07:35.16,0:07:37.73,Default,,0,0,0,,Nie przyszłam tu bawić się kulami jak ty, dziwko!
+Dialogue: 0,0:07:37.75,0:07:39.84,Default,,0,0,0,,Po prostu uważam, że nachosy są tu naprawdę dobre.
+Dialogue: 0,0:07:40.18,0:07:42.79,Default,,0,0,0,,Cóż, z pewnością chcielibyśmy cię mieć.
+Dialogue: 0,0:07:42.82,0:07:46.25,Default,,0,0,0,,Desperacko potrzebujemy trzeciego członka drużyny.
+Dialogue: 0,0:07:46.43,0:07:48.63,Default,,0,0,0,,Cadance, o czym ty mówisz, ona jest zła!
+Dialogue: 0,0:07:48.97,0:07:53.29,Default,,0,0,0,,W końcu nie jest tak, że akurat teraz próbuje podbić świat.
+Dialogue: 0,0:07:53.32,0:07:56.16,Default,,0,0,0,,Może to nawet pomoże jej się zmienić.
+Dialogue: 0,0:07:56.31,0:07:59.06,Default,,0,0,0,,No dobra kucyki, podzielmy się na drużyny!
+Dialogue: 0,0:07:59.08,0:08:00.85,Default,,0,0,0,,Chłopaki mogą być kapitanami drużyn.
+Dialogue: 0,0:08:00.92,0:08:01.92,Default,,0,0,0,,Dla mnie w porządku!
+Dialogue: 0,0:08:01.94,0:08:04.60,Default,,0,0,0,,Przyzwyczaiłam się, że kucyki robią, co im kurwa każę!
+Dialogue: 0,0:08:05.64,0:08:07.00,Default,,0,0,0,,No dobra tato, ty pierwszy!
+Dialogue: 0,0:08:07.15,0:08:09.08,Default,,0,0,0,,Wiadomo, że chce wygrać głupi chuju.
+Dialogue: 0,0:08:09.10,0:08:12.34,Default,,0,0,0,,Więc oczywiście wybieram tę laskę,\Nktóra najlepiej radzi sobie z kulami.
+Dialogue: 0,0:08:14.00,0:08:16.14,Default,,0,0,0,,Kochanie, nie przy dzieciach!
+Dialogue: 0,0:08:17.13,0:08:18.47,Default,,0,0,0,,Skoro wybrałeś mamę,
+Dialogue: 0,0:08:18.59,0:08:20.88,Default,,0,0,0,,To oczywiste, że ja wybiorę Cadance!
+Dialogue: 0,0:08:21.24,0:08:23.19,Default,,0,0,0,,Razem z naszą połączoną siłą,
+Dialogue: 0,0:08:23.21,0:08:25.52,Default,,0,0,0,,zetrzemy ich na miazgę, jak krem na bajglach!
+Dialogue: 0,0:08:25.95,0:08:27.00,Default,,0,0,0,,Cóż, eee
+Dialogue: 0,0:08:27.78,0:08:28.78,Default,,0,0,0,,Zobaczmy.
+Dialogue: 0,0:08:29.49,0:08:30.26,Default,,0,0,0,,Myślę że,
+Dialogue: 0,0:08:31.05,0:08:32.14,Default,,0,0,0,,Myślę że weźmiemy...
+Dialogue: 0,0:08:32.92,0:08:33.69,Default,,0,0,0,,Twilight!
+Dialogue: 0,0:08:34.31,0:08:35.02,Default,,0,0,0,,Jeb się!
+Dialogue: 0,0:08:37.37,0:08:39.65,Default,,0,0,0,,Chyba nie spakowałaś sprayu na owady, co?
+Dialogue: 0,0:08:40.08,0:08:41.61,Default,,0,0,0,,Shining, to było wredne!
+Dialogue: 0,0:08:41.74,0:08:44.78,Default,,0,0,0,,Chrysalis jest tu, by bawić się tak jak my wszyscy.
+Dialogue: 0,0:08:44.96,0:08:48.27,Default,,0,0,0,,Z pewnością nie zaszkodziłoby ci okazać jej trochę więcej życzliwości.
+Dialogue: 0,0:08:48.57,0:08:50.57,Default,,0,0,0,,Wiedziałam, że to był błąd tu przychodzić.
+Dialogue: 0,0:08:50.59,0:08:54.92,Default,,0,0,0,,Panno Velvet, czy mogłabym prosić o jakieś pierdolone pudełko,\Nżeby zabrać nachosy do domu?
+Dialogue: 0,0:08:55.23,0:08:57.28,Default,,0,0,0,,Nie Chrysalis, chcemy żebyś została!
+Dialogue: 0,0:08:57.30,0:08:58.67,Default,,0,0,0,,Jesteś częścią drużyny!
+Dialogue: 0,0:08:58.69,0:08:59.25,Default,,0,0,0,,Właśnie!
+Dialogue: 0,0:08:59.27,0:09:00.47,Default,,0,0,0,,Chodźmy cieszyć się grą!
+Dialogue: 0,0:09:00.79,0:09:02.11,Default,,0,0,0,,Naprawdę chcecie żebym została?
+Dialogue: 0,0:09:02.14,0:09:03.28,Default,,0,0,0,,Mimo że jestem czarna?
+Dialogue: 0,0:09:03.74,0:09:06.00,Default,,0,0,0,,Tylko nic nie kradnij, dopóki tu jesteś!
+Dialogue: 0,0:09:06.28,0:09:07.28,Default,,0,0,0,,Właśnie!
+Dialogue: 0,0:09:07.34,0:09:11.47,Default,,0,0,0,,Może nie jesteśmy twoimi, jak to mówicie, "ziomkami",
+Dialogue: 0,0:09:11.49,0:09:14.20,Default,,0,0,0,,Ale i tak chcemy, żebyś czuła się kochana i akceptowana.
+Dialogue: 0,0:09:14.28,0:09:17.83,Default,,0,0,0,,nawet jeśli twoja sierść jest o wiele za ciemna.
+Dialogue: 0,0:09:19.39,0:09:21.83,Default,,0,0,0,,Poproszę duże nachosy z serem.
+Dialogue: 0,0:09:21.96,0:09:23.92,Default,,0,0,0,,Tylko bez nachosów i sera.
+Dialogue: 0,0:09:24.24,0:09:25.97,Default,,0,0,0,,Czyli chcesz po prostu pustą tackę?
+Dialogue: 0,0:09:26.44,0:09:27.57,Default,,0,0,0,,Oh, przecież mnie znasz!
+Dialogue: 0,0:09:27.59,0:09:28.84,Default,,0,0,0,,Jestem Pinkie Pie!
+Dialogue: 0,0:09:28.86,0:09:30.12,Default,,0,0,0,,Ta zwariowana!
+Dialogue: 0,0:09:30.24,0:09:33.13,Default,,0,0,0,,Muszę podtrzymywać swój wizerunek pierdolonej dziwaczki.
+Dialogue: 0,0:09:33.29,0:09:37.84,Default,,0,0,0,,Nikt się nie spodziewa, że wyjdę po jedzenie i wrócę z pustą tacką!
+Dialogue: 0,0:09:38.21,0:09:44.12,czas,,0,0,0,,(Szkoła Ponyville...)
+Dialogue: 0,0:09:38.80,0:09:39.69,Default,,0,0,0,,Dziwne,
+Dialogue: 0,0:09:39.71,0:09:42.96,Default,,0,0,0,,Anomalia, o której wspomniała Celestia, powinna być gdzieś tutaj.
+Dialogue: 0,0:09:42.98,0:09:45.50,Default,,0,0,0,,Ale wszystko wygląda tu stosunkowo normalnie.
+Dialogue: 0,0:09:47.27,0:09:48.04,Default,,0,0,0,,Chwila,
+Dialogue: 0,0:09:48.18,0:09:48.93,Default,,0,0,0,,Scoolatoo.
+Dialogue: 0,0:09:49.06,0:09:50.44,Default,,0,0,0,,Coś jest z nią nie tak.
+Dialogue: 0,0:09:50.47,0:09:51.79,Default,,0,0,0,,I z Sweetie Belle też!
+Dialogue: 0,0:09:51.81,0:09:52.53,Default,,0,0,0,,Ale czemu?
+Dialogue: 0,0:09:55.06,0:09:56.08,Default,,0,0,0,,O, co my tu mamy?
+Dialogue: 0,0:09:56.10,0:09:58.42,Default,,0,0,0,,Samotne zabawy z Scootaloo?
+Dialogue: 0,0:09:58.63,0:09:59.71,Default,,0,0,0,,To naprawdę smutne.
+Dialogue: 0,0:09:59.73,0:10:02.09,Default,,0,0,0,,Jesteś jednym cholernie żałosnym kucykiem.
+Dialogue: 0,0:10:02.33,0:10:04.05,Default,,0,0,0,,Znasz zasady piaskownicy,
+Dialogue: 0,0:10:04.41,0:10:08.57,Default,,0,0,0,,żadna klacz nie bawi się w mojej piaskownicy\Nbez zapłacenia podatku od piasku.
+Dialogue: 0,0:10:09.16,0:10:10.33,Default,,0,0,0,,Odejdź, głupcze.
+Dialogue: 0,0:10:10.48,0:10:13.11,Default,,0,0,0,,Nie chcesz się ze mną w to bawić.
+Dialogue: 0,0:10:13.83,0:10:14.72,Default,,0,0,0,,Nie masz pieniędzy?
+Dialogue: 0,0:10:15.05,0:10:19.36,Default,,0,0,0,,Wygląda na to, że będziesz musiała oddać mi tę ładną, błyszczącą, niebieską łopatkę!
+Dialogue: 0,0:10:29.60,0:10:30.71,Default,,0,0,0,,Cześć, Scootaloo!
+Dialogue: 0,0:10:30.73,0:10:32.23,Default,,0,0,0,,Mogę się pobawić obok ciebie?
+Dialogue: 0,0:10:36.30,0:10:38.33,Default,,0,0,0,,To naprawdę fajna sztuczka, Scootaloo!
+Dialogue: 0,0:10:38.35,0:10:40.94,Default,,0,0,0,,Nie powiesz mi, jak spontanicznie
+Dialogue: 0,0:10:40.96,0:10:43.25,Default,,0,0,0,,zetknęłaś się z mocą Jednorożców?
+Dialogue: 0,0:10:43.79,0:10:44.64,Default,,0,0,0,,Słuchaj Boomer,
+Dialogue: 0,0:10:45.48,0:10:48.07,Default,,0,0,0,,jeśli masz coś do powiedzenia, to się pośpiesz.
+Dialogue: 0,0:10:48.25,0:10:54.38,Default,,0,0,0,,Mam tylko 10 minut zabawy, zanim pójdę do domu\Npo kanapkę z masłem orzechowym i dżemem.
+Dialogue: 0,0:10:54.84,0:10:56.71,Default,,0,0,0,,Wow, to brzmi naprawdę pysznie!
+Dialogue: 0,0:10:57.08,0:10:57.98,Default,,0,0,0,,Jest okej.
+Dialogue: 0,0:10:58.45,0:10:59.95,Default,,0,0,0,,Wiesz co, Scooty Booty?
+Dialogue: 0,0:11:00.04,0:11:01.34,Default,,0,0,0,,Podoba mi się twoje nastawienie.
+Dialogue: 0,0:11:01.36,0:11:03.03,Default,,0,0,0,,A ja też lubię przekąski.
+Dialogue: 0,0:11:03.38,0:11:06.31,Default,,0,0,0,,Wiesz, co jem, gdy najdzie mnie ochota na coś do chrupania?
+Dialogue: 0,0:11:06.77,0:11:08.69,Default,,0,0,0,,Pewnie jakieś stare kucykowe jedzenie.
+Dialogue: 0,0:11:08.77,0:11:10.47,Default,,0,0,0,,W stylu batonów z granolą i orzechami.
+Dialogue: 0,0:11:10.49,0:11:11.23,Default,,0,0,0,,Nie prawda.
+Dialogue: 0,0:11:11.25,0:11:12.06,Default,,0,0,0,,Kto ci to powiedział?
+Dialogue: 0,0:11:12.09,0:11:13.09,Default,,0,0,0,,Czy to była Fluttershy?
+Dialogue: 0,0:11:13.11,0:11:14.70,Default,,0,0,0,,To straszna kłamczucha!
+Dialogue: 0,0:11:14.72,0:11:16.04,Default,,0,0,0,,Hej, mam pomysł.
+Dialogue: 0,0:11:16.06,0:11:18.74,Default,,0,0,0,,Może pójdziesz ze mną na drugą stronę placu zabaw,
+Dialogue: 0,0:11:18.76,0:11:22.24,Default,,0,0,0,,z dala od innych kucyków, żebym mógła cię obejrzeć i podotykać?
+Dialogue: 0,0:11:22.43,0:11:23.90,Default,,0,0,0,,Obiecuję, że będę delikatna.
+Dialogue: 0,0:11:23.92,0:11:25.80,Default,,0,0,0,,Może nawet dostaniesz coś słodkiego.
+Dialogue: 0,0:11:26.18,0:11:27.54,Default,,0,0,0,,Twilight, co ty wyprawiasz?
+Dialogue: 0,0:11:28.05,0:11:31.52,Default,,0,0,0,,Uczeń często upodabnia się do nauczyciela, jak to mówią.
+Dialogue: 0,0:11:32.17,0:11:32.86,Default,,0,0,0,,Koniec tego.
+Dialogue: 0,0:11:32.88,0:11:35.81,Default,,0,0,0,,Idę tam, zanim ta klacz wyląduje w areszcie.
+Dialogue: 0,0:11:35.83,0:11:39.11,Default,,0,0,0,,Jeśli już idziesz, czy mogę w końcu zdjąć tę idiotyczną rzecz?
+Dialogue: 0,0:11:39.95,0:11:41.44,Default,,0,0,0,,Przestań myśleć, że masz prawa!
+Dialogue: 0,0:11:41.66,0:11:43.58,Default,,0,0,0,, Ja jestem zwiastunem koszmarów.
+Dialogue: 0,0:11:43.86,0:11:46.54,Default,,0,0,0,,Nie, Luna. W niedziele jesteś zwiastunem ciasteczek!
+Dialogue: 0,0:11:47.46,0:11:49.03,Default,,0,0,0,,Swoją drogą, są pyszne!
+Dialogue: 0,0:11:49.13,0:11:50.82,Default,,0,0,0,,Dodałaś szczyptę gwiezdnego pyłu?
+Dialogue: 0,0:11:50.84,0:11:54.53,Default,,0,0,0,,Może odrobinę... żebyś nawet za dnia pamiętała o nocy.
+Dialogue: 0,0:11:57.17,0:11:58.75,Default,,0,0,0,,Twilight, mogę z tobą porozmawiać?
+Dialogue: 0,0:11:58.94,0:12:00.27,Default,,0,0,0,,Nie, jeśli zamierzasz mnie udrzyć.
+Dialogue: 0,0:12:01.30,0:12:04.76,Default,,0,0,0,,Twilight, dlaczego, na miłość Celestii,\Nzachowujesz się jak pedofil?
+Dialogue: 0,0:12:05.23,0:12:06.13,Default,,0,0,0,,Wcale nie!
+Dialogue: 0,0:12:06.15,0:12:07.04,Default,,0,0,0,,Scooty booty.
+Dialogue: 0,0:12:07.37,0:12:09.64,Default,,0,0,0,,Rozmawiam z nią tak, jak ty rozmawiałeś ze mną.
+Dialogue: 0,0:12:09.81,0:12:11.33,Default,,0,0,0,,Sparkle booty, to znaczy.
+Dialogue: 0,0:12:11.36,0:12:12.69,Default,,0,0,0,,Twilight Sparkle!
+Dialogue: 0,0:12:12.71,0:12:14.28,Default,,0,0,0,,To... to co innego.
+Dialogue: 0,0:12:14.49,0:12:16.12,Default,,0,0,0,,Ja, my jesteśmy inni.
+Dialogue: 0,0:12:16.42,0:12:17.76,Default,,0,0,0,,A teraz muszę iść do domu.
+Dialogue: 0,0:12:17.78,0:12:21.94,Default,,0,0,0,,Ale chcę, żebyś mi obiecała,\Nże nie zbliżysz się do tej klaczy do końca dnia.
+Dialogue: 0,0:12:22.57,0:12:25.52,Default,,0,0,0,,Okej, nie zbliżę się do Scootaloo do końca dnia.
+Dialogue: 0,0:12:25.55,0:12:27.62,Default,,0,0,0,,Hej, słodziaku, chcesz trochę cukierków?
+Dialogue: 0,0:12:27.98,0:12:29.25,Default,,0,0,0,,Mam kłopoty?
+Dialogue: 0,0:12:29.62,0:12:32.71,Default,,0,0,0,,Nie, po prostu chcę wiedzieć,\Ndlaczego twoje oczy wyglądają tak pojebanie?
+Dialogue: 0,0:12:33.04,0:12:35.88,Default,,0,0,0,,Pamiętasz, co mówiłam o rozmowach z nieznajomymi, skarbie?
+Dialogue: 0,0:12:36.30,0:12:37.96,Default,,0,0,0,,Nie mów tej dziwce absolutnie niczego!
+Dialogue: 0,0:12:38.65,0:12:40.22,Default,,0,0,0,,Nie jestem obca, Rarity,
+Dialogue: 0,0:12:40.24,0:12:41.17,Default,,0,0,0,,tylko przyjaciółką!
+Dialogue: 0,0:12:41.82,0:12:42.97,Default,,0,0,0,,Kiedy mam urodziny?
+Dialogue: 0,0:12:43.27,0:12:44.94,Default,,0,0,0,,Tego samego dnia, każdego roku.
+Dialogue: 0,0:12:45.13,0:12:46.43,Default,,0,0,0,,I skąd o tym wiesz?
+Dialogue: 0,0:12:46.67,0:12:48.25,Default,,0,0,0,,To trochę podejrzane!
+Dialogue: 0,0:12:48.50,0:12:51.29,Default,,0,0,0,,Skąd wiesz, że nie urodziłem się dwa różne dni?
+Dialogue: 0,0:12:51.38,0:12:53.39,Default,,0,0,0,,Bo urodziny tak nie działają.
+Dialogue: 0,0:12:53.76,0:12:55.01,Default,,0,0,0,,Ona nas śledzi!
+Dialogue: 0,0:12:55.04,0:12:57.44,Default,,0,0,0,,Sweetie Belle, biegnij do środka i nie oglądaj się za siebie!
+Dialogue: 0,0:12:58.67,0:13:01.23,Default,,0,0,0,,Ja się tym zajmę, Twilight Sparkle, moim dupskiem!
+Dialogue: 0,0:13:07.33,0:13:08.32,Default,,0,0,0,,O mój Boże!
+Dialogue: 0,0:13:08.54,0:13:11.16,Default,,0,0,0,,Fluttershy pierdzi, machając skrzydłami!
+Dialogue: 0,0:13:11.30,0:13:13.78,Default,,0,0,0,,To ruch znany jako Zabójczy Śmierdzący Podmuch!
+Dialogue: 0,0:13:13.91,0:13:15.88,Default,,0,0,0,,To najpotężniejsza technika pegaza!
+Dialogue: 0,0:13:16.15,0:13:19.14,Default,,0,0,0,,Dorównuje jej tylko Sonic Rainboom Rainbow Dash!
+Dialogue: 0,0:13:20.27,0:13:21.48,Default,,0,0,0,,Pani Cheerilee, nie!
+Dialogue: 0,0:13:21.63,0:13:22.45,Default,,0,0,0,,Nie walcz z tym!
+Dialogue: 0,0:13:22.88,0:13:24.73,Default,,0,0,0,,Nic nie ochroni tych źrebiąt przede mną.
+Dialogue: 0,0:13:24.76,0:13:25.67,Default,,0,0,0,,Nawet ty!
+Dialogue: 0,0:13:26.06,0:13:27.44,Default,,0,0,0,,Znikaj z moim klaśnięciem tyłka!
+Dialogue: 0,0:13:31.97,0:13:33.66,Default,,0,0,0,,Podziwiam twoją determinację, nauczycielko.
+Dialogue: 0,0:13:33.69,0:13:36.29,Default,,0,0,0,,Nie było jeszcze kucyka, który przetrwał tak długo.
+Dialogue: 0,0:13:37.17,0:13:38.25,Default,,0,0,0,,Bo wszyscy nie żyją.
+Dialogue: 0,0:13:38.81,0:13:41.58,Default,,0,0,0,,To chyba ta słynna "kamienna wola" kucyków ziemskich.
+Dialogue: 0,0:13:42.05,0:13:44.38,Default,,0,0,0,,Ogłaszam cię tą najsilniejszą.
+Dialogue: 0,0:13:44.83,0:13:46.33,Default,,0,0,0,,Ale i tak podzielisz ich los,
+Dialogue: 0,0:13:46.36,0:13:47.27,Default,,0,0,0,,I pojdziesz do piekła!
+Dialogue: 0,0:13:53.71,0:13:55.74,Default,,0,0,0,,Pora na wyjaśnienia, Sweetie Belle.
+Dialogue: 0,0:13:55.76,0:13:57.42,Default,,0,0,0,,Co się stało z tobą i Scootaloo?
+Dialogue: 0,0:13:57.56,0:13:59.39,Default,,0,0,0,,To był wypadek!
+Dialogue: 0,0:13:59.54,0:14:00.69,Default,,0,0,0,,Wypadło mi oko,
+Dialogue: 0,0:14:00.71,0:14:04.22,Default,,0,0,0,,więc Scootaloo zaproponowała, że da mi swoje.
+Dialogue: 0,0:14:04.24,0:14:06.35,Default,,0,0,0,,Ale wyjęłam nie to, co trzeba
+Dialogue: 0,0:14:06.38,0:14:08.45,Default,,0,0,0,,i musiałam oddać jej moje.
+Dialogue: 0,0:14:08.48,0:14:10.95,Default,,0,0,0,,A teraz z jakiegoś powodu może używać magii przeze mnie.
+Dialogue: 0,0:14:11.17,0:14:11.76,Default,,0,0,0,,Kurde.
+Dialogue: 0,0:14:11.78,0:14:14.81,Default,,0,0,0,,Niepełnosprawny pegaz, który nie umie latać i chodzi po ziemi
+Dialogue: 0,0:14:14.83,0:14:17.60,Default,,0,0,0,,jak kucyk ziemski, ale bez ich siły.
+Dialogue: 0,0:14:17.83,0:14:18.84,Default,,0,0,0,,Za to ma trochę magii.
+Dialogue: 0,0:14:18.96,0:14:21.55,Default,,0,0,0,,ale za mało, żeby być czymś więcej niż utrapieniem dla innych.
+Dialogue: 0,0:14:21.78,0:14:23.82,Default,,0,0,0,,Ta suka jest jak upośledzony alikorn.
+Dialogue: 0,0:14:24.23,0:14:25.54,Default,,0,0,0,,Oj, co za problem?
+Dialogue: 0,0:14:25.75,0:14:28.95,Default,,0,0,0,,Pegaz z odrobiną magii, nikogo nie skrzywdzi!
+Dialogue: 0,0:14:29.38,0:14:30.09,Default,,0,0,0,,Na razie!
+Dialogue: 0,0:14:30.20,0:14:33.45,Default,,0,0,0,,Ale w końcu to może zniszczyć systemowy rasizm,
+Dialogue: 0,0:14:33.48,0:14:35.48,Default,,0,0,0,,z którego korzystają jednorożce takie jak my.
+Dialogue: 0,0:14:39.26,0:14:41.65,Default,,0,0,0,,O, patrzcie klaso, mamy dziś specjalnego gościa.
+Dialogue: 0,0:14:46.27,0:14:48.74,Default,,0,0,0,,A co cię do nas sprowadza, uczennico księżniczki Celestii?
+Dialogue: 0,0:14:48.91,0:14:51.14,Default,,0,0,0,,Żeby tym dzieciakom wydłubać te pieprzone oczy.
+Dialogue: 0,0:14:58.40,0:15:00.83,Default,,0,0,0,,Nauczyciele noszą broń po tej stronie miasta?
+Dialogue: 0,0:15:01.01,0:15:02.67,Default,,0,0,0,,No tak, przecież to totalna dziura.
+Dialogue: 0,0:15:18.65,0:15:19.94,Default,,0,0,0,,Odłóż broń, Cheerilee!
+Dialogue: 0,0:15:20.17,0:15:22.72,Default,,0,0,0,,Oboje wiemy, że nie płacą ci wystarczająco za takie gówno.
+Dialogue: 0,0:15:28.67,0:15:29.59,Default,,0,0,0,,Łap deszcz sików!
+Dialogue: 0,0:15:32.16,0:15:35.38,Default,,0,0,0,,Nie ma już dorosłych, którzy ochronią cię przed moim gniewem, Scootaloo!
+Dialogue: 0,0:15:35.51,0:15:36.75,Default,,0,0,0,,Więc jak to będzie?
+Dialogue: 0,0:15:36.91,0:15:38.63,Default,,0,0,0,,Zrobimy to w prosty sposób
+Dialogue: 0,0:15:38.65,0:15:40.97,Default,,0,0,0,,i poddasz się sama, a ja ci wydłubię to oko?
+Dialogue: 0,0:15:41.16,0:15:44.08,Default,,0,0,0,,Czy w ciężki sposób i ja tam podejdę i ci je wydłubię?
+Dialogue: 0,0:15:44.61,0:15:47.89,Default,,0,0,0,,Jeśli chcesz to oko, to musisz mi je odebrać!
+Dialogue: 0,0:15:48.23,0:15:49.91,Default,,0,0,0,,Nie zamierzam się bić z dzieckiem!
+Dialogue: 0,0:15:50.48,0:15:51.12,Default,,0,0,0,,Czemu nie?
+Dialogue: 0,0:15:51.15,0:15:53.00,Default,,0,0,0,,Boisz się, że przegrasz z dzieckiem?
+Dialogue: 0,0:15:56.27,0:15:57.27,Default,,0,0,0,,Mam cię suko!
+Dialogue: 0,0:15:59.75,0:16:00.91,Default,,0,0,0,,Ups, nie te!
+Dialogue: 0,0:16:00.93,0:16:02.74,Default,,0,0,0,,No cóż, szansa była pół na pół.
+Dialogue: 0,0:16:02.77,0:16:03.87,Default,,0,0,0,,Możesz je dostać z powrotem.
+Dialogue: 0,0:16:04.78,0:16:06.40,Default,,0,0,0,,Przestań wrzeszczeć z bólu!
+Dialogue: 0,0:16:06.42,0:16:07.66,Default,,0,0,0,,Chce włożyć to z powrotem!
+Dialogue: 0,0:16:09.74,0:16:10.61,Default,,0,0,0,,Rarity, pomóż!
+Dialogue: 0,0:16:10.63,0:16:12.46,Default,,0,0,0,,Jestem atakowana przez dzieci!
+Dialogue: 0,0:16:18.61,0:16:20.19,Default,,0,0,0,,Widzieliście to, kucyki?
+Dialogue: 0,0:16:20.21,0:16:21.23,Default,,0,0,0,,Zdobyłem Strike!
+Dialogue: 0,0:16:21.25,0:16:22.49,Default,,0,0,0,,tatuś zdobył...
+Dialogue: 0,0:16:22.97,0:16:24.09,Default,,0,0,0,,O, patrzcie na to!
+Dialogue: 0,0:16:24.31,0:16:26.66,Default,,0,0,0,,Był taki dumny ze swojego rycerskiego stroju!
+Dialogue: 0,0:16:26.68,0:16:29.44,Default,,0,0,0,,nawet jeśli to tylko folia aluminiowa.
+Dialogue: 0,0:16:29.56,0:16:30.85,Default,,0,0,0,,Ojejku!
+Dialogue: 0,0:16:30.88,0:16:33.28,Default,,0,0,0,,Wygląda jak chodząca puszka po konserwach!
+Dialogue: 0,0:16:33.31,0:16:34.87,Default,,0,0,0,,To takie urocze!
+Dialogue: 0,0:16:35.44,0:16:37.64,Default,,0,0,0,,A to on ze swoją pierwszą różdżką.
+Dialogue: 0,0:16:37.84,0:16:39.02,Default,,0,0,0,,Był z niej taki dumny!
+Dialogue: 0,0:16:39.08,0:16:41.77,Default,,0,0,0,,Choć to była tylko gałązka znaleziona w ogródku.
+Dialogue: 0,0:16:42.01,0:16:46.41,Default,,0,0,0,,{\i1}Podejmowałabym z nim akty prokreacyjne\Npo osiągnięciu przez niego legalnego wieku.
+Dialogue: 0,0:16:47.26,0:16:48.59,Default,,0,0,0,,{\i1}Ruchałabym się z tym dzieciakiem!
+Dialogue: 0,0:16:49.33,0:16:50.92,Default,,0,0,0,,{\i1}Ruchałabym się z tym dzieciakiem!
+Dialogue: 0,0:16:52.15,0:16:54.01,Default,,0,0,0,,Dobra mamo, chyba wystarczy.
+Dialogue: 0,0:16:54.34,0:16:56.01,Default,,0,0,0,,Może wrócimy do gry?
+Dialogue: 0,0:16:56.41,0:16:57.44,Default,,0,0,0,,Muszę przyznać,
+Dialogue: 0,0:16:57.46,0:16:59.21,Default,,0,0,0,,te zdjęcia to coś specjalnego.
+Dialogue: 0,0:16:59.33,0:17:01.55,Default,,0,0,0,,Nigdy nie myślałam, że wielki Shining Armor może wyglądać
+Dialogue: 0,0:17:01.57,0:17:03.97,Default,,0,0,0,,jak taki słodki, pierdolony ziemniak.
+Dialogue: 0,0:17:04.62,0:17:05.57,Default,,0,0,0,,Shining Armor!
+Dialogue: 0,0:17:05.69,0:17:07.76,Default,,0,0,0,,Czy to właśnie twój głos przed chwilą słyszałem?
+Dialogue: 0,0:17:11.13,0:17:13.17,Default,,0,0,0,,Blueblood, już to przerabialiśmy!
+Dialogue: 0,0:17:13.31,0:17:14.51,Default,,0,0,0,,Zostaję z rodziną!
+Dialogue: 0,0:17:14.74,0:17:15.45,Default,,0,0,0,,Idź do domu!
+Dialogue: 0,0:17:15.66,0:17:18.19,Default,,0,0,0,,Nie masz prawa mówić, chyba że ci na to pozwolę.
+Dialogue: 0,0:17:18.22,0:17:19.19,Default,,0,0,0,,Właśnie, że mam prawo!
+Dialogue: 0,0:17:19.40,0:17:20.42,Default,,0,0,0,,Bo to już koniec!
+Dialogue: 0,0:17:20.72,0:17:21.84,Default,,0,0,0,,Mam nadzieję, że przez "koniec"
+Dialogue: 0,0:17:21.86,0:17:23.58,Default,,0,0,0,,masz na myśli, że skończyłeś z moją kolacją?
+Dialogue: 0,0:17:24.18,0:17:25.66,Default,,0,0,0,,Nie, zrywam z tobą!
+Dialogue: 0,0:17:25.93,0:17:27.51,Default,,0,0,0,,Ciągle tylko walczymy!
+Dialogue: 0,0:17:27.72,0:17:29.46,Default,,0,0,0,,Więc wracam do Cadance!
+Dialogue: 0,0:17:29.83,0:17:31.57,Default,,0,0,0,,Mam dość twojego znęcania się nade mną!
+Dialogue: 0,0:17:32.04,0:17:33.16,Default,,0,0,0,,Ja się znęcałem?
+Dialogue: 0,0:17:33.46,0:17:33.90,Default,,0,0,0,,Ha!
+Dialogue: 0,0:17:34.08,0:17:34.62,Default,,0,0,0,,Nie.
+Dialogue: 0,0:17:34.87,0:17:38.26,Default,,0,0,0,,Nie będziesz teraz przekonywał wszystkich,\Nże to ja jestem tutaj czarnym charakterem!
+Dialogue: 0,0:17:38.49,0:17:41.53,Default,,0,0,0,,Czy to nie ty zostawiłeś swoją żonę,\Nżeby poderwać mnie dla moich pieniędzy?
+Dialogue: 0,0:17:42.05,0:17:43.47,Default,,0,0,0,,To ja z tobą zrywam!
+Dialogue: 0,0:17:43.68,0:17:45.98,Default,,0,0,0,,Shining Armor, nie ty ze mną.
+Dialogue: 0,0:17:46.44,0:17:47.65,Default,,0,0,0,,Księżniczko Cadance!
+Dialogue: 0,0:17:47.67,0:17:48.94,Default,,0,0,0,,Teraz, bardziej niż kiedykolwiek,
+Dialogue: 0,0:17:49.24,0:17:52.43,Default,,0,0,0,,rozumiem, że jesteśmy tylko pionkami w jego grze.
+Dialogue: 0,0:17:52.56,0:17:56.22,Default,,0,0,0,,Gorąco radzę ci, żebyś wzięła pod uwagę to, co się tu dziś wydarzyło,
+Dialogue: 0,0:17:56.43,0:17:59.66,Default,,0,0,0,,Jeśli zdecydujesz się kontynuować z nim relację.
+Dialogue: 0,0:17:59.69,0:18:02.05,Default,,0,0,0,,Życzę wam przyjemnego zakończenia wieczoru.
+Dialogue: 0,0:18:04.58,0:18:06.64,Default,,0,0,0,,Zaczekaj no chwilę, mój drogi.
+Dialogue: 0,0:18:07.06,0:18:10.16,Default,,0,0,0,,To prawda, że Shining Armor podjął kilka nie najlepszych decyzji.
+Dialogue: 0,0:18:10.18,0:18:12.45,Default,,0,0,0,,Ale to jeszcze nie czyni z niego potwora.
+Dialogue: 0,0:18:13.20,0:18:15.41,Default,,0,0,0,,Chcesz to powtórzyć, dziewczynko?
+Dialogue: 0,0:18:15.68,0:18:18.61,Default,,0,0,0,,Nie słyszę cię przez żałosny dźwięk twojej kobiecości!
+Dialogue: 0,0:18:18.85,0:18:20.46,Default,,0,0,0,,Mówię ci, przygotuj się do walki!
+Dialogue: 0,0:18:20.82,0:18:23.78,Default,,0,0,0,,Żaden kucyk nie będzie bezkarnie obrażać mojego faceta!
+Dialogue: 0,0:18:24.09,0:18:27.38,Default,,0,0,0,,Chyba że boisz się przegrać z elegancką damą?
+Dialogue: 0,0:18:27.69,0:18:28.79,Default,,0,0,0,,Chcesz ze mną walczyć?
+Dialogue: 0,0:18:29.07,0:18:29.92,Default,,0,0,0,,A ha ha!
+Dialogue: 0,0:18:29.94,0:18:31.34,Default,,0,0,0,,Ja kobiety biję codziennie!
+Dialogue: 0,0:18:31.53,0:18:33.55,Default,,0,0,0,,Ale nie codziennie mam wymówkę!
+Dialogue: 0,0:18:33.94,0:18:36.18,Default,,0,0,0,,Zwycięzca dostaje Shining Armora.
+Dialogue: 0,0:18:36.47,0:18:38.09,Default,,0,0,0,,Przegrany stąd spada.
+Dialogue: 0,0:18:38.42,0:18:39.14,Default,,0,0,0,,Zgoda?
+Dialogue: 0,0:18:39.16,0:18:40.52,Default,,0,0,0,,Myślisz, że mnie to obchodzi?
+Dialogue: 0,0:18:40.90,0:18:42.34,Default,,0,0,0,,Przyszłam tu tylko ci wpierdolić!
+Dialogue: 0,0:18:43.06,0:18:47.87,Default,,0,0,0,,Pokażę ci, jak radzimy sobie z takimi zniewieściałymi\Npedałami jak ty, w Kryształowym Cesarstwie!
+Dialogue: 0,0:18:48.12,0:18:50.97,Default,,0,0,0,,Pokażę ci, jak seksista radzi sobie z kobietami!
+Dialogue: 0,0:18:52.79,0:18:53.24,Default,,0,0,0,,Ha!
+Dialogue: 0,0:18:53.45,0:18:53.97,Default,,0,0,0,,Baba!
+Dialogue: 0,0:18:54.14,0:18:55.43,Default,,0,0,0,,Spróbuj ponownie, kobieto!
+Dialogue: 0,0:18:58.02,0:18:58.96,Default,,0,0,0,,Ale jesteś słaba!
+Dialogue: 0,0:18:59.29,0:19:00.38,Default,,0,0,0,,Czemu taka jesteś?
+Dialogue: 0,0:19:00.87,0:19:01.27,Default,,0,0,0,,Dajesz!
+Dialogue: 0,0:19:01.63,0:19:02.40,Default,,0,0,0,,Gejowski cios!
+Dialogue: 0,0:19:03.06,0:19:04.28,Default,,0,0,0,,Myślałem, że to ma być walka!
+Dialogue: 0,0:19:04.55,0:19:05.51,Default,,0,0,0,,Czemu mnie nie atakujesz?
+Dialogue: 0,0:19:06.19,0:19:06.68,Default,,0,0,0,,Dajesz!
+Dialogue: 0,0:19:06.70,0:19:07.80,Default,,0,0,0,,Gejowska seria ciosów!
+Dialogue: 0,0:19:09.41,0:19:10.29,Default,,0,0,0,,Gejowski cios!
+Dialogue: 0,0:19:10.91,0:19:11.68,Default,,0,0,0,,Gejowski cios!
+Dialogue: 0,0:19:12.22,0:19:13.05,Default,,0,0,0,,Gejowski cios!
+Dialogue: 0,0:19:13.61,0:19:14.35,Default,,0,0,0,,Gejowski cios!
+Dialogue: 0,0:19:15.05,0:19:15.76,Default,,0,0,0,,Gejowski cios!
+Dialogue: 0,0:19:16.53,0:19:17.33,Default,,0,0,0,,Gejowski cios!
+Dialogue: 0,0:19:18.93,0:19:19.42,Default,,0,0,0,,Dajesz!
+Dialogue: 0,0:19:19.45,0:19:20.54,Default,,0,0,0,,Gejowska seria ciosów!
+Dialogue: 0,0:19:21.15,0:19:21.70,Default,,0,0,0,,Ha!
+Dialogue: 0,0:19:21.73,0:19:22.79,Default,,0,0,0,,Dałaś się nabrać?
+Dialogue: 0,0:19:22.84,0:19:23.76,Default,,0,0,0,,Głupia suka!
+Dialogue: 0,0:19:24.61,0:19:29.17,Default,,0,0,0,,Gdy mężczyzna wraca do domu, na stole powinien być obiad,\Na kobieta na kolanach!
+Dialogue: 0,0:19:29.43,0:19:31.15,Default,,0,0,0,,Ale ja kobiet nie potrzebuję.
+Dialogue: 0,0:19:31.18,0:19:34.57,Default,,0,0,0,,Więc to jedyne kule, które powinny udeżyć cię w twoją twarz!
+Dialogue: 0,0:19:37.92,0:19:38.58,Default,,0,0,0,,Co?
+Dialogue: 0,0:19:38.84,0:19:41.33,Default,,0,0,0,,Czy dalej będziecie tak stać i gapić się,
+Dialogue: 0,0:19:41.35,0:19:43.98,Default,,0,0,0,,gdy damę maltretują w kręgielni?
+Dialogue: 0,0:19:44.12,0:19:46.24,Default,,0,0,0,,Ależ oczywiście, że nie jestem zaskoczona.
+Dialogue: 0,0:19:46.54,0:19:48.88,Default,,0,0,0,,Typowy dzień w Ponyville, jak mniemam.
+Dialogue: 0,0:19:56.60,0:19:57.94,Default,,0,0,0,,Cadance, wszystko w porządku?
+Dialogue: 0,0:20:00.29,0:20:02.11,Default,,0,0,0,,Czy wyglądam jakbym miała się dobrze?
+Dialogue: 0,0:20:02.41,0:20:03.57,Default,,0,0,0,,Jak mi poszło?
+Dialogue: 0,0:20:03.85,0:20:05.28,Default,,0,0,0,,Przynajmniej wyglądałam fajnie?
+Dialogue: 0,0:20:06.69,0:20:07.76,Default,,0,0,0,,Naprawdę fajnie!
+Dialogue: 0,0:20:08.33,0:20:09.90,Default,,0,0,0,,Cadance, byłaś niesamowita!
+Dialogue: 0,0:20:10.18,0:20:12.10,Default,,0,0,0,,Właśnie pokazałaś nam wszystkim, że poddanie się
+Dialogue: 0,0:20:12.34,0:20:15.60,Default,,0,0,0,,a dostanie po dupie to dwie zupełnie różne rzeczy.
+Dialogue: 0,0:20:16.02,0:20:17.95,Default,,0,0,0,,Zaraz, mówisz, że przegrałam?
+Dialogue: 0,0:20:18.26,0:20:20.49,Default,,0,0,0,,Ale przecież walnęłam go jakieś pięć razy!
+Dialogue: 0,0:20:20.69,0:20:24.02,Default,,0,0,0,,Ale to się nie liczy, gdy on ciebie tłukł bez przerwy przez dwie minuty.
+Dialogue: 0,0:20:25.61,0:20:27.82,Default,,0,0,0,,Oo, uhh... okej.
+Dialogue: 0,0:20:28.57,0:20:32.99,Default,,0,0,0,,Cadence, po zjedzeniu z tobą tej ogromnej miski sera, zacząłem myśleć.
+Dialogue: 0,0:20:33.31,0:20:35.78,Default,,0,0,0,,Kurwa, może w życiu chodzi o coś więcej niż tylko kasę.
+Dialogue: 0,0:20:36.26,0:20:40.51,Default,,0,0,0,,Shining, wiesz, że chmurki to tylko zgubione pianki?
+Dialogue: 0,0:20:40.88,0:20:43.30,Default,,0,0,0,,Księżniczko, chyba powinnaś się położyć.
+Dialogue: 0,0:20:43.66,0:20:46.23,Default,,0,0,0,,Ale co z żelkową rewolucją?
+Dialogue: 0,0:20:48.45,0:20:49.54,Default,,0,0,0,,Umm, Chrysalis?
+Dialogue: 0,0:20:49.76,0:20:50.76,Default,,0,0,0,,Co ty wyprawiasz?
+Dialogue: 0,0:20:50.97,0:20:52.64,Default,,0,0,0,,Oh, ja tylko patrzę.
+Dialogue: 0,0:20:52.66,0:20:53.80,Default,,0,0,0,,To już jest przestępstwo?
+Dialogue: 0,0:20:54.22,0:20:56.05,Default,,0,0,0,,Ta część z molestowaniem, tak.
+Dialogue: 0,0:20:56.43,0:20:59.43,Default,,0,0,0,,Musisz być naprawdę silny,\Ndźwigając te swoje potężne kule!
+Dialogue: 0,0:20:59.46,0:20:59.80,Default,,0,0,0,,Dzięki!
+Dialogue: 0,0:20:59.82,0:21:02.49,Default,,0,0,0,,Może miałbyś ochotę ulokować swój ładunek w mojej cipie?
+Dialogue: 0,0:21:03.53,0:21:06.24,Default,,0,0,0,,To znaczy, może chcesz, żebym zdjeła z ciebie trochę ciężaru?
+Dialogue: 0,0:21:06.44,0:21:07.33,Default,,0,0,0,,Nie dzięki!
+Dialogue: 0,0:21:07.47,0:21:09.52,Default,,0,0,0,,Nie pozwalam nikomu dotykać moich kul do kręgli,
+Dialogue: 0,0:21:09.55,0:21:12.06,Default,,0,0,0,,bo to drogie rzeczy, które kupiłem w eBay.
+Dialogue: 0,0:21:12.56,0:21:13.66,Default,,0,0,0,,Hej, mam pomysł!
+Dialogue: 0,0:21:14.00,0:21:16.93,Default,,0,0,0,,Może opuścimy to miejsce i pogramy w kilka rund minigolfa?
+Dialogue: 0,0:21:17.17,0:21:22.19,Default,,0,0,0,, Potem przy coli i waniliowych lodach możemy\Nprzedyskutować imiona dla naszego przyszłego potomstwa.
+Dialogue: 0,0:21:22.21,0:21:24.21,Default,,0,0,0,,Słyszałem, że wy biali chłopcy to uwielbiacie.
+Dialogue: 0,0:21:24.34,0:21:25.27,Default,,0,0,0,,Ja też.
+Dialogue: 0,0:21:25.30,0:21:26.47,Default,,0,0,0,,Wolę Pepsi.
+Dialogue: 0,0:21:26.64,0:21:28.68,Default,,0,0,0,,A teraz, jeśli pozwolisz, próbuję grać w kręgle.
+Dialogue: 0,0:21:29.50,0:21:33.78,Default,,0,0,0,,Cadence jest oczywiście urocza, ale oboje wiemy,\Nże nigdy nie zaspokoi cię tak jak ja
+Dialogue: 0,0:21:33.81,0:21:36.11,Default,,0,0,0,,bo jej stawy nóg i szyi są przecież wewnątrz.
+Dialogue: 0,0:21:36.52,0:21:38.48,Default,,0,0,0,,Czy zwykły kucyk potrafiłby zrobić coś takiego?
+Dialogue: 0,0:21:44.77,0:21:48.05,Default,,0,0,0,,Hej synu, właśnie zaliczyłem strike'a i nikt nawet nie zauważył.
+Dialogue: 0,0:21:48.07,0:21:50.05,Default,,0,0,0,,Idź tam i poustawiaj moje kręgle!
+Dialogue: 0,0:21:50.25,0:21:53.23,Default,,0,0,0,,To działa automatycznie tato, same się podniosą.
+Dialogue: 0,0:21:53.55,0:21:56.04,Default,,0,0,0,,Nie, nie wrócą. Przecież przychodzimy tu co miesiąc!
+Dialogue: 0,0:21:56.18,0:21:57.04,Default,,0,0,0,,No właśnie!
+Dialogue: 0,0:21:57.20,0:21:59.37,Default,,0,0,0,,Dlatego wiem, że to ustawia automatycznie!
+Dialogue: 0,0:21:59.45,0:22:03.13,Default,,0,0,0,,Wiem, że masz wielką dupe, ale nie musisz zachowywać się jak dupek!
+Dialogue: 0,0:22:03.32,0:22:04.74,Default,,0,0,0,,Nieważne, nie obchodzi mnie to.
+Dialogue: 0,0:22:04.76,0:22:06.87,Default,,0,0,0,,Po prostu zrób co mówię i poustawiaj moje kręgle!
+Dialogue: 0,0:22:07.17,0:22:10.15,Default,,0,0,0,,Nie będę uczestniczył w twoich dziwnych gierkach władzy, tato.
+Dialogue: 0,0:22:10.43,0:22:12.12,Default,,0,0,0,,Mam 35 i pół roku!
+Dialogue: 0,0:22:12.44,0:22:13.76,Default,,0,0,0,,Nie kłam, chłopcze.
+Dialogue: 0,0:22:13.84,0:22:14.50,Default,,0,0,0,,Nie kłamie!
+Dialogue: 0,0:22:14.63,0:22:15.64,Default,,0,0,0,,Masz wszystko!
+Dialogue: 0,0:22:15.79,0:22:16.35,Default,,0,0,0,,Wiem.
+Dialogue: 0,0:22:16.37,0:22:17.73,Default,,0,0,0,,Kapitan Gwardii Królewskiej!
+Dialogue: 0,0:22:17.75,0:22:19.86,Default,,0,0,0,,Dowódca, ale kapitan też brzmi nieźle.
+Dialogue: 0,0:22:19.88,0:22:23.45,Default,,0,0,0,,Żonaty z piękną księżniczką, mieszkasz w wielkim zamku!
+Dialogue: 0,0:22:23.48,0:22:25.65,Default,,0,0,0,,To nie zamek, to całe królestwo.
+Dialogue: 0,0:22:25.81,0:22:28.31,Default,,0,0,0,,Tymczasem ja mieszkam w starym domu z brzydką suką!
+Dialogue: 0,0:22:28.46,0:22:30.14,Default,,0,0,0,,Myślę, że wygląda całkiem ładnie!
+Dialogue: 0,0:22:30.31,0:22:33.20,Default,,0,0,0,,Jak Twilight, która nie słucha Evanescence.
+Dialogue: 0,0:22:33.31,0:22:36.18,Default,,0,0,0,,Ledwo wiążemy koniec z końcem i wyglądamy jak zmyci starzy głupcy!
+Dialogue: 0,0:22:36.30,0:22:38.01,Default,,0,0,0,,Pozwólcie, że się na chwilę wtrącę.
+Dialogue: 0,0:22:38.16,0:22:40.40,Default,,0,0,0,,A dlaczego mielibyśmy się przejmować tym,\Nco masz do powiedzenia?
+Dialogue: 0,0:22:40.42,0:22:41.31,Default,,0,0,0,,Jesteś czarna!
+Dialogue: 0,0:22:41.73,0:22:42.52,Default,,0,0,0,,Okej.
+Dialogue: 0,0:22:42.75,0:22:44.94,Default,,0,0,0,,Tato, nie zachowuj się rasistowsko poza domem!
+Dialogue: 0,0:22:45.36,0:22:46.56,Default,,0,0,0,,Hej, wszyscy tak myślimy!
+Dialogue: 0,0:22:46.59,0:22:49.06,Default,,0,0,0,,Tylko ja mam jaja, żeby to powiedzieć!
+Dialogue: 0,0:22:49.30,0:22:51.20,Default,,0,0,0,,Myślisz, że tylko dlatego że jestem inna,
+Dialogue: 0,0:22:51.23,0:22:53.44,Default,,0,0,0,,moje słowa powinny mieć mniejsze znaczenie?
+Dialogue: 0,0:22:53.46,0:22:54.01,Default,,0,0,0,,Tak!
+Dialogue: 0,0:22:54.29,0:22:55.08,Default,,0,0,0,,Okej.
+Dialogue: 0,0:22:55.81,0:22:56.97,Default,,0,0,0,,Słuchaj, nie jestem rasistą!
+Dialogue: 0,0:22:57.00,0:22:59.67,Default,,0,0,0,,Po prostu uważam, że pewne kucyki\Nnie powinny mieć równych praw.
+Dialogue: 0,0:22:58.94,0:23:00.04,Default,,0,0,0,,{\c&HF2FF6D&}Ona w ogóle jest koniem?
+Dialogue: 0,0:23:00.07,0:23:03.03,Default,,0,0,0,,I nienawidzę każdego, kto myśli, że jest lepszy ode mnie!
+Dialogue: 0,0:23:03.05,0:23:05.08,Default,,0,0,0,,Czy to dlatego nienawidzisz każdego kucyka?
+Dialogue: 0,0:23:05.50,0:23:08.00,Default,,0,0,0,,Shining Armor to dobra osoba, panie Night Light.
+Dialogue: 0,0:23:08.16,0:23:10.70,Default,,0,0,0,,Powinien pan być dumny ze swojego białego syna marnotrawnego!
+Dialogue: 0,0:23:10.84,0:23:13.19,Default,,0,0,0,,Ale mam wrażenie, że jesteś po prostu zazdrosny o jego sukces.
+Dialogue: 0,0:23:13.52,0:23:14.28,Default,,0,0,0,,Zazdrosny?
+Dialogue: 0,0:23:14.47,0:23:16.95,Default,,0,0,0,,Myślisz, że jestem zazdrosny o nieskazitelnie białą sierść mojego syna,
+Dialogue: 0,0:23:16.97,0:23:19.51,Default,,0,0,0,,która lśni jak polerowany marmur? A może o jego królewsko niebieską grzywę,
+Dialogue: 0,0:23:19.53,0:23:21.55,Default,,0,0,0,,spływającą jak wodospad?
+Dialogue: 0,0:23:21.57,0:23:24.57,Default,,0,0,0,,Albo o jego idealną szczękę i głębokie błękitne oczy?
+Dialogue: 0,0:23:25.48,0:23:29.12,Default,,0,0,0,,Powiedzmy sobie szczerze. Musisz mieć niezłą strzelbę w spodniach.
+Dialogue: 0,0:23:29.49,0:23:31.76,Default,,0,0,0,,Bo wątpię, żeby mama wyszła za ciebie dla twojej twarzy.
+Dialogue: 0,0:23:32.54,0:23:33.39,Default,,0,0,0,,Pierdol się!
+Dialogue: 0,0:23:33.41,0:23:34.88,Default,,0,0,0,,Nie, ty się pierdol suko!
+Dialogue: 0,0:23:35.25,0:23:37.96,Default,,0,0,0,,Patrzcie tylko, jak się wymądrzasz, próbując zawstydzić mojego niskiego króla,
+Dialogue: 0,0:23:37.98,0:23:39.87,Default,,0,0,0,, jakbyś sam był jakimś ideałem.
+Dialogue: 0,0:23:40.04,0:23:43.75,Default,,0,0,0,,Wiesz, gdybyś był w moim królestwie, czyli w pieprzonym getcie,
+Dialogue: 0,0:23:43.77,0:23:46.91,Default,,0,0,0,,nie wyszedłbyś żywy z tej kręgielni!
+Dialogue: 0,0:23:46.93,0:23:50.71,Default,,0,0,0,,Na twoje szczęście, rozwalenie cię tylko utrwaliłoby mit,
+Dialogue: 0,0:23:50.74,0:23:53.30,Default,,0,0,0,,że mój rodzaj to tylko dzikie zwierzęta.
+Dialogue: 0,0:23:53.50,0:23:56.32,Default,,0,0,0,,Więc podziękuj swojej bogini Celestii, że okazuję ci litość
+Dialogue: 0,0:23:56.35,0:23:59.61,Default,,0,0,0,,jako 180-centymetrowa, uległa czarnulka.
+Dialogue: 0,0:23:59.63,0:24:00.67,Default,,0,0,0,,Głupia dziwko.
+Dialogue: 0,0:24:00.81,0:24:02.22,Default,,0,0,0,,Litość jest dla słabych!
+Dialogue: 0,0:24:03.03,0:24:05.32,Default,,0,0,0,,Hej, Pinkie Pie, chodź tu kurwa!
+Dialogue: 0,0:24:05.34,0:24:06.38,Default,,0,0,0,,Tato, co ty robisz?
+Dialogue: 0,0:24:06.41,0:24:07.34,Default,,0,0,0,,Przerażasz mnie!
+Dialogue: 0,0:24:07.73,0:24:09.21,Default,,0,0,0,,Za chwilę się przekonasz!
+Dialogue: 0,0:24:10.02,0:24:11.78,Default,,0,0,0,,Chyba wyszło szydło z worka.
+Dialogue: 0,0:24:11.98,0:24:13.77,Default,,0,0,0,,Co jest, stary?
+Dialogue: 0,0:24:14.23,0:24:15.27,Default,,0,0,0,,Hej Pinkie Pie,
+Dialogue: 0,0:24:15.30,0:24:19.09,Default,,0,0,0,,jakbyś się czuła, dziedzicząc dosłownie cały nasz rodzinny majątek po mojej śmierci?
+Dialogue: 0,0:24:19.16,0:24:19.87,Default,,0,0,0,,Tato nie moż-
+Dialogue: 0,0:24:19.89,0:24:21.03,Default,,0,0,0,,Nie wtrącaj się!
+Dialogue: 0,0:24:21.05,0:24:23.65,Default,,0,0,0,,Więc Pinkie Pie, chcesz darmowe rzeczy?
+Dialogue: 0,0:24:24.05,0:24:24.87,Default,,0,0,0,,Pewnie.
+Dialogue: 0,0:24:26.47,0:24:29.47,Default,,0,0,0,,Twoja magiczna aura ma dosłownie kolor szczyn.
+Dialogue: 0,0:24:29.90,0:24:32.10,Default,,0,0,0,,Nic dziwnego, że nienawidzisz swojego zjebanego życia!
+Dialogue: 0,0:24:35.15,0:24:36.15,Default,,0,0,0,,Pinkie, wróciłaś!
+Dialogue: 0,0:24:36.28,0:24:37.34,Default,,0,0,0,,Co tam masz?
+Dialogue: 0,0:24:37.66,0:24:39.21,Default,,0,0,0,,Torbe bajgli!
+Dialogue: 0,0:24:39.34,0:24:40.41,Default,,0,0,0,,Mogę dostać bajgla?
+Dialogue: 0,0:24:40.74,0:24:42.90,Default,,0,0,0,,Nie, to moja torba bajgli!
+Dialogue: 0,0:24:43.00,0:24:44.82,Default,,0,0,0,,Więc jak tam u ciebie?
+Dialogue: 0,0:24:44.96,0:24:47.61,Default,,0,0,0,,Ukończyłeś swoją supertajną misję?
+Dialogue: 0,0:24:48.08,0:24:50.03,Default,,0,0,0,,Oh nie, zjebałam to totalnie.
+Dialogue: 0,0:24:50.13,0:24:52.10,Default,,0,0,0,,Wygląda na to, że całkiem nieźle to znosisz.
+Dialogue: 0,0:24:52.30,0:24:54.38,Default,,0,0,0,,Wypłakałam się po drodze.
+Dialogue: 0,0:24:54.41,0:24:56.74,Default,,0,0,0,,Tylko nie mów nic Celestii, jasne?
+Dialogue: 0,0:24:56.76,0:25:01.08,Default,,0,0,0,,Ma teraz tyle na głowie, w tym wódkę i fasolę,
+Dialogue: 0,0:25:01.08,0:25:03.16,Default,,0,0,0,,że liczę, że o tym wszystkim zapomni.
+Dialogue: 0,0:25:03.18,0:25:05.48,Default,,0,0,0,,A tak w ogóle, jak poszło u moich rodziców?
+Dialogue: 0,0:25:06.05,0:25:06.57,Default,,0,0,0,,Oh,
+Dialogue: 0,0:25:07.12,0:25:08.50,Default,,0,0,0,,Poszło bardzo dobrze!

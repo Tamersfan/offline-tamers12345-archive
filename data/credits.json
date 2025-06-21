@@ -1,0 +1,35 @@
+{
+  "creator": "All original videos, art, and content in this archive were created by Tamers12345.",
+  "creatorLinks": [
+    { "label": "YouTube", "url": "https://www.youtube.com/@Tamers12345Official" },
+    { "label": "Twitter/X", "url": "https://x.com/TheTamers12345" },
+    { "label": "Patreon", "url": "https://www.patreon.com/Tamers12345" },
+    { "label": "Tumblr Blog 1", "url": "https://tamers12345-blog-blog.tumblr.com/" },
+    { "label": "Tumblr Blog 2", "url": "https://tamers12345isme.tumblr.com/" },
+    { "label": "Newgrounds", "url": "https://tamers12345official.newgrounds.com/" },
+    { "label": "Pony.Tube", "url": "https://pony.tube/c/tamers12345official/videos" }
+  ],
+  "header": "Subtitles provided by those below. Thank you to all translators and contributors!",
+  "contributors": [
+    {
+      "name": "Ponilek",
+      "link": "https://www.youtube.com/@Ponilek",
+      "works": [
+        { "video": "Fluttershy's Hot Pot Party", "language": "Polish" },
+        { "video": "My Little Pony: Pinkie Pie's Sleepover", "language": "Polish" },
+        { "video": "Rainbow Dash's Birthday Bash", "language": "Polish" },
+        { "video": "My Little Pony: Rarity and Twilight Sparkle Go To Unicorn Con", "language": "Polish" },
+        { "video": "My Little Pony Pinkie Pie Goes Bowling With Twilights family", "language": "Polish" },
+        { "video": "My Little Pony Pinkie Pie Participates in a Joke-Off", "language": "Polish" },
+        { "video": "My Little Pony StarSong and Toola Roola Come to Visit", "language": "Polish" },
+        { "video": "Hearth’s Warming in Manehattan", "language": "Polish" },
+        { "video": "My Little Pony The Movie Shattered Harmony", "language": "Polish" },
+        { "video": "My Little Pony The Movie Soarin and Braeburn", "language": "Polish" },
+        { "video": "My Little Pony The Movie The Death Of Twilight Sparkle", "language": "Polish" },
+        { "video": "Rainbow Dash Must Perform the Sonic Rainboom One Finale Time Or Die Trying", "language": "Polish" },
+        { "video": "Twilight Sparkle Commits Arson In The Name Of Princess Celestia", "language": "Polish" },
+        { "video": "Twilight Sparkle Shows Trixie The True Meaning Of Friendship Whether She Likes It Or Not", "language": "Polish" }
+      ]
+    }
+  ]
+}

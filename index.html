@@ -4,6 +4,22 @@
   <meta charset="UTF-8">
   <title>Offline Tamers12345 Archive</title>
   <link rel="stylesheet" href="style.css">
+  <script src="libs/libass/subtitles-octopus.js"></script>
+  <script>
+    window.SubtitlesOctopusWorkerUrl = 'libs/libass/subtitles-octopus-worker.js';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const video = document.getElementById('player-video');
+      if (!video) {
+        console.error("❌ Video element with ID 'player-video' not found.");
+        return;
+      }
+
+      video.addEventListener('loadedmetadata', () => {
+        console.log("✅ Video metadata loaded — loading .ass subtitles...");
+      });
+    });
+  </script>
 </head>
 <body>
   <div class="tab-container">
@@ -11,6 +27,7 @@
     <button id="tab-deviantart" class="tab-button">DeviantArt</button>
     <button id="tab-tumblr" class="tab-button">Tumblr Blog 1</button>
     <button id="tab-tumblr2" class="tab-button">Tumblr Blog 2</button>
+    <button id="tab-credits" class="tab-button">Credits</button>
   </div>
 
   <div id="startup-screen">
@@ -26,29 +43,23 @@
 
     <div style="padding: 10px;">
       <input type="text" id="searchInput" placeholder="Search videos by title..." style="margin-right: 10px;">
-
       <label for="sortOrder">Sort by:</label>
       <select id="sortOrder">
         <option value="newest" selected>Newest</option>
         <option value="oldest">Oldest</option>
       </select>
-
       <label style="margin-left: 10px;"><input type="checkbox" id="badge-toggle" checked> Show Live Chat Badges</label>
-
       <label style="margin-left: 10px;"><input type="checkbox" id="favoritesToggle"> Show Favorites</label>
-
       <label style="margin-left: 10px;" for="tagFilter">Filter:</label>
       <select id="tagFilter">
         <option value="all">Everything</option>
         <option value="no-mlp">Everything but MLP</option>
         <option value="only-mlp">Only MLP</option>
       </select>
-
       <label style="margin-left: 10px;" for="playlistSelect">Playlist:</label>
       <select id="playlistSelect">
         <option value="all">All</option>
       </select>
-
       <button id="change-folder-btn" style="margin-left: 10px;">Change Video Folder</button>
     </div>
 
@@ -72,26 +83,29 @@
           <option value="2">2x</option>
         </select>
         <button onclick="toggleChat()">Toggle Chat</button>
+        <label for="subtitleSelector" id="subtitle-label" style="display:none;">Subtitles:</label>
+        <select id="subtitleSelector" style="display:none;">
+          <option value="">None</option>
+        </select>
       </div>
 
       <div id="player-layout">
         <div id="video-wrapper">
           <h2 id="player-title"></h2>
-          <video id="player-video" controls>
-            <track id="video-subtitle" kind="subtitles" label="English" srclang="en">
-          </video>
+          <div style="position: relative;">
+            <video id="player-video" controls>
+              <track id="video-subtitle" kind="subtitles" label="English" srclang="en">
+            </video>
+          </div>
           <p id="player-description"></p>
           <p><span id="player-date"></span></p>
         </div>
-
         <div id="chat-pane">
           <div id="chat-messages"></div>
         </div>
       </div>
     </div>
   </div>
-
-  <script src="script.js"></script>
 
   <div id="deviantart-section" style="display:none;">
     <div class="controls">
@@ -104,7 +118,6 @@
     </div>
     <div id="deviantart-gallery" class="grid"></div>
 
-    <!-- DeviantArt Fullscreen Modal -->
     <div id="da-modal" class="da-modal" style="display:none;">
       <div class="da-modal-content">
         <button id="da-modal-close" class="da-modal-close">✕</button>
@@ -115,7 +128,6 @@
     </div>
   </div>
 
-  <!-- Tumblr Blog 1 section -->
   <div id="tumblr-section" style="display:none;">
     <div id="tumblr-container">
       <iframe id="tumblr-frame" sandbox="allow-same-origin allow-scripts"></iframe>
@@ -126,7 +138,6 @@
     </div>
   </div>
 
-  <!-- Tumblr Blog 2 section -->
   <div id="tumblr2-section" style="display:none;">
     <div id="tumblr2-container">
       <iframe id="tumblr2-frame" sandbox="allow-same-origin allow-scripts"></iframe>
@@ -137,6 +148,26 @@
     </div>
   </div>
 
+  <!-- The ONLY static credits-section you need: -->
+  <div id="credits-section" style="display:none; padding: 20px;">
+    <!-- The following are dynamically created and shown/hidden by your JS: -->
+    <div id="alt-progress-bar" style="width: 100%; background: #ccc; height: 10px; margin-top: 10px; display:none;">
+      <div id="alt-progress-fill" style="width: 0%; background: #4caf50; height: 100%;"></div>
+    </div>
+    <div id="alt-progress-label" style="font-size: 0.95em; margin-top: 4px; display:none;"></div>
+    <div id="alt-download-status" style="margin-top: 10px; font-size: 0.9em; white-space: pre-line;"></div>
+  </div>
+
+  <!-- UNIVERSAL Download Progress Bar (for updates & video downloads) -->
+  <div id="main-download-progress" style="display:none;position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#222;padding:12px 24px;border-radius:8px;color:#fff;z-index:9999;min-width:320px;box-shadow:0 2px 16px #0008;">
+    <div id="main-download-status" style="margin-bottom:8px;font-size:16px;"></div>
+    <div style="background:#333;height:20px;border-radius:10px;overflow:hidden;">
+      <div id="main-download-bar" style="height:100%;width:0%;background:#4af;transition:width 0.2s;"></div>
+    </div>
+    <div id="main-download-label" style="font-size:13px;margin-top:6px;text-align:right;"></div>
+  </div>
+
+  <script src="script.js"></script>
   <script src="deviantart.js"></script>
   <script src="tumblr.js"></script>
   <script src="tumblr2.js"></script>

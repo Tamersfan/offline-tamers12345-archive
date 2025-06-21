@@ -2,13 +2,73 @@
 let chatFiles = new Set();
 let showBadges = true;
 let sortOrder = 'newest';
-let tagFilter = 'all';               // filter state: all, no-mlp, only-mlp
-let selectedPlaylist = 'all';        // playlist/tag-based filter (ignores "mlp")
+let tagFilter = 'all';
+let selectedPlaylist = 'all';
 let rawVideoData = [];
 let videoPath = "";
 let favorites = new Set(JSON.parse(localStorage.getItem('favorites') || '[]'));
+let subtitlesData = {};
+let assRenderer = null;
+let currentBlobUrl = null;
 
-// === Load available chat files ===
+function getDebugOverlay() {
+  return null;
+}
+
+// === Universal Download Progress Bar ===
+// (Add this at the top, after your global state)
+
+function formatBytes(bytes) {
+  if (bytes === 0) return '0 Bytes';
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+function showMainDownloadProgress(status, percent, received, total) {
+  const bar = document.getElementById('main-download-bar');
+  const wrap = document.getElementById('main-download-progress');
+  const label = document.getElementById('main-download-label');
+  const statusDiv = document.getElementById('main-download-status');
+  if (!wrap || !bar || !label || !statusDiv) return;
+  wrap.style.display = 'block';
+  bar.style.width = percent ? Math.round(percent) + '%' : '0%';
+  statusDiv.textContent = status;
+  label.textContent = `${formatBytes(received || 0)} / ${formatBytes(total || 0)}` +
+    (percent ? ` (${Math.round(percent)}%)` : '');
+}
+
+function hideMainDownloadProgress() {
+  const wrap = document.getElementById('main-download-progress');
+  if (wrap) wrap.style.display = 'none';
+}
+
+// === Progress Listeners for main process events ===
+// Place this in your startup section (DOMContentLoaded or after DOM is ready):
+window.electronAPI.onUpdateProgress?.(function (progress) {
+  // progress: {percent, transferred, total, ...}
+  showMainDownloadProgress(
+    "Downloading program update...",
+    progress.percent,
+    progress.transferred,
+    progress.total
+  );
+  if (progress.percent >= 100) setTimeout(hideMainDownloadProgress, 2000);
+});
+
+window.electronAPI.onVideoDownloadProgress?.(function (data) {
+  // data: {filename, percent, received, total}
+  showMainDownloadProgress(
+    `Downloading video: ${data.filename || ''}`,
+    data.percent,
+    data.received,
+    data.total
+  );
+  if (data.percent >= 100) setTimeout(hideMainDownloadProgress, 2000);
+});
+
+
 async function loadChatFiles() {
   try {
     const res = await fetch('data/chat_index.json');
@@ -19,39 +79,117 @@ async function loadChatFiles() {
   }
 }
 
+
+// === Alt Video URLs loaded from JSON ===
+let altVideoURLs = {};
+
+// === Load alt video URLs from JSON ===
+async function loadAltVideoURLs() {
+  try {
+    const res = await fetch('data/altvideos.json');
+    altVideoURLs = await res.json();
+  } catch (e) {
+    console.error("Could not load altvideos.json", e);
+    altVideoURLs = {};
+  }
+}
+
+// === File System Access helpers ===
+async function fileExistsInVideoFolder(filename) {
+  if (!videoPath) return false;
+  return await window.electronAPI.fileExists(`${videoPath}/${filename}`);
+}
+async function saveAltVideoToFolder(filename, arrayBuffer) {
+  if (!videoPath) throw new Error("No video path selected!");
+  return await window.electronAPI.saveAltVideo(`${videoPath}/${filename}`, arrayBuffer);
+}
+
+// === Utility ===
+function isAss(path) {
+  return path.toLowerCase().endsWith('.ass');
+}
+
+function clearAssSubtitle() {
+  if (assRenderer) {
+    console.log("🧹 Disposing assRenderer");
+    assRenderer.dispose();
+    assRenderer = null;
+  }
+  if (currentBlobUrl) {
+    console.log("🧹 Revoking blob URL");
+    URL.revokeObjectURL(currentBlobUrl);
+    currentBlobUrl = null;
+  }
+}
+
+// ... other helper functions, UI setup, video grid, etc. ...
+
+async function loadAssSubtitle(subtitlePath, videoElement) {
+  clearAssSubtitle();
+
+  try {
+    console.log(`=== [DEBUG] Loading ASS subtitle: ${subtitlePath}`);
+    const response = await fetch(subtitlePath);
+    if (!response.ok) throw new Error(`Failed to fetch subtitle file: ${subtitlePath}`);
+    const assText = await response.text();
+
+    // Find font names declared in the ASS file (for debugging only)
+    const fontNameRegex = /Fontname\s*:\s*([^\r\n]+)/g;
+    let match, fontsInAss = [];
+    while ((match = fontNameRegex.exec(assText))) {
+      fontsInAss.push(match[1].trim());
+    }
+    console.log("=== [DEBUG] Fontnames in ASS:", fontsInAss);
+
+    // Set up SubtitlesOctopus with **no fonts specified** (browser/system default fonts will be used)
+    assRenderer = new SubtitlesOctopus({
+      video: videoElement,
+      subContent: assText,
+      // No "fonts" property at all!
+      workerUrl: window.SubtitlesOctopusWorkerUrl,
+      legacyWorkerUrl: window.SubtitlesOctopusWorkerUrl
+    });
+  } catch (e) {
+    console.error("❌ Failed to load .ass subtitle:", e);
+  }
+}
+
 // === Initialization ===
 async function init() {
   await loadChatFiles();
+  await loadAltVideoURLs();
 
   const res = await fetch('data/videos.json');
   rawVideoData = await res.json();
 
+  try {
+    const subs = await fetch('data/subtitles.json');
+    subtitlesData = await subs.json();
+  } catch (e) {
+    console.warn("Could not load data/subtitles.json");
+  }
+
   populatePlaylistOptions();
   renderVideoGrid();
 
-  // Sort control
   document.getElementById('sortOrder').addEventListener('change', e => {
     sortOrder = e.target.value;
     renderVideoGrid();
   });
 
-  // Live chat badge toggle
   document.getElementById('badge-toggle').addEventListener('change', e => {
     showBadges = e.target.checked;
     renderVideoGrid();
   });
 
-  // Favorites toggle
   document.getElementById('favoritesToggle').addEventListener('change', () => {
     renderVideoGrid();
   });
 
-  // Search input
   document.getElementById('searchInput').addEventListener('input', () => {
     renderVideoGrid();
   });
 
-  // Tag-based filter ("Everything", "Everything but MLP", "Only MLP")
   const filterSelect = document.getElementById('tagFilter');
   if (filterSelect) {
     filterSelect.addEventListener('change', e => {
@@ -60,7 +198,6 @@ async function init() {
     });
   }
 
-  // Playlist (tag) filter, excluding "mlp"
   const playlistSelect = document.getElementById('playlistSelect');
   if (playlistSelect) {
     playlistSelect.addEventListener('change', e => {
@@ -69,9 +206,7 @@ async function init() {
     });
   }
 
-  // ── New: Check for missing videos on startup ────────────────────────────────
   const missing = await window.electronAPI.checkMissingVideos();
-  console.log('▶ Missing videos (renderer):', missing);
   if (missing.length) {
     if (confirm(`You’re missing ${missing.length} videos. Download them now?`)) {
       try {
@@ -100,7 +235,9 @@ function populatePlaylistOptions() {
 
   const tagArray = Array.from(tagSet);
   const customOrder = [
+    'SU Episode',
     'SU Lore Arc 1 (The Prophecy/The Boys)',
+    'Obama Arc',
     'Parodies',
     'Zatch Bell',
     'Holiday Special',
@@ -207,15 +344,51 @@ function showPlayer(video) {
   document.getElementById('player-date').innerText = formatDate(video.date);
 
   const player = document.getElementById('player-video');
-  const chatPane = document.getElementById('chat-pane');
-  const chatBox = document.getElementById('chat-messages');
-  const toggleBtn = document.querySelector('button[onclick="toggleChat()"]');
+  const subtitleSelector = document.getElementById('subtitleSelector');
+  const subtitleLabel = document.getElementById('subtitle-label');
+  const track = document.getElementById('video-subtitle');
 
   player.src = "file://" + videoPath + "/" + video.filename;
   player.load();
   player.className = 'normal';
   player.volume = document.getElementById('volumeSlider').value;
   player.playbackRate = parseFloat(document.getElementById('speedSelector').value);
+
+  currentVideoFilename = video.filename;
+  currentAltVideo = null;
+
+  // Reset subtitle UI
+  track.removeAttribute('src');
+  subtitleSelector.innerHTML = '<option value="">None</option>';
+  subtitleSelector.style.display = 'none';
+  subtitleLabel.style.display = 'none';
+
+  const subInfo = subtitlesData[video.filename];
+  if (subInfo) {
+    for (const [lang, data] of Object.entries(subInfo)) {
+      const opt = document.createElement('option');
+      opt.value = lang;
+      opt.textContent = lang;
+      subtitleSelector.appendChild(opt);
+    }
+
+    subtitleSelector.style.display = 'inline-block';
+    subtitleLabel.style.display = 'inline-block';
+    subtitleSelector.onchange = () => {
+      const lang = subtitleSelector.value;
+      setTimeout(() => {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            changeSubtitle(lang);
+          });
+        });
+      }, 100);
+    };
+  }
+
+  const chatPane = document.getElementById('chat-pane');
+  const chatBox = document.getElementById('chat-messages');
+  const toggleBtn = document.querySelector('button[onclick="toggleChat()"]');
 
   chatBox.innerHTML = "";
   chatPane.style.display = 'none';
@@ -249,6 +422,99 @@ function showPlayer(video) {
   };
 }
 
+let currentVideoFilename = null;
+let currentAltVideo = null;
+
+function changeSubtitle(lang) {
+  const track = document.getElementById('video-subtitle');
+  const video = document.getElementById('player-video');
+  const currentTime = video.currentTime;
+
+  clearAssSubtitle();
+
+  const currentVideoTitle = document.getElementById('player-title').innerText;
+  const videoEntry = rawVideoData.find(v => v.title === currentVideoTitle);
+  if (!videoEntry) return;
+
+  const subInfo = subtitlesData[videoEntry.filename];
+
+  // No subtitles selected — revert to original video
+  if (!lang || !subInfo || !subInfo[lang]) {
+    if (currentAltVideo && currentVideoFilename) {
+      video.src = "file://" + videoPath + "/" + currentVideoFilename;
+      video.load();
+      video.onloadedmetadata = () => {
+        video.currentTime = currentTime;
+        currentAltVideo = null;
+      };
+    }
+    track.removeAttribute('src');
+    video.load();
+    return;
+  }
+
+  // Subtitles selected
+  const entry = subInfo[lang];
+  const subtitlePath = typeof entry === 'string' ? entry : entry.path;
+  const altVideo = typeof entry === 'object' ? entry.altVideo : null;
+
+  if (!currentVideoFilename) currentVideoFilename = videoEntry.filename;
+
+  if (altVideo && altVideo !== currentAltVideo) {
+    const altPath = `${videoPath}/${altVideo}`;
+    fetch(`file://${altPath}`)
+      .then(r => {
+        if (r.ok) {
+          video.src = "file://" + altPath;
+          currentAltVideo = altVideo;
+        } else {
+          video.src = "file://" + videoPath + "/" + currentVideoFilename;
+          currentAltVideo = null;
+        }
+      })
+      .catch(() => {
+        video.src = "file://" + videoPath + "/" + currentVideoFilename;
+        currentAltVideo = null;
+      })
+      .finally(() => {
+        video.load();
+        video.onloadedmetadata = () => {
+          video.currentTime = currentTime;
+        };
+      });
+  } else {
+    video.src = "file://" + videoPath + "/" + currentVideoFilename;
+    video.load();
+    video.onloadedmetadata = () => {
+      video.currentTime = currentTime;
+    };
+  }
+
+  if (subtitlePath) {
+    if (isAss(subtitlePath)) {
+      setTimeout(() => {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            loadAssSubtitle(subtitlePath, video);
+          });
+        });
+      }, 100);
+    } else {
+      track.src = subtitlePath;
+      track.label = lang;
+      track.srclang = "pl";
+      track.default = true;
+      video.load();
+      video.onloadedmetadata = () => {
+        video.currentTime = currentTime;
+        if (video.textTracks.length > 0) {
+          video.textTracks[0].mode = 'showing';
+        }
+      };
+    }
+  }
+}
+
 function closePlayer() {
   const player = document.getElementById('player-video');
   player.pause();
@@ -274,16 +540,230 @@ function toggleChat() {
 }
 
 function parseTimestamp(ts) {
-  return ts.split(':').map(Number).reduce((a,b) => a*60 + b, 0);
+  return ts.split(':').map(Number).reduce((a, b) => a * 60 + b, 0);
 }
 function formatDate(d) {
   return d.length === 8
-    ? `${d.slice(0,4)}-${d.slice(4,6)}-${d.slice(6)}`
+    ? `${d.slice(0, 4)}-${d.slice(4, 6)}-${d.slice(6)}`
     : d;
+}
+
+// === Credits Tab: Render from JSON ===
+async function renderCreditsPage() {
+  const creditsSection = document.getElementById('credits-section');
+  // Only clear the details, not the progress bar or status!
+  let detailsDiv = document.getElementById('credits-details');
+  if (!detailsDiv) {
+    detailsDiv = document.createElement('div');
+    detailsDiv.id = 'credits-details';
+    creditsSection.prepend(detailsDiv);
+  }
+  detailsDiv.innerHTML = "";
+
+  try {
+    const res = await fetch('data/credits.json');
+    const data = await res.json();
+
+    // ====== BEGIN: Creator and Links ======
+    let html = '';
+    if (data.creator) {
+      html += `<h2 style="margin-bottom:0.25em;">${data.creator}</h2>`;
+    }
+    if (Array.isArray(data.creatorLinks) && data.creatorLinks.length) {
+      html += `<div style="margin-bottom:1em;">`;
+      html += data.creatorLinks.map(link =>
+        `<a href="${link.url}" target="_blank" rel="noopener" style="margin-right: 10px; color:#4af;">${link.label}</a>`
+      ).join('');
+      html += `</div>`;
+    }
+    // ====== END: Creator and Links ======
+
+    html += `<h2>Credits</h2>`;
+    html += `<p>${data.header}</p>`;
+    html += `<ul>`;
+    for (const c of data.contributors) {
+      if (c.link) {
+        html += `<li><strong><a href="${c.link}" target="_blank" rel="noopener" style="color:#4af;text-decoration:underline;">${c.name}</a></strong>:<ul>`;
+      } else {
+        html += `<li><strong>${c.name}</strong>:<ul>`;
+      }
+      for (const w of c.works) {
+        html += `<li>${w.video} <span style="color:#666;">(${w.language})</span></li>`;
+      }
+      html += `</ul></li>`;
+    }
+    html += `</ul>`;
+    html += `
+  <div id="alt-video-explanation" style="margin:16px 0 6px 0;padding:10px 16px;background:#222;border-radius:6px;color:#f1f1f1;font-size:15px;">
+    <strong>What are “Alt Videos”?</strong><br>
+    <span style="color:#b7e;">Alt videos are alternate versions of some original videos—usually versions with on-screen translations. They are optional extras and are not required to watch the main archive. These files are large and are downloaded separately to save space.
+                              If an alt video is downloaded, it will automatically be swapped in when you select its corresponding subtitles in the video player. For example, choosing the Polish subtitles for "My Little Pony： Fluttershy's Hot Pot Party" will load "My Little Pony： Impreza Z Gorącymi Garnkami Fluttershy" (if you have it downloaded). Turning subtitles off will return you to the original video.
+                              If you do not have the alt video downloaded, the subtitles will simply display over the original video as normal.
+</span>
+  </div>
+  <div id="missing-alt-video-list" style="margin-top: 10px;"></div>
+  <label><input type="checkbox" id="force-redownload"> Force Redownload</label><br>
+  <button id="download-selected-alt-videos">Download Selected Alt Videos</button>
+`;
+
+    detailsDiv.innerHTML = html;
+  } catch (e) {
+    detailsDiv.innerHTML = "<h2>Credits</h2><p>❌ Failed to load credits.</p>";
+  }
+
+  await renderMissingAltVideos();
+
+  // Use .onclick so there's never a duplicate handler
+  document.getElementById('download-selected-alt-videos').onclick = downloadAltVideosHandler;
+
+  // Make all external links in credits section open in default browser
+  if (creditsSection && !creditsSection._externalLinkHandlerSet) {
+    creditsSection.addEventListener('click', function (event) {
+      const a = event.target.closest('a[target=\"_blank\"]');
+      if (a && a.href.startsWith('http')) {
+        event.preventDefault();
+        window.electronAPI.openExternal(a.href);
+      }
+    });
+    creditsSection._externalLinkHandlerSet = true;
+  }
+} // <== End of renderCreditsPage
+
+
+// === Download handler, now with debug! ===
+async function downloadAltVideosHandler() {
+  const status = document.getElementById('alt-download-status');
+  const progressBar = document.getElementById('alt-progress-bar');
+  const progressFill = document.getElementById('alt-progress-fill');
+  const progressLabel = document.getElementById('alt-progress-label');
+  const forceRedownload = document.getElementById('force-redownload').checked;
+  const form = document.getElementById('alt-video-form');
+  if (!form) {
+    status.textContent = '❌ No video checklist found.';
+    return;
+  }
+
+  const checkedBoxes = Array.from(form.querySelectorAll('input[name="altfile"]:checked'));
+  const selected = checkedBoxes.map(el => el.value);
+
+  if (selected.length === 0) {
+    status.textContent = '⚠️ No videos selected.';
+    return;
+  }
+
+  let completed = 0;
+  status.textContent = '';
+  progressBar.style.display = 'block';
+  progressFill.style.width = '0%';
+  progressLabel.style.display = 'block';
+  progressLabel.textContent = '';
+
+  for (const filename of selected) {
+    const url = altVideoURLs[filename];
+    if (!url) continue;
+    try {
+      const exists = await fileExistsInVideoFolder(filename);
+      if (exists && !forceRedownload) {
+        status.textContent += `⏩ Skipped: ${filename}\n`;
+        completed++;
+        continue;
+      }
+
+      // Begin download UI
+      progressLabel.textContent = `Starting: ${filename}`;
+
+      // --- Real-time progress download ---
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+      const contentLength = response.headers.get('content-length');
+      const total = contentLength ? parseInt(contentLength) : null;
+
+      let received = 0;
+      let chunks = [];
+      const reader = response.body.getReader();
+
+      while (true) {
+        const {done, value} = await reader.read();
+        if (done) break;
+        chunks.push(value);
+        received += value.length;
+        let percent = total ? ((received / total) * 100).toFixed(1) : null;
+
+        // Update progress bar and label in real-time
+        progressFill.style.width = total ? `${percent}%` : '0%';
+        progressLabel.textContent =
+          `Downloading: ${filename}\n` +
+          (total ? `${formatBytes(received)} / ${formatBytes(total)} (${percent}%)` : `${formatBytes(received)} downloaded`);
+      }
+
+      // Combine chunks into a single ArrayBuffer
+      let buffer = new Uint8Array(received);
+      let pos = 0;
+      for (let chunk of chunks) {
+        buffer.set(chunk, pos);
+        pos += chunk.length;
+      }
+      await saveAltVideoToFolder(filename, buffer);
+
+      status.textContent += `✅ Downloaded: ${filename}\n`;
+    } catch (err) {
+      console.error('Error downloading:', filename, err);
+      status.textContent += `❌ Failed: ${filename}\n`;
+    }
+    completed++;
+  }
+
+  // Hide progress bar when done
+  progressBar.style.display = 'none';
+  progressLabel.style.display = 'none';
+}
+
+async function renderMissingAltVideos() {
+  const listDiv = document.getElementById('missing-alt-video-list');
+  listDiv.innerHTML = '<strong>Missing Alt Videos:</strong><br>';
+
+  try {
+    const res = await fetch('data/subtitles.json');
+    const subtitles = await res.json();
+
+    const missing = [];
+    for (const langs of Object.values(subtitles)) {
+      for (const langData of Object.values(langs)) {
+        const filename = langData.altVideo;
+        if (!filename || !altVideoURLs[filename]) continue;
+        const exists = await fileExistsInVideoFolder(filename);
+        if (!exists) missing.push(filename);
+      }
+    }
+
+    if (missing.length === 0) {
+      listDiv.innerHTML += '<p>✅ All alt videos are present.</p>';
+      return;
+    }
+    let formHtml = '<form id="alt-video-form">';
+    missing.forEach(name => {
+      formHtml += `<label><input type="checkbox" name="altfile" value="${name}" checked> ${name}</label><br>`;
+    });
+    formHtml += '</form>';
+    listDiv.innerHTML += formHtml;
+
+  } catch (e) {
+    console.error('Failed to render missing alt videos:', e);
+    listDiv.innerHTML += '<p>❌ Failed to scan for missing alt videos.</p>';
+  }
 }
 
 // === Startup & tab-switching ===
 document.addEventListener('DOMContentLoaded', async () => {
+  // DEBUG overlay: Safe to add now!
+  getDebugOverlay();
+
+  // Patch SubtitlesOctopus worker error if not done already (for late injection cases)
+  if (window.SubtitlesOctopus && !window._octopusDebugPatched) {
+    try { patchSubtitlesOctopusDebug(); } catch (e) {}
+  }
+
   const settings = await window.electronAPI.getSettings();
   if (settings && settings.videoPath) {
     videoPath = settings.videoPath.replace(/\\\\/g, '/');
@@ -317,16 +797,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   const daBtn = document.getElementById('tab-deviantart');
   const tu1Btn = document.getElementById('tab-tumblr');
   const tu2Btn = document.getElementById('tab-tumblr2');
+  const creditsBtn = document.getElementById('tab-credits');
   const startup = document.getElementById('startup-screen');
   const ytSec = document.getElementById('app-content');
   const daSec = document.getElementById('deviantart-section');
   const tu1Sec = document.getElementById('tumblr-section');
   const tu2Sec = document.getElementById('tumblr2-section');
+  const creditsSec = document.getElementById('credits-section');
 
   function showSection(name) {
     if (typeof stopMusic === 'function' && name !== 'deviantart') stopMusic();
-    [startup, ytSec, daSec, tu1Sec, tu2Sec].forEach(s => { if (s) s.style.display = 'none'; });
-    [ytBtn, daBtn, tu1Btn, tu2Btn].forEach(b => b.classList.remove('active'));
+    [startup, ytSec, daSec, tu1Sec, tu2Sec, creditsSec].forEach(s => { if (s) s.style.display = 'none'; });
+    [ytBtn, daBtn, tu1Btn, tu2Btn, creditsBtn].forEach(b => b && b.classList.remove('active'));
     if (name === 'youtube') {
       ytSec.style.display = 'block';
       ytBtn.classList.add('active');
@@ -342,13 +824,18 @@ document.addEventListener('DOMContentLoaded', async () => {
       tu2Sec.style.display = 'block';
       tu2Btn.classList.add('active');
       if (typeof initTumblr2 === 'function') initTumblr2();
+    } else if (name === 'credits') {
+      creditsSec.style.display = 'block';
+      creditsBtn.classList.add('active');
+      renderCreditsPage();
     }
   }
 
-  ytBtn.addEventListener('click',   () => showSection('youtube'));
-  daBtn.addEventListener('click',   () => showSection('deviantart'));
-  tu1Btn.addEventListener('click',  () => showSection('tumblr'));
-  tu2Btn.addEventListener('click',  () => showSection('tumblr2'));
+  ytBtn.addEventListener('click', () => showSection('youtube'));
+  daBtn.addEventListener('click', () => showSection('deviantart'));
+  tu1Btn.addEventListener('click', () => showSection('tumblr'));
+  tu2Btn.addEventListener('click', () => showSection('tumblr2'));
+  creditsBtn.addEventListener('click', () => showSection('credits'));
 
   showSection('youtube');
 });

@@ -264,11 +264,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const daTab  = document.getElementById('tab-deviantart');
   const tu1Tab = document.getElementById('tab-tumblr');
   const tu2Tab = document.getElementById('tab-tumblr2');
+  const creditsTab = document.getElementById('tab-credits'); // <--- ADD THIS
 
   // Pause DeviantArt audio when switching away
   ytTab?.addEventListener('click',  () => { audio.pause(); updateMusicUI(); });
   tu1Tab?.addEventListener('click', () => { audio.pause(); updateMusicUI(); });
   tu2Tab?.addEventListener('click', () => { audio.pause(); updateMusicUI(); });
+  creditsTab?.addEventListener('click', () => { audio.pause(); updateMusicUI(); }); // <--- ADD THIS LINE
 
   // Resume if coming back
   daTab?.addEventListener('click', () => { if (musicOn) audio.play(); updateMusicUI(); });

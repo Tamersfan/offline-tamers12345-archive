@@ -1,0 +1,640 @@
+﻿[Script Info]
+; This is an Advanced Sub Station Alpha v4+ script.
+Title: e03 - Rainbow Dash Must Perform the Sonic Rainboom One Finale Time Or Die Trying.translation
+ScriptType: v4.00+
+PlayDepth: 0
+ScaledBorderAndShadow: Yes
+PlayResX: 1920
+PlayResY: 1080
+WrapStyle: 2
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default,Arial,50,&H00FFFFFF,&H0000FFFF,&H32000000,&HFF000000,0,0,0,0,100,100,0,0,3,1.0,1,2,10,10,10,1
+Style: bus,Arial,70,&H00FFFFFF,&H0000FFFF,&H00FFFFFF,&H00FFFFFF,-1,0,0,0,100,100,0.0,0,1,2.0,3.0,8,10,10,10,1
+Style: miejsce,Arial,80,&H00FFFFFF,&H0000FFFF,&H37000000,&HFF000000,0,0,0,0,100,100,0,0,3,2.0,1,7,10,10,10,1
+Style: rasizm,Arial,50,&H00FFFFFF,&H0000FFFF,&H3B000000,&HFF000000,0,0,0,0,100,100,0,0,3,3.0,1,2,10,10,10,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:12.06,0:00:13.23,Default,,0,0,0,,Księżniczko Celestio!
+Dialogue: 0,0:00:13.38,0:00:15.36,Default,,0,0,0,,Byłam w trakcie nauk magicznych,
+Dialogue: 0,0:00:15.57,0:00:17.91,Default,,0,0,0,,kiedy dostałam wiadomość,\Nże chcesz mnie widzieć.
+Dialogue: 0,0:00:33.06,0:00:34.02,Default,,0,0,0,,Oh, Twilight!
+Dialogue: 0,0:00:34.23,0:00:35.34,Default,,0,0,0,,Moja najlepsza uczennico,
+Dialogue: 0,0:00:35.49,0:00:37.18,Default,,0,0,0,,naprawdę przepraszam.
+Dialogue: 0,0:00:37.32,0:00:40.29,Default,,0,0,0,,Pewne sprawy nie idą po mojej mysli.
+Dialogue: 0,0:00:41.46,0:00:42.09,Default,,0,0,0,,Rozumiem.
+Dialogue: 0,0:00:42.30,0:00:43.89,Default,,0,0,0,,Czy jest coś, w czym mogę ci pomóc?
+Dialogue: 0,0:00:44.07,0:00:45.02,Default,,0,0,0,,Nie.
+Dialogue: 0,0:00:45.10,0:00:45.95,Default,,0,0,0,,Oh, ale-
+Dialogue: 0,0:00:46.03,0:00:49.83,Default,,0,0,0,,Zbliża się rocznica przejęcia przeze mnie władzy,
+Dialogue: 0,0:00:50.16,0:00:52.85,Default,,0,0,0,,więc mam dużo papierowej roboty do zrobienia.
+Dialogue: 0,0:00:54.24,0:00:55.38,Default,,0,0,0,,Gratulację!
+Dialogue: 0,0:00:55.79,0:01:02.85,Default,,0,0,0,,Taa, każdego roku chcę urządzać takie wydarzenie,\Nżeby było lepsze od poprzedniego,
+Dialogue: 0,0:01:03.18,0:01:05.23,Default,,0,0,0,,aby ten dzień był warty świętowania.
+Dialogue: 0,0:01:05.34,0:01:09.27,Default,,0,0,0,,Zeszłego roku, zabrałam wszystkich\Nmieszkańców Equestrii do Chuck E. Cheese.
+Dialogue: 0,0:01:09.59,0:01:14.23,Default,,0,0,0,,Niestety w tym roku mam problem z\Nwymyśleniem występu, który byłby równy poprzedniemu.
+Dialogue: 0,0:01:14.64,0:01:18.27,Default,,0,0,0,,A może zorganicuję pokaz magiczny w środku miasta?
+Dialogue: 0,0:01:18.48,0:01:19.41,Default,,0,0,0,,Twilight, nie.
+Dialogue: 0,0:01:19.92,0:01:21.69,Default,,0,0,0,,Mogę użyć mojej magii do żonglowania!
+Dialogue: 0,0:01:22.14,0:01:23.68,Default,,0,0,0,,Wystarczy, Twilight.
+Dialogue: 0,0:01:23.85,0:01:24.81,Default,,0,0,0,,Mogę również-
+Dialogue: 0,0:01:25.05,0:01:25.59,Default,,0,0,0,,Dość!
+Dialogue: 0,0:01:28.53,0:01:32.31,Default,,0,0,0,,Twilight, widzę że nie bierzesz tego na poważnie\Ni zaczynasz nie irytować.
+Dialogue: 0,0:01:32.61,0:01:37.29,Default,,0,0,0,,Nikt nie chce oglądać magicznych sztuczek\Ndrugorzędnego alikorna z trzeciorzędnym rogiem.
+Dialogue: 0,0:01:37.86,0:01:38.61,Default,,0,0,0,,Idź do domu.
+Dialogue: 0,0:01:38.94,0:01:42.36,Default,,0,0,0,,A ja pójdę do kuchni przygotować mrożoną Totino's Pizze.
+Dialogue: 0,0:01:42.72,0:01:48.66,Default,,0,0,0,,Dokupiłam dodatkowy ser i plasterki peperoni,\Naby ją urozmaicić żeby była najwyższej klasy.
+Dialogue: 0,0:01:54.35,0:01:57.12,Default,,0,0,0,,Proszę, weź plasterek pepperoni na drogę,
+Dialogue: 0,0:01:57.48,0:01:59.73,Default,,0,0,0,,żeby nie było, że nic dla ciebie nie robię.
+Dialogue: 0,0:01:59.94,0:02:01.62,Default,,0,0,0,,Mogę do tego odrobinę sera?
+Dialogue: 0,0:02:01.86,0:02:04.27,Default,,0,0,0,,Nie, potrzebuje jej do pizzy.
+Dialogue: 0,0:02:14.49,0:02:15.45,Default,,0,0,0,,{\c&He0e0e0&\i1}Nie dobrze,{\i0}
+Dialogue: 0,0:02:15.48,0:02:19.02,Default,,0,0,0,,{\c&He0e0e0&\i1}Celestia ma problem, a jak go ma,\Nto staje się pasywno-agresywna.{\i0}
+Dialogue: 0,0:02:19.22,0:02:22.34,Default,,0,0,0,,{\c&He0e0e0&\i1}A co gorsza, przestaje wtedy\Nzwracać na mnie uwagę.{\i0}
+Dialogue: 0,0:02:22.44,0:02:24.95,Default,,0,0,0,,{\c&He0e0e0&\i1}Dawno nie widziałam jej w takim stanie.{\i0}
+Dialogue: 0,0:02:24.98,0:02:27.37,Default,,0,0,0,,{\c&He0e0e0&\i1}Jeśli ktoś inny przyjdzie rozwiązać jej problem,{\i0}
+Dialogue: 0,0:02:27.40,0:02:30.48,Default,,0,0,0,,{\c&He0e0e0&\i1}to księżniczka Celestia może wybrać go\Nna nowego ucznia.{\i0}
+Dialogue: 0,0:02:30.66,0:02:32.04,Default,,0,0,0,,{\c&He0e0e0&\i1}a ja wyląduje na ulicy.{\i0}
+Dialogue: 0,0:02:32.22,0:02:35.79,Default,,0,0,0,,{\c&He0e0e0&\i1}Ale jak mogę jej pomóc, kiedy jedyne co mam,\Nto moja żałosna magia?{\i0}
+Dialogue: 0,0:02:35.91,0:02:37.83,Default,,0,0,0,,Wiem że wciąż tu jesteś, Twilight.
+Dialogue: 0,0:02:38.13,0:02:41.46,Default,,0,0,0,,Czy mój mały śmierdzący kucyk możę tu przyjść,
+Dialogue: 0,0:02:41.58,0:02:46.33,Default,,0,0,0,,i pomóc mi z przygotowaniem\Ntej cholernej pizzy czy co?
+Dialogue: 0,0:02:46.46,0:02:50.39,Default,,0,0,0,,Nie, na pewno jest więcej sposobów\Nna rozwiązanie tej sytuacji niż tylko magią,
+Dialogue: 0,0:02:50.58,0:02:52.41,Default,,0,0,0,,na- na- na przykład, przyjaźnią!
+Dialogue: 0,0:02:52.65,0:02:54.96,Default,,0,0,0,,Dokładnie jak nauczyła mnie księżniczka Celestia!
+Dialogue: 0,0:02:55.47,0:02:56.70,Default,,0,0,0,,Celesto, czy ty-
+Dialogue: 0,0:02:56.91,0:02:57.27,Default,,0,0,0,,yyy
+Dialogue: 0,0:02:57.48,0:02:58.92,Default,,0,0,0,,Znasz moją przyjaciółkę, Rarity?
+Dialogue: 0,0:02:58.94,0:03:00.93,Default,,0,0,0,,Już skończyliśmy o tym rozmawiać.
+Dialogue: 0,0:03:01.08,0:03:02.52,Default,,0,0,0,,Wiem co chcesz zrobić.
+Dialogue: 0,0:03:02.85,0:03:05.64,Default,,0,0,0,,Pinkie Pie też jest dobra w urządzaniu imprez!
+Dialogue: 0,0:03:05.80,0:03:10.11,Default,,0,0,0,,Imprezy Pinkie Pie są niczym w porównaniu z\Nwydarzeniem, które chcę zorganizować.
+Dialogue: 0,0:03:10.14,0:03:10.80,Default,,0,0,0,,Applejack-
+Dialogue: 0,0:03:10.82,0:03:12.87,Default,,0,0,0,,Idź rozgrzać piekarnik, słodziutka.
+Dialogue: 0,0:03:13.05,0:03:15.93,Default,,0,0,0,,Jeśli nie chcesz mi pomóc przygotować pizzy,\Nto idź do domu,
+Dialogue: 0,0:03:16.26,0:03:17.87,Default,,0,0,0,,bo aktualnie mnie dręczysz.
+Dialogue: 0,0:03:19.29,0:03:21.80,Default,,0,0,0,,Rainbow Dash może zrobić Sonic Rainboom!
+Dialogue: 0,0:03:23.07,0:03:23.85,Default,,0,0,0,,Możesz powtórzyć?
+Dialogue: 0,0:03:24.06,0:03:27.00,Default,,0,0,0,,M- moja przyjaciółka\NRainbow Dash, znasz ją.
+Dialogue: 0,0:03:27.12,0:03:29.13,Default,,0,0,0,,Oh, tak!\NTa co gejowsko wygląda.
+Dialogue: 0,0:03:29.25,0:03:33.63,Default,,0,0,0,,Taa, czy nie byłoby fajnie, jeśli by zrobiła\NSonic Rainboom spejalnie dla ciebie?
+Dialogue: 0,0:03:33.84,0:03:36.60,Default,,0,0,0,,Poleciałaby tak wysoko,\Nżeby cała Equestria mogła to zobaczyć!
+Dialogue: 0,0:03:37.17,0:03:38.76,Default,,0,0,0,,To byłoby naprawdę fajne!
+Dialogue: 0,0:03:39.02,0:03:42.18,Default,,0,0,0,,Wiesz, ostatnio groziłam-\Nto znaczy,
+Dialogue: 0,0:03:42.20,0:03:46.86,Default,,0,0,0,,pytałam pegazów z Cloudsdale,\Nczy nie mogłabym zorganizować tam rocznicy.
+Dialogue: 0,0:03:47.13,0:03:49.45,Default,,0,0,0,,Wszystko zaczyna układać!
+Dialogue: 0,0:03:49.69,0:03:53.52,Default,,0,0,0,,Jeśli pokazałabym wszystkim,\Nże mam swoją latającą sukę,
+Dialogue: 0,0:03:53.55,0:03:57.00,Default,,0,0,0,,która jest zdolna zrobić Sonic Rainboom\Nna moje życzenie,
+Dialogue: 0,0:03:57.36,0:03:59.91,Default,,0,0,0,,mogłabym wzbudzić strach w wielu sercach.
+Dialogue: 0,0:04:00.11,0:04:06.31,Default,,0,0,0,,Przy okazji każdy będzie wiedział, że jej latająca suka,\Nto przyjaciółka studentki Celestii, Twilight Sparkle.
+Dialogue: 0,0:04:06.33,0:04:09.43,Default,,0,0,0,,Dzięki czemu zdobęde szacunek\Ni podziw na który zasługuję.
+Dialogue: 0,0:04:09.45,0:04:11.68,Default,,0,0,0,,Dobra robota Twilight Sparkle!
+Dialogue: 0,0:04:11.74,0:04:17.01,Default,,0,0,0,,Każdego dnia udawadniasz mi, że nie mogłam\Nwybrać lepszej suki niż ty.
+Dialogue: 0,0:04:17.04,0:04:20.10,Default,,0,0,0,,Powiesz każdemu że to mój pomysł, prawda?
+Dialogue: 0,0:04:20.46,0:04:21.04,Default,,0,0,0,,Co?
+Dialogue: 0,0:04:21.57,0:04:23.53,Default,,0,0,0,,Aaa, tak\Nna pewno.
+Dialogue: 0,0:04:26.54,0:04:30.83,Default,,0,0,0,,No i tak to wygląda. Ta jebana dyktatorka chce zmusić mnie,\Nbym zrobiła z siebie błazna,
+Dialogue: 0,0:04:30.87,0:04:32.43,Default,,0,0,0,,na oczach całej equestrii.
+Dialogue: 0,0:04:32.46,0:04:35.61,Default,,0,0,0,,Co za kretyński pomysł?\NCzemu jej tego nie odradziłaś?
+Dialogue: 0,0:04:35.82,0:04:38.78,Default,,0,0,0,,Ale rainbow dash, myślałam\Nże lubisz popisywać się przed ludźmi.
+Dialogue: 0,0:04:38.81,0:04:40.56,Default,,0,0,0,,Wybacz że to powiem kochana,
+Dialogue: 0,0:04:40.80,0:04:44.01,Default,,0,0,0,,ale księżniczke Celestie pojebało z tym pomysłem.
+Dialogue: 0,0:04:44.31,0:04:48.04,Default,,0,0,0,,Ostatnio gdy Rainbow Dash zrobiła Sonic Rainboom,\Nbyła bliska śmierci.
+Dialogue: 0,0:04:48.52,0:04:50.73,Default,,0,0,0,,Na pewno nie jest to aż tak poważne.
+Dialogue: 0,0:04:50.85,0:04:53.52,Default,,0,0,0,,Rainbow Dash, to nie jest aż tak poważne, prawda?
+Dialogue: 0,0:04:54.00,0:04:55.77,Default,,0,0,0,,Oczywiście że jest\Nautystyczna dziwko.
+Dialogue: 0,0:04:55.89,0:04:57.87,Default,,0,0,0,,Jak myślisz, czemu to nazywa się Sonic Rainboom?
+Dialogue: 0,0:04:58.02,0:05:00.20,Default,,0,0,0,,Ponieważ każdy kto próbował,\Nto kurwa wybuchł.
+Dialogue: 0,0:05:01.74,0:05:03.13,Default,,0,0,0,,A skoro mowa o wybuchaniu.
+Dialogue: 0,0:05:04.62,0:05:08.44,Default,,0,0,0,,Czy to prawda że Rainbow Dash zrobi Sonic Rainboom?
+Dialogue: 0,0:05:08.82,0:05:11.41,Default,,0,0,0,,Kto tym sukom to powiedział?
+Dialogue: 0,0:05:11.58,0:05:14.74,Default,,0,0,0,,Możliwe że ja trochę porozpowiadałam\No tym chcąc się tym pochwalić.
+Dialogue: 0,0:05:15.63,0:05:17.50,Default,,0,0,0,,Możemy iść z tobą do Cloudsdale?
+Dialogue: 0,0:05:17.52,0:05:18.33,Default,,0,0,0,,Cloudsdale?
+Dialogue: 0,0:05:18.54,0:05:22.89,Default,,0,0,0,,Celestia organizuje tam\Nswoją rocznicę w tym roku.
+Dialogue: 0,0:05:23.07,0:05:24.99,Default,,0,0,0,,Nie dość, że jutro zginę,
+Dialogue: 0,0:05:25.01,0:05:28.86,Default,,0,0,0,,to jeszcze zaprezentuje własnej ojczyźnie\Nostateczny pokaz upokorzenia.
+Dialogue: 0,0:05:28.89,0:05:30.38,Default,,0,0,0,,Co za wstyd,
+Dialogue: 0,0:05:30.41,0:05:33.16,Default,,0,0,0,,Przeklęta księżniczka Celesia,\Nniech trafi do kucykowego piekła!
+Dialogue: 0,0:05:33.19,0:05:36.82,Default,,0,0,0,,Tylko diabeł czerpie przyjemność\Nz takich haniebnych czynów!
+Dialogue: 0,0:05:37.03,0:05:40.02,Default,,0,0,0,,Co znaczy że Rarity i ja nie jedziemy?
+Dialogue: 0,0:05:40.05,0:05:41.88,Default,,0,0,0,,Prawo Cloudsdale mówi że jako pegaz
+Dialogue: 0,0:05:41.91,0:05:44.76,Default,,0,0,0,,mogę zabrać tylko jednego\Njednorożca i kucyka ziemnego,
+Dialogue: 0,0:05:44.78,0:05:46.77,Default,,0,0,0,,więc wybrałam Twilight i Applejack.
+Dialogue: 0,0:05:46.79,0:05:48.81,Default,,0,0,0,,Cloudsdale brzmi trochę rasistowsko.
+Dialogue: 0,0:05:48.94,0:05:50.94,Default,,0,0,0,,Emm, właściwie to jestem alikornem.
+Dialogue: 0,0:05:51.51,0:05:54.53,Default,,0,0,0,,Tak, Twilight. Wiemy że jesteś specjalna.
+Dialogue: 0,0:05:54.56,0:05:58.54,Default,,0,0,0,,W takim razie dlaczego Applejack może zabrać\Nze sobą całą wieśniacką rodzinę?
+Dialogue: 0,0:06:02.16,0:06:06.61,Default,,0,0,0,,Ponieważ wszyscy są produktem kazirodztwa,\Nich budowa biologiczna jest tak splątana,
+Dialogue: 0,0:06:06.64,0:06:10.55,Default,,0,0,0,,pokręcona i zjebana, że technicznie\Nliczą się jako jeden osobnik.
+Dialogue: 0,0:06:10.57,0:06:13.06,Default,,0,0,0,,Tak mówi prawo w Cloudsdale.
+Dialogue: 0,0:06:13.28,0:06:16.41,Default,,0,0,0,,Chwila, skoro Twilight jest częściowo pegazem,
+Dialogue: 0,0:06:16.54,0:06:19.53,Default,,0,0,0,,czy to nie oznacza, że ona też może\Nzabrać dwóch gości?
+Dialogue: 0,0:06:19.65,0:06:23.91,Default,,0,0,0,,O kurwa, dobre Pinki Pie. Mów tak dalej\Na może będziemy miały szansę!
+Dialogue: 0,0:06:24.12,0:06:28.56,Default,,0,0,0,,Emm, dziewczyny. Oni powiedzieli,\Nże mogę zabrać dwóch gości jeśli chcę.
+Dialogue: 0,0:06:28.83,0:06:30.32,Default,,0,0,0,,Nie mówili że muszę.
+Dialogue: 0,0:06:30.58,0:06:31.80,Default,,0,0,0,,Idę do autobusu.
+Dialogue: 0,0:06:32.28,0:06:33.27,Default,,0,0,0,,Dasz wiarę?
+Dialogue: 0,0:06:33.51,0:06:35.40,Default,,0,0,0,,Na prawdę pojedziemy do Cloudsdale!
+Dialogue: 0,0:06:35.64,0:06:38.76,Default,,0,0,0,,Fanklub Rainbow Dash,\Nwreszcie wyruszy w świat!
+Dialogue: 0,0:06:38.98,0:06:43.37,Default,,0,0,0,,Scootaloo, przestań nas wreszcie\Nnazywać fanklubem Rainbow Dash!
+Dialogue: 0,0:06:43.47,0:06:46.46,Default,,0,0,0,,Jeszcze ktoś pomysli\Nże jesteśmy jakąś pedalską sektą!
+Dialogue: 0,0:06:47.80,0:06:48.81,Default,,0,0,0,,Nie ważne.
+Dialogue: 0,0:06:49.86,0:06:52.58,Default,,0,0,0,,Jesteś pegazem, to oznacza,\Nże możesz zabrać dwóch gości.
+Dialogue: 0,0:06:52.66,0:06:53.56,Default,,0,0,0,,Weź mnie ze sobą!
+Dialogue: 0,0:06:53.58,0:06:57.45,Default,,0,0,0,,Mówiła, że może zabrać tylko jednego\Njednorożca, więc wybrała mnie!
+Dialogue: 0,0:06:57.73,0:07:01.03,Default,,0,0,0,,Sweetie Belle!\NTwoja siostra przeraża mnie!
+Dialogue: 0,0:07:02.48,0:07:05.98,Default,,0,0,0,,Skoro trzeci członek twojego\Nmałego gangu, czyli Apple Bloom,
+Dialogue: 0,0:07:06.00,0:07:08.75,Default,,0,0,0,,jedzie razem ze swoją pojebaną, kazirodczą rodziną.
+Dialogue: 0,0:07:08.75,0:07:12.55,Default,,0,0,0,,To oznacza, że możesz zabrać jednego\Nziemskiego kucyka takiego jak ja. Prawda?
+Dialogue: 0,0:07:15.07,0:07:17.85,Default,,0,0,0,,Wracaj tu, gówniarzu!
+Dialogue: 0,0:07:19.86,0:07:22.20,Default,,0,0,0,,No dobra, kucyki. Zbierajcie się wszyscy.
+Dialogue: 0,0:07:22.23,0:07:25.45,Default,,0,0,0,,Pamiętajcie, że każdy kucyk\Nniebędący pegazem, idzie na tyły.
+Dialogue: 0,0:07:22.65,0:07:27.54,bus,,0,0,0,,{\pos(1006,699)\c&Hffd805&}Kucyki ziemskie{\c} {\c&Hff7700&}i jednorożce,{\c} {\c&Hff57f5&}siedzą z tyłu{\c} {\c&H98ff12&}autobusu.
+Dialogue: 0,0:07:39.85,0:07:41.89,Default,,0,0,0,,Chcesz jabłko, Twilight?
+Dialogue: 0,0:07:41.91,0:07:43.19,Default,,0,0,0,,Są świeże!
+Dialogue: 0,0:07:43.22,0:07:43.76,Default,,0,0,0,,Nie.
+Dialogue: 0,0:07:43.78,0:07:49.07,Default,,0,0,0,,Księżniczka Celestia karmi mnie na tyle dobrze, że takie marne owoce jak jabłka, są dla mnie mało warte.
+Dialogue: 0,0:07:49.23,0:07:51.79,Default,,0,0,0,,Idę pogadać z Rainbow Dash.
+Dialogue: 0,0:07:57.21,0:07:59.28,Default,,0,0,0,,Twilight, ty opóźniony, autystyczny chuju.
+Dialogue: 0,0:07:59.40,0:08:01.20,Default,,0,0,0,,Nie możesz przebywać\Nna przodzie autobusu!
+Dialogue: 0,0:08:01.53,0:08:02.05,Default,,0,0,0,,Wiem o tym.
+Dialogue: 0,0:08:02.25,0:08:03.82,Default,,0,0,0,,Chciałam po prostu\Nz tobą pogadać.
+Dialogue: 0,0:08:04.17,0:08:07.30,Default,,0,0,0,,Rainbow Dash, na prawde zrobisz\Nten Sonic Rainboom?
+Dialogue: 0,0:08:07.47,0:08:09.15,Default,,0,0,0,,Co chcesz przez to powiedzieć?
+Dialogue: 0,0:08:09.27,0:08:10.84,Default,,0,0,0,,Chyba nie myslisz że mi się uda, suko?
+Dialogue: 0,0:08:10.86,0:08:11.39,Default,,0,0,0,,Nie.
+Dialogue: 0,0:08:11.43,0:08:11.95,Default,,0,0,0,,To znaczy,
+Dialogue: 0,0:08:11.97,0:08:13.53,Default,,0,0,0,,Myślisz że jutro umrzesz?
+Dialogue: 0,0:08:13.89,0:08:14.44,Default,,0,0,0,,Ooh,
+Dialogue: 0,0:08:14.61,0:08:15.37,Default,,0,0,0,,no raczej!
+Dialogue: 0,0:08:15.39,0:08:16.54,Default,,0,0,0,,Mam przejebane!
+Dialogue: 0,0:08:16.56,0:08:18.37,Default,,0,0,0,,To ponad moje tłuste dupsko!
+Dialogue: 0,0:08:18.39,0:08:22.24,Default,,0,0,0,,Ale przynajmniej będę mogła odejść\Nw blasku chwały itd.
+Dialogue: 0,0:08:22.30,0:08:23.62,Default,,0,0,0,,Przepraszam.
+Dialogue: 0,0:08:23.73,0:08:26.74,Default,,0,0,0,,Dlaczego przepraszasz? To nie twoja wina, że jutro umrę.
+Dialogue: 0,0:08:26.76,0:08:30.85,Default,,0,0,0,,Jedyną winną osobą, jest nasz absolutny bóg\Ni władca, księżniczka Celestia.
+Dialogue: 0,0:08:31.01,0:08:33.99,Default,,0,0,0,,Nie chciałam ci tego mówić,\Nkiedy inni byli w podbliżu ale,
+Dialogue: 0,0:08:34.01,0:08:37.01,Default,,0,0,0,,to ja zasugerowałam jej, byś zroniła Sonic Rainboom
+Dialogue: 0,0:08:37.04,0:08:39.36,Default,,0,0,0,,na rocznicy księżniczki Celestii.
+Dialogue: 0,0:08:40.15,0:08:44.14,Default,,0,0,0,,Księżniczka Celestia chciała, aby ten dzień był wyjątkowy\Nwięc dałam jej parę pomysłów,
+Dialogue: 0,0:08:44.40,0:08:47.16,Default,,0,0,0,,dzięki którym mogłabym zapewnić kucykom dobrą zabawę,
+Dialogue: 0,0:08:47.19,0:08:53.54,Default,,0,0,0,,ale wybrała ciebie do tego zadania zamiast mnie, po tym,\Njak zasugerowałam jej że możesz zrobić Sonic Rainboom.
+Dialogue: 0,0:08:54.12,0:08:56.06,Default,,0,0,0,,Won na tyły autobusu.
+Dialogue: 0,0:08:56.46,0:08:57.03,Default,,0,0,0,,Ale-
+Dialogue: 0,0:08:57.10,0:08:58.95,Default,,0,0,0,,Powiedziałam, won do tyłu!
+Dialogue: 0,0:08:58.98,0:09:00.75,Default,,0,0,0,,Zanim zrobię coś, czego będę żałować.
+Dialogue: 0,0:09:00.86,0:09:03.16,Default,,0,0,0,,Wiedz, że nie dostaniesz zaproszenia na mój pogrzeb.
+Dialogue: 0,0:09:06.46,0:09:07.24,Default,,0,0,0,,O jezu...
+Dialogue: 0,0:09:07.26,0:09:08.65,Default,,0,0,0,,Nie znosze, gdy ona do mnie idzie.
+Dialogue: 0,0:09:08.68,0:09:10.65,Default,,0,0,0,,Ale lubie popatrzeć jak ta suka odchodzi.
+Dialogue: 0,0:09:11.97,0:09:16.81,miejsce,,0,0,0,,{\fad(700,700}Cloudsdale, dom pegazów...
+Dialogue: 0,0:09:21.65,0:09:26.94,Default,,0,0,0,,Witajcie w Cloudsdale! Oto dom pagazów,\Ni miejsce urodzenia wielkiej Rainbow Dash.
+Dialogue: 0,0:09:27.19,0:09:28.31,Default,,0,0,0,,Myślę że jest tu w porządku.
+Dialogue: 0,0:09:28.34,0:09:32.20,Default,,0,0,0,,Czekajcie tu suki. Idę załatwić nam\Njakieś pokoje w najbliższym hotelu.
+Dialogue: 0,0:09:32.73,0:09:34.62,Default,,0,0,0,,Applejack, muszę iść siku!
+Dialogue: 0,0:09:34.74,0:09:37.08,Default,,0,0,0,,Nie ma tu żadnych jabłoni do kopania.
+Dialogue: 0,0:09:37.21,0:09:38.17,Default,,0,0,0,,Chce do domu!
+Dialogue: 0,0:09:38.35,0:09:43.14,Default,,0,0,0,,Applejack, możemy pogadać?\NPo chuj przyprowadziłaś tu swojego brata i siostrę?
+Dialogue: 0,0:09:43.17,0:09:47.13,Default,,0,0,0,,Bo chcą zobaczyć jak Rainbow Dash\Nrobi Sonic Rainboom.
+Dialogue: 0,0:09:47.58,0:09:50.29,Default,,0,0,0,,I jeszcze ten pedał, kuzyn Braeburn,\Nco on tu robi?
+Dialogue: 0,0:09:50.47,0:09:54.50,Default,,0,0,0,,Wszyscy wiedzą, że bycie gejem w Ponyville,\Njest przestępstwem!
+Dialogue: 0,0:09:54.52,0:09:56.28,Default,,0,0,0,,Ale nie jesteśmy w Ponyville!
+Dialogue: 0,0:09:56.46,0:09:58.23,Default,,0,0,0,,A w Cloudsdale to nie jest przedstępstwem!
+Dialogue: 0,0:09:58.68,0:09:59.52,Default,,0,0,0,,Właśnie że jest!
+Dialogue: 0,0:09:59.70,0:10:04.86,Default,,0,0,0,,Właściwie tu masz siedemnaście razy gorzej,\Nponieważ Cloudsdale, to jedyne miejsce w Equestrii,
+Dialogue: 0,0:10:04.89,0:10:07.93,Default,,0,0,0,,gdzie stosuje się karę śmierci na homoseksualistach.
+Dialogue: 0,0:10:07.95,0:10:09.75,Default,,0,0,0,,Cóż, Big Mac powiedział że mogę tu być.
+Dialogue: 0,0:10:09.87,0:10:12.87,Default,,0,0,0,,Policja nie będzie wiedziała że jestem gejem, dopóki nikt nic nie powie.
+Dialogue: 0,0:10:13.25,0:10:15.09,Default,,0,0,0,,Braeburn, mogę się czegoś spytać?
+Dialogue: 0,0:10:15.32,0:10:16.74,Default,,0,0,0,,Oczywiście, kuzynie Big mac!
+Dialogue: 0,0:10:16.79,0:10:20.69,Default,,0,0,0,,Idź już kurwa do domu, tylko komplikujesz sprawy\Ntym swoim gejowskim pierdoleniem!
+Dialogue: 0,0:10:20.93,0:10:22.31,Default,,0,0,0,,Ale nic nie zrobiłem!
+Dialogue: 0,0:10:22.49,0:10:24.50,Default,,0,0,0,,To wy gadacie o tym, że jestem gejem!
+Dialogue: 0,0:10:24.78,0:10:28.97,Default,,0,0,0,,Czy kiedykolwiek pomyślałeś, że to dlatego tak jest,\Nbo ty jesteś problemem, a nie reszta świata?
+Dialogue: 0,0:10:29.09,0:10:32.39,Default,,0,0,0,,Bóg stworzył tylko jedną samicę i jednego samca.
+Dialogue: 0,0:10:32.49,0:10:37.24,Default,,0,0,0,,Wracaj do swojej farmy w Appleloosa\Ni tam se bądź gejem. Nie chcemy cię tutaj.
+Dialogue: 0,0:10:40.20,0:10:44.10,Default,,0,0,0,,Applejack chce wiedzieć z kim będziecie mieszkać w hotelu\Ni ile chcecie łóżek.
+Dialogue: 0,0:10:44.13,0:10:47.69,Default,,0,0,0,,Będę mieszkał razem z Braeburn.\NJedno łóżko, najmniejsze jakie jest,
+Dialogue: 0,0:10:47.71,0:10:50.46,Default,,0,0,0,,żebym mógł być jak najbardziej\Nściśnięty z jego ciałem.
+Dialogue: 0,0:10:51.59,0:10:54.33,Default,,0,0,0,,Skoro chcesz się bawić w geja, to mam nadzieję\Nże jesteś gotowy na jebanie,
+Dialogue: 0,0:10:54.35,0:10:56.46,Default,,0,0,0,,w twoją ciasną dupę, drogi chłopcze.
+Dialogue: 0,0:11:00.65,0:11:04.56,Default,,0,0,0,,Czy to nie przypatkiem Wonderbolts?\NSpitfire, Soarin, co u was?
+Dialogue: 0,0:11:04.83,0:11:06.21,Default,,0,0,0,,Na pewno lepiej niż u ciebie!
+Dialogue: 0,0:11:06.23,0:11:09.00,Default,,0,0,0,,Jak to jest mieszkać w takim zadupiu jak Ponyville?
+Dialogue: 0,0:11:09.02,0:11:14.88,Default,,0,0,0,,Ale musi być chujowo mieszkać\Nz tak gówno wartymi istotami,\Njak błotne kucyki i patykogłowi.
+Dialogue: 0,0:11:14.96,0:11:18.84,Default,,0,0,0,,Wiedziałaś, że mimo tego, że jednorożce\Nstanowią zaledwie trzy procent populacji,
+Dialogue: 0,0:11:18.86,0:11:21.99,Default,,0,0,0,,to osiemdziesiąt siedem procent\Nprzestępstw popełniają jednorożce?
+Dialogue: 0,0:11:22.05,0:11:26.00,Default,,0,0,0,,Czy to prawda, że jutro umrzesz\Nrobiąc Sonic Rainboom?
+Dialogue: 0,0:11:26.52,0:11:32.30,Default,,0,0,0,,Hey, ty! Lepiej uważaj na swoje słownictwo\Nw obecności mojej młodszej siostry!
+Dialogue: 0,0:11:32.33,0:11:34.49,Default,,0,0,0,,Takie obelgi mogą ja zranić!
+Dialogue: 0,0:11:34.76,0:11:36.83,Default,,0,0,0,,jakie obelgi? Błotny kucyk? Patykogłowa?
+Dialogue: 0,0:11:36.85,0:11:40.37,Default,,0,0,0,,Może te słowa nauczą twoją siostrę,\Ngdzie jej miejsce, zanim dorośnie.
+Dialogue: 0,0:11:40.49,0:11:44.78,Default,,0,0,0,,Powiedz mi, nie udeżyłaś się głową\No dach autobusu, kiedy tu jechałaś?
+Dialogue: 0,0:11:44.99,0:11:47.84,Default,,0,0,0,,Słyszałam że chujowo musi się\Njechać na tyłach autobusu.
+Dialogue: 0,0:11:48.05,0:11:49.94,Default,,0,0,0,,A może jesteście za głupie,\Nby użyć pasów?
+Dialogue: 0,0:11:50.09,0:11:51.60,Default,,0,0,0,,Spójrz na nią Applejack,
+Dialogue: 0,0:11:52.22,0:11:55.82,Default,,0,0,0,,Nazywa nas głupimi,\Nkiedy jako jadyna nosi ciuchy!
+Dialogue: 0,0:11:55.95,0:11:57.29,Default,,0,0,0,,Pojebało cię?
+Dialogue: 0,0:11:57.44,0:11:58.37,Default,,0,0,0,,Jesteśmu końmi!
+Dialogue: 0,0:11:58.49,0:12:00.32,Default,,0,0,0,,Nie potrzebujemy ciuchów!
+Dialogue: 0,0:12:00.53,0:12:01.82,Default,,0,0,0,,Co się dzieje gdy srasz?
+Dialogue: 0,0:12:01.97,0:12:03.71,Default,,0,0,0,,Za każdym razem musisz\Nkupować nowe ubrania suko?
+Dialogue: 0,0:12:03.74,0:12:05.03,Default,,0,0,0,,Wiesz jak to mówią,
+Dialogue: 0,0:12:05.06,0:12:07.05,Default,,0,0,0,,pagazy mają ogromne jaja.
+Dialogue: 0,0:12:07.07,0:12:09.71,Default,,0,0,0,,Jak inaczej byśmy zapobiegali\Ntarganiu ich po ziemi?
+Dialogue: 0,0:12:13.54,0:12:17.64,Default,,0,0,0,,Ooo, czyżby nasze słonko właśnie zrobiło\Nśmierdzące bum-bum w swoje gacie?
+Dialogue: 0,0:12:18.35,0:12:19.45,Default,,0,0,0,,Co? O nie!
+Dialogue: 0,0:12:25.38,0:12:27.30,Default,,0,0,0,,Powiedz, czy pegazy tak potrafią?
+Dialogue: 0,0:12:27.86,0:12:29.33,Default,,0,0,0,,Nie, ale moge to!
+Dialogue: 0,0:12:31.96,0:12:33.34,Default,,0,0,0,,No i lecimy!
+Dialogue: 0,0:12:33.38,0:12:35.66,Default,,0,0,0,,Zajebie cię, ty gruby błotny kucu!
+Dialogue: 0,0:12:35.69,0:12:37.36,Default,,0,0,0,,Mam nadzieję, że podoba ci cię przejażdżka!
+Dialogue: 0,0:12:40.63,0:12:41.60,Default,,0,0,0,,Zabiję cię!
+Dialogue: 0,0:12:41.62,0:12:43.20,Default,,0,0,0,,Zajebię cię, tłusta kurwo!
+Dialogue: 0,0:12:43.22,0:12:44.70,Default,,0,0,0,,Pomocy, Twilight!
+Dialogue: 0,0:12:44.72,0:12:48.17,Default,,0,0,0,,Jako ziemski kucyk,\Nnie mam jak się przed nimi bronić!
+Dialogue: 0,0:12:48.29,0:12:52.04,Default,,0,0,0,,Skoro tak bardzo lubisz ziemię,\Nto może staniesz się jej częścią?
+Dialogue: 0,0:12:58.43,0:13:00.89,Default,,0,0,0,,Coś ty zrobiła z jednym\Nz moich elementów harmonii?
+Dialogue: 0,0:13:01.03,0:13:02.06,Default,,0,0,0,,Przynieś ją z powrotem!
+Dialogue: 0,0:13:02.21,0:13:04.13,Default,,0,0,0,,Nie chcesz znać jej losu, patykogłowa.
+Dialogue: 0,0:13:04.55,0:13:06.44,Default,,0,0,0,,Przynieś ją, albo mi pomóż!
+Dialogue: 0,0:13:06.68,0:13:11.24,Default,,0,0,0,,Wywaliłam ja po drugiej stronie miasta,\N19 km stąd, aby dać jej nauczkę.
+Dialogue: 0,0:13:11.30,0:13:12.44,Default,,0,0,0,,No to ją przynieś!
+Dialogue: 0,0:13:12.55,0:13:15.84,Default,,0,0,0,,Jeśli będzie chciała tu być.\Nto sama przyjdzie.
+Dialogue: 0,0:13:16.24,0:13:17.79,Default,,0,0,0,,O, cześć Soarin!
+Dialogue: 0,0:13:17.81,0:13:21.58,Default,,0,0,0,,Wiesz, pomyslałem ci coś powiem\Nbiorąc pod uwagę, że nie jesteś tu często,
+Dialogue: 0,0:13:21.75,0:13:24.14,Default,,0,0,0,,nie każdy pegaz w Cloudsdale jest rasistą.
+Dialogue: 0,0:13:24.38,0:13:26.92,Default,,0,0,0,,Na przykład ja uważam,\Nże błotne kucyki i patykogłowi, to znaczy,
+Dialogue: 0,0:13:26.94,0:13:30.50,Default,,0,0,0,,ziemskie kucyki i jednorożce,\Nrównież mają swoje unikalne cechy,
+Dialogue: 0,0:13:30.89,0:13:33.71,Default,,0,0,0,,i zasługują ta takie same prawa\Njak każdy inny.
+Dialogue: 0,0:13:33.77,0:13:36.81,Default,,0,0,0,,No dobra, ale wiesz, że ja jestem rasistą. Co nie?
+Dialogue: 0,0:13:37.07,0:13:42.48,Default,,0,0,0,,W każdym razie, chcesz polecieć\Nna najbliższy tor wyścigowy\Ni potrenować przed jutrzejszym wydarzeniem?
+Dialogue: 0,0:13:42.51,0:13:44.06,Default,,0,0,0,,Myślę, że to świetny pomysł!
+Dialogue: 0,0:13:44.16,0:13:46.86,Default,,0,0,0,,Chętnie użyję swoich skrzydeł to tego,\Ndo czego zostały stworzone,
+Dialogue: 0,0:13:46.88,0:13:49.54,Default,,0,0,0,,i polatam sobie ostatni raz, zanim zdechnę.
+Dialogue: 0,0:13:55.80,0:13:58.43,Default,,0,0,0,,Nie będziemy mogli zrobić z tobą Sonic Rainboom,
+Dialogue: 0,0:13:58.45,0:14:00.27,Default,,0,0,0,,skoro tylko ty to umiesz zrobić.
+Dialogue: 0,0:14:00.43,0:14:01.38,Default,,0,0,0,,Wiadomo.
+Dialogue: 0,0:14:01.41,0:14:04.60,Default,,0,0,0,,Ale Wonderboltsi będą i tak latać obok ciebie,
+Dialogue: 0,0:14:04.62,0:14:07.09,Default,,0,0,0,,aby zapewnić wspaniały pokaz dla księżniczki Celestii.
+Dialogue: 0,0:14:07.34,0:14:08.12,Default,,0,0,0,,Gotowa?
+Dialogue: 0,0:14:08.55,0:14:09.85,Default,,0,0,0,,Zaczynam odliczanie.
+Dialogue: 0,0:14:10.13,0:14:12.27,Default,,0,0,0,,Tylko nie pierdnij mi w twarz,
+Dialogue: 0,0:14:12.70,0:14:15.93,Default,,0,0,0,,bo inaczej będę miał przez ciebie wypadek i złamie se ramię jak ostatnio.
+Dialogue: 0,0:14:15.95,0:14:16.55,Default,,0,0,0,,Trzy
+Dialogue: 0,0:14:16.58,0:14:17.24,Default,,0,0,0,,Dwa
+Dialogue: 0,0:14:17.26,0:14:17.78,Default,,0,0,0,,Jeden
+Dialogue: 0,0:14:29.25,0:14:30.23,Default,,0,0,0,,O kurwa!
+Dialogue: 0,0:14:37.41,0:14:42.32,Default,,0,0,0,,Braeburn, czy możesz zabrać worek jabłek z autobusu\Ni zanieść go do naszego pokoju?
+Dialogue: 0,0:14:42.71,0:14:43.96,Default,,0,0,0,,Jasne kuzynie!
+Dialogue: 0,0:14:55.25,0:14:56.43,Default,,0,0,0,,Przepraszam za to.
+Dialogue: 0,0:14:56.65,0:14:59.22,Default,,0,0,0,,Nie widziałem gdzie lece.
+Dialogue: 0,0:14:59.63,0:15:00.71,Default,,0,0,0,,W porządku,
+Dialogue: 0,0:15:00.73,0:15:03.75,Default,,0,0,0,,Ja też nie patrzyłem gdzie lece, znaczy idę.
+Dialogue: 0,0:15:05.39,0:15:06.25,Default,,0,0,0,,Wszystko w porządku?
+Dialogue: 0,0:15:06.27,0:15:07.98,Default,,0,0,0,,Chyba porządnie upadłeś.
+Dialogue: 0,0:15:10.15,0:15:11.69,Default,,0,0,0,,Zaraz, czy on już poleciał?
+Dialogue: 0,0:15:14.63,0:15:16.02,Default,,0,0,0,,Nie, tutaj jestem.
+Dialogue: 0,0:15:17.93,0:15:20.30,Default,,0,0,0,,Wy pegazy, na prawdę jesteście wyjątkowi, wiesz?
+Dialogue: 0,0:15:20.83,0:15:23.42,Default,,0,0,0,,Wówisz, jakbyś nigdy pegaza nie widział,
+Dialogue: 0,0:15:23.60,0:15:25.92,Default,,0,0,0,,Tam, skąd pochodze, nie ma was zbyt wielu.
+Dialogue: 0,0:15:26.57,0:15:30.45,Default,,0,0,0,,Odkąd osiedliliśmy się w Appleloosa, mieliśmy do czynienia tylko z ziemskimi kucykami.
+Dialogue: 0,0:15:30.61,0:15:31.39,Default,,0,0,0,,Czy mógłbym
+Dialogue: 0,0:15:32.13,0:15:33.30,Default,,0,0,0,,polatać z tobą?
+Dialogue: 0,0:15:36.35,0:15:38.55,Default,,0,0,0,,Cóż, ale głupiutki z ciebie chłopiec.
+Dialogue: 0,0:15:47.00,0:15:47.78,Default,,0,0,0,,Kto to był?
+Dialogue: 0,0:15:47.97,0:15:51.04,Default,,0,0,0,,Nie znam jego imienia, ale wydaje się całkiem miłym gościem.
+Dialogue: 0,0:15:51.06,0:15:54.07,Default,,0,0,0,,Nie przypominam sobię, żebym ci pozwalał gadać z innymi ogierami,
+Dialogue: 0,0:15:54.10,0:15:55.68,Default,,0,0,0,,zwłaszcza z pegazami.
+Dialogue: 0,0:15:55.71,0:15:56.30,Default,,0,0,0,,Co?
+Dialogue: 0,0:15:56.96,0:15:58.74,Default,,0,0,0,,Odwróć się i pochyl!
+Dialogue: 0,0:16:00.34,0:16:02.56,Default,,0,0,0,,Będę musiał pozbierać jabłka, które opuściłeś,
+Dialogue: 0,0:16:02.58,0:16:04.28,Default,,0,0,0,,a potem pójdę się odlać.
+Dialogue: 0,0:16:04.30,0:16:06.89,Default,,0,0,0,,Więc pośpiesz się, nie będę prosił dwa razy!
+Dialogue: 0,0:16:08.60,0:16:09.40,Default,,0,0,0,,Rozszerz je!
+Dialogue: 0,0:16:13.91,0:16:15.44,Default,,0,0,0,,Podnieś jebany ogon!
+Dialogue: 0,0:16:40.64,0:16:41.62,Default,,0,0,0,,Jak mam na imię!?
+Dialogue: 0,0:16:41.90,0:16:43.15,Default,,0,0,0,,Big!\NBig Mac!
+Dialogue: 0,0:16:50.44,0:16:51.76,Default,,0,0,0,,O Celestio!
+Dialogue: 0,0:16:51.79,0:16:54.80,Default,,0,0,0,,Rainbow Dash była świetna!\NWidzieliście?
+Dialogue: 0,0:16:55.22,0:16:58.69,Default,,0,0,0,,Dlaczego to nie byłam ja!? Ona piernęła na niego,\Nto piwinnam być ja!
+Dialogue: 0,0:16:59.48,0:17:01.28,Default,,0,0,0,,Rainbow Dash, byłaś świetna!
+Dialogue: 0,0:17:01.61,0:17:02.36,Default,,0,0,0,,Wiem o tym.
+Dialogue: 0,0:17:02.39,0:17:04.02,Default,,0,0,0,,Nie gadaj do mnie, patykogłowa.
+Dialogue: 0,0:17:04.05,0:17:05.33,Default,,0,0,0,,Jak mnie nazwałaś?
+Dialogue: 0,0:17:05.89,0:17:07.28,Default,,0,0,0,,Nazwałam cię tym, czym jesteś.
+Dialogue: 0,0:17:07.67,0:17:08.62,Default,,0,0,0,,Dashi, ty nigdy-
+Dialogue: 0,0:17:08.69,0:17:10.40,Default,,0,0,0,,Nigdy wcześniej mnie tak nie nazwałaś!
+Dialogue: 0,0:17:10.85,0:17:14.52,Default,,0,0,0,,Tak było zanim zaplanowałaś moją\Negzekucję razem z księżniczką Celestią.
+Dialogue: 0,0:17:15.05,0:17:19.41,Default,,0,0,0,,Hej Twilight, wiedziałaś, że mimo tego, że jednorożce\Nstanowią zaledwie trzy procent populacji,
+Dialogue: 0,0:17:19.43,0:17:22.35,Default,,0,0,0,,to osiemdziesiąt siedem procent\Nprzestępstw popełniają jednorożce?
+Dialogue: 0,0:17:23.21,0:17:24.98,Default,,0,0,0,,I to wszystko, co trzeba było powiedzieć.
+Dialogue: 0,0:17:25.29,0:17:29.23,Default,,0,0,0,,No dalej pegazy! Puśćmy parę bąków i zorwalmy tę dziurę!
+Dialogue: 0,0:17:35.50,0:17:37.25,Default,,0,0,0,,Applejack, kiedy wróciłas?
+Dialogue: 0,0:17:37.58,0:17:38.72,Default,,0,0,0,,Nie pamiętam.
+Dialogue: 0,0:17:38.99,0:17:42.11,Default,,0,0,0,,Chyba nie pozwolisz im tak do ciebie gadać,
+Dialogue: 0,0:17:42.29,0:17:43.71,Default,,0,0,0,,co nie, Twilight?
+Dialogue: 0,0:17:43.97,0:17:45.80,Default,,0,0,0,,Przecież jesteś alikornem!
+Dialogue: 0,0:17:45.95,0:17:48.44,Default,,0,0,0,,Leć i załatw ich albo coś.
+Dialogue: 0,0:17:48.74,0:17:50.09,Default,,0,0,0,,W porządku, Applejack.
+Dialogue: 0,0:17:50.24,0:17:53.09,Default,,0,0,0,,Rainbow Dash jest w takiej,\Na nie innej sytuacji przez mnie.
+Dialogue: 0,0:17:53.21,0:17:53.96,Default,,0,0,0,,Zasłużyłam na to.
+Dialogue: 0,0:17:54.38,0:17:55.07,Default,,0,0,0,,Ty tak,
+Dialogue: 0,0:17:55.37,0:17:56.73,Default,,0,0,0,,ale ja nie!
+Dialogue: 0,0:17:58.25,0:17:59.45,Default,,0,0,0,,Moja splówa!
+Dialogue: 0,0:17:59.63,0:18:00.48,Default,,0,0,0,,Oddawaj!
+Dialogue: 0,0:18:00.50,0:18:01.52,Default,,0,0,0,,Zamknij się!
+Dialogue: 0,0:18:01.82,0:18:02.76,Default,,0,0,0,,Przestań, Applejack!
+Dialogue: 0,0:18:02.79,0:18:04.38,Default,,0,0,0,,Cicho!
+Dialogue: 0,0:18:09.63,0:18:14.90,Default,,0,0,0,,Zabiłaś ją, ty kurwa zabiłaś Spitfire\Nty głupi błotny kucu!
+Dialogue: 0,0:18:15.23,0:18:20.40,Default,,0,0,0,,Przemoc, to jedyne co potraficie!\NWy błotne kucyki i patykogłowe jesteście takie same!
+Dialogue: 0,0:18:47.08,0:18:49.64,Default,,0,0,0,,Do jutra na pewno nie wyzdrowieje,
+Dialogue: 0,0:18:50.03,0:18:53.57,Default,,0,0,0,,Bez lidera Wonderbolts, ciężko będzie wystąpić jako grupa,
+Dialogue: 0,0:18:54.05,0:18:56.99,Default,,0,0,0,,to znaczy, że będziesz musiała\Nwystępować sama, Rainbow Dash.
+Dialogue: 0,0:18:57.14,0:18:59.78,Default,,0,0,0,,W porządku, lubię być w centrum uwagi.
+Dialogue: 0,0:19:00.00,0:19:01.43,Default,,0,0,0,,Ta dziwka zasłużyła na to!
+Dialogue: 0,0:19:01.55,0:19:03.26,Default,,0,0,0,,Applejeck, nie zaczynaj!
+Dialogue: 0,0:19:03.59,0:19:04.94,Default,,0,0,0,,Ta dziwka zasłużyła na to!
+Dialogue: 0,0:19:06.30,0:19:07.16,Default,,0,0,0,,Apple Bloom!
+Dialogue: 0,0:19:07.46,0:19:09.14,Default,,0,0,0,,Applejack, panuj nad siostrą!
+Dialogue: 0,0:19:09.36,0:19:09.95,Default,,0,0,0,,Nie.
+Dialogue: 0,0:19:10.40,0:19:11.82,Default,,0,0,0,,Uspokuj się, słodka.
+Dialogue: 0,0:19:11.96,0:19:13.82,Default,,0,0,0,,Nie będę spokojna!
+Dialogue: 0,0:19:13.95,0:19:16.91,Default,,0,0,0,,Przez ten cały czas, mówiła o nas:
+Dialogue: 0,0:19:17.06,0:19:17.93,Default,,0,0,0,,patykogłowe,
+Dialogue: 0,0:19:18.08,0:19:18.95,Default,,0,0,0,,błotne kucyki.
+Dialogue: 0,0:19:19.07,0:19:22.63,Default,,0,0,0,,Mam tego dość! Jestem zmęczona już tym rasizmem!
+Dialogue: 0,0:19:22.66,0:19:27.44,Default,,0,0,0,,Jestem pewna, że jest jakiś sposób na poniżenie pegaza!
+Dialogue: 0,0:19:27.60,0:19:32.17,Default,,0,0,0,,Masz szczęście, że Soarin jest na tyle miły,\Nże nie zgłosił nas na policję po tym co odjebałaś,
+Dialogue: 0,0:19:32.21,0:19:35.35,Default,,0,0,0,,I nie zrobił tego mimo tego, że sam jest pegazem.
+Dialogue: 0,0:19:35.47,0:19:38.36,Default,,0,0,0,,Ooo, czyli on jest tym dobrym?
+Dialogue: 0,0:19:38.43,0:19:42.57,Default,,0,0,0,,Trzymasz jego stronę, tylko dlatego,\Nże masz przywileje jako alikorn!
+Dialogue: 0,0:19:42.80,0:19:49.33,Default,,0,0,0,,Możesz być częścią społeczności, jakiej chcesz\Ni kiedy chcesz, jak jakaś tania kurwa!
+Dialogue: 0,0:19:49.79,0:19:50.93,Default,,0,0,0,,Masz rację.
+Dialogue: 0,0:19:51.11,0:19:52.19,Default,,0,0,0,,Jestem alikornem.
+Dialogue: 0,0:19:52.43,0:19:53.60,Default,,0,0,0,,Ale to nie jest przywilej,
+Dialogue: 0,0:19:53.75,0:19:54.44,Default,,0,0,0,,tylko ciężar.
+Dialogue: 0,0:19:54.57,0:19:56.75,Default,,0,0,0,,Nie mogę zmienić tego,\Nże patrzę na innych z góry,
+Dialogue: 0,0:19:57.42,0:19:58.67,Default,,0,0,0,,i na przyjaciół.
+Dialogue: 0,0:20:00.62,0:20:03.62,Default,,0,0,0,,Nic nie poradzę z tym że jestem\Nczęściowo po każdej stronie,
+Dialogue: 0,0:20:03.83,0:20:04.58,Default,,0,0,0,,ziemskich kucyków,
+Dialogue: 0,0:20:04.76,0:20:05.45,Default,,0,0,0,,pegazów,
+Dialogue: 0,0:20:05.60,0:20:06.35,Default,,0,0,0,,jednorożców,
+Dialogue: 0,0:20:06.56,0:20:08.61,Default,,0,0,0,,mimo że nie muszę być po żadnej.
+Dialogue: 0,0:20:08.78,0:20:10.43,Default,,0,0,0,,Bo jestem jepsza od was wszystkich.
+Dialogue: 0,0:20:10.64,0:20:11.99,Default,,0,0,0,,Jestem specjalna i unikalna,
+Dialogue: 0,0:20:12.14,0:20:14.15,Default,,0,0,0,,Jak dzieci w specjalnych klasach.
+Dialogue: 0,0:20:14.33,0:20:15.86,Default,,0,0,0,,O czym my tu gadaliśmy?
+Dialogue: 0,0:20:16.34,0:20:19.34,Default,,0,0,0,,O rasiźmie i który kucyk jest najlepszy.
+Dialogue: 0,0:20:19.46,0:20:19.93,Default,,0,0,0,,A racja.
+Dialogue: 0,0:20:20.22,0:20:21.96,Default,,0,0,0,,Bez wątpienia najlepsze są alikorny.
+Dialogue: 0,0:20:22.17,0:20:23.84,Default,,0,0,0,,Bo mam cechy całej trójki.
+Dialogue: 0,0:20:23.86,0:20:25.03,Default,,0,0,0,,No i zaczynasz.
+Dialogue: 0,0:20:25.05,0:20:25.80,Default,,0,0,0,,Co zaczynam?
+Dialogue: 0,0:20:26.22,0:20:27.25,Default,,0,0,0,,Być rasistowska!
+Dialogue: 0,0:20:27.28,0:20:29.85,Default,,0,0,0,,Jesteś zazdrosna że nie jesteś alikornem!
+Dialogue: 0,0:20:30.15,0:20:31.17,Default,,0,0,0,,Czy on jest gejem?
+Dialogue: 0,0:20:31.47,0:20:32.47,Default,,0,0,0,,Co?
+Dialogue: 0,0:20:33.13,0:20:34.27,Default,,0,0,0,,Jestem kucykiem ziemskim.
+Dialogue: 0,0:20:34.35,0:20:35.73,Default,,0,0,0,,Nie o to pytałem.
+Dialogue: 0,0:20:35.97,0:20:38.89,Default,,0,0,0,,Pod groźbą jurysdykcji i przepisów prawa Cloudsdale,
+Dialogue: 0,0:20:38.92,0:20:41.23,Default,,0,0,0,,musimy skłamać i powiedzieć ci, że nie jest.
+Dialogue: 0,0:20:42.01,0:20:44.85,Default,,0,0,0,,Wracam do hotelu. Muszę się wyspać,
+Dialogue: 0,0:20:44.88,0:20:47.67,Default,,0,0,0,,żeby jutro móc dotrzeć się\Ndo perłowych bram z godnośćią.
+Dialogue: 0,0:20:47.69,0:20:50.51,Default,,0,0,0,,Hej, myślicie że bóg też jest koniem?
+Dialogue: 0,0:20:54.17,0:20:57.96,Default,,0,0,0,,Dzięki że dałaś mi sodę,\Nstarsza siostro Apple Bloom
+Dialogue: 0,0:20:57.98,0:21:02.52,Default,,0,0,0,,Jestem tak podekscytowana jutrzejszym\NSonic Rainboom, że nie mogę spać!
+Dialogue: 0,0:21:02.97,0:21:04.51,Default,,0,0,0,,Nie ma za co!
+Dialogue: 0,0:21:04.77,0:21:07.95,Default,,0,0,0,,Dała ci tylko dlatego, bo inaczej byś ryczała!
+Dialogue: 0,0:21:08.19,0:21:12.09,Default,,0,0,0,,Apple Bloom, często się mnie pytasz,\Nczemu nie masz przyjaciół.
+Dialogue: 0,0:21:12.36,0:21:14.29,Default,,0,0,0,,I tu masz odpowiedź, dlaczego.
+Dialogue: 0,0:21:14.55,0:21:17.79,Default,,0,0,0,,Rozumiem że zdiagnozowno u ciebie raka w zeszłym tygodniu,
+Dialogue: 0,0:21:17.79,0:21:21.23,Default,,0,0,0,,ale to nie oznacza, że możesz na nas wyładowywać swoją frustrację!
+Dialogue: 0,0:21:21.26,0:21:23.56,Default,,0,0,0,,ale ja nie mam raka.
+Dialogue: 0,0:21:29.84,0:21:31.52,Default,,0,0,0,,Wiesz, Cloudsdale jest nawet-
+Dialogue: 0,0:21:31.55,0:21:33.89,Default,,0,0,0,,Jest w porządku, ale Ponyville lepsze.
+Dialogue: 0,0:21:37.01,0:21:39.51,Default,,0,0,0,,Soarin jest spoko,\Nwiem już jak się nazywa.
+Dialogue: 0,0:21:39.70,0:21:42.51,Default,,0,0,0,,Dobrze, że nie zgłosił Applejack policji.
+Dialogue: 0,0:21:42.66,0:21:43.53,Default,,0,0,0,,Nie gadaj o nim.
+Dialogue: 0,0:21:43.63,0:21:45.63,Default,,0,0,0,,Więc o czym powinienem gadać
+Dialogue: 0,0:21:45.66,0:21:48.45,Default,,0,0,0,,skoro nie mogę mówić ani o Cloudsdale,\Nani o ich mieszkańcach?
+Dialogue: 0,0:21:49.20,0:21:51.38,Default,,0,0,0,,Zgaś światło, idziemy spać.
+Dialogue: 0,0:21:57.20,0:22:00.90,Default,,0,0,0,,Nic ci się nie stało, kiedy ten pedalski pegaz\Nwleciał w ciebie, prawda?
+Dialogue: 0,0:22:01.53,0:22:02.53,Default,,0,0,0,,Soiarin?
+Dialogue: 0,0:22:02.94,0:22:04.42,Default,,0,0,0,,Yyy, nie.
+Dialogue: 0,0:22:05.13,0:22:06.46,Default,,0,0,0,,To dobrze.
+Dialogue: 0,0:22:06.75,0:22:07.75,Default,,0,0,0,,Dobranoc.
+Dialogue: 0,0:22:08.97,0:22:10.15,Default,,0,0,0,,Dobranoc.
+Dialogue: 0,0:22:12.84,0:22:14.19,Default,,0,0,0,,A gdzie Rainbow Dash?
+Dialogue: 0,0:22:14.31,0:22:15.54,Default,,0,0,0,,Nie ma jej w swoim pokoju.
+Dialogue: 0,0:22:15.81,0:22:18.48,Default,,0,0,0,,Nigdy nie wiadomo co z tą tęczową suką.
+Dialogue: 0,0:22:18.81,0:22:22.41,Default,,0,0,0,,Biorąc pod uwagę, że ona zawsze\Nchce być na na szczycie,
+Dialogue: 0,0:22:22.56,0:22:25.51,Default,,0,0,0,,nie zdziwiłabym się, jakby była na dachu.
+Dialogue: 0,0:22:33.62,0:22:35.82,Default,,0,0,0,,Miałam przeczucie, że będziesz tutaj.
+Dialogue: 0,0:22:37.20,0:22:38.52,Default,,0,0,0,,Nie odzywaj sie do mnie, patykogłowa.
+Dialogue: 0,0:22:38.79,0:22:42.13,Default,,0,0,0,,Nawet nie dasz mi sie pożegnać,\Nzanim jutro umrzesz?
+Dialogue: 0,0:22:43.29,0:22:45.72,Default,,0,0,0,,Myślę że możesz tu zostać na parę minut.
+Dialogue: 0,0:22:45.99,0:22:47.01,Default,,0,0,0,,Czego słuchasz?
+Dialogue: 0,0:22:47.64,0:22:49.35,Default,,0,0,0,,Phil Dutra\NRight Behind The Rain
+Dialogue: 0,0:22:49.47,0:22:51.75,Default,,0,0,0,,Kiedy nie ma nikogo, kto by mi dał siłę,
+Dialogue: 0,0:22:51.93,0:22:53.86,Default,,0,0,0,,Phil Dutra mi ją daje.
+Dialogue: 0,0:22:54.72,0:22:58.84,Default,,0,0,0,,Widzę że wciąż używasz tych słuchawek,\Nkróre ci dałam na urodziny miesiąc temu.
+Dialogue: 0,0:22:59.72,0:23:00.48,Default,,0,0,0,,No raczej!
+Dialogue: 0,0:23:00.60,0:23:04.91,Default,,0,0,0,,Są zajebiste, trzymają się lepiej, niż te,\Nco zwyle kupiję w Dollar Tree.
+Dialogue: 0,0:23:06.23,0:23:07.79,Default,,0,0,0,,{\c&Hfff11f&}Twilight.{\c}\N{\c&Hff5ded&}Rainbow Dash
+Dialogue: 0,0:23:08.82,0:23:12.14,Default,,0,0,0,,Będę z tobą zajebiście szczera.\NNa prawdę, nie chcę jutro umierać!
+Dialogue: 0,0:23:12.23,0:23:15.87,Default,,0,0,0,,Nie chcę tego robić, ale nie mam żadnego wyjścia.\NI to wszystko twoja wina!
+Dialogue: 0,0:23:15.96,0:23:18.75,Default,,0,0,0,,Tak bardzo się boję.\NCzym sobie na to zasłużyłam?
+Dialogue: 0,0:23:18.96,0:23:21.09,Default,,0,0,0,,Powiedziałabym ci,\Nale nie mam na to czasu.
+Dialogue: 0,0:23:21.33,0:23:23.44,Default,,0,0,0,,Za 10 minut muszę iść srać.
+Dialogue: 0,0:23:23.47,0:23:27.57,Default,,0,0,0,,Wiesz co? Pewnie pomyślisz że oszalałam,\Nale coś mi mówi, że jutro nie umrzesz.
+Dialogue: 0,0:23:27.81,0:23:30.93,Default,,0,0,0,,Chcesz powiedzieć, że powiedziałaś Celestii, żeby to wszystko anulowała?
+Dialogue: 0,0:23:31.29,0:23:32.19,Default,,0,0,0,,Noo, nie.
+Dialogue: 0,0:23:32.49,0:23:34.52,Default,,0,0,0,,Próbowałam napisać list do Celestii,
+Dialogue: 0,0:23:34.54,0:23:37.86,Default,,0,0,0,,ale po chwili wysłała mi list o treści:\N"Zamknij się, suko."
+Dialogue: 0,0:23:38.16,0:23:40.50,Default,,0,0,0,,Więc pewnie i tak jutro umrzesz.
+Dialogue: 0,0:23:40.63,0:23:41.44,Default,,0,0,0,,Ale znam cię.
+Dialogue: 0,0:23:42.99,0:23:43.92,Default,,0,0,0,,Ale znam cię.
+Dialogue: 0,0:23:44.10,0:23:49.34,Default,,0,0,0,,Znam swoją przyjaciółke Rainbow Dash,\Ni wiem że już kiedyś zrobiła Sonic Rainboom\Ni wyszła z tego cało.
+Dialogue: 0,0:23:49.36,0:23:53.66,Default,,0,0,0,,A dzięki dopingowi od Twilight Sparkle,\NSonic Rainboom nie będzie dla niej problemem.
+Dialogue: 0,0:23:53.85,0:23:57.57,Default,,0,0,0,,Mam na myśli to, że przyjaźń nas uratuje,\Ntak jak zawsze to robi.
+Dialogue: 0,0:23:57.78,0:23:59.80,Default,,0,0,0,,Bo przyjaźń to magia.
+Dialogue: 0,0:24:05.16,0:24:10.56,Default,,0,0,0,,Jak ma mi przyjaźń pomóc,\Nkiedy będę leciała w kierunku ziemi,\Na z dupy mi będzie leciała tęcza?
+Dialogue: 0,0:24:11.37,0:24:13.71,Default,,0,0,0,,Przepraszam, że cały dzień nazywałam cię patykogłową.
+Dialogue: 0,0:24:13.98,0:24:17.44,Default,,0,0,0,,Nie jesteś patykogłową,\Ntylko jedną z najlepszych alikornów.
+Dialogue: 0,0:24:21.51,0:24:21.99,Default,,0,0,0,,Co?
+Dialogue: 0,0:24:22.35,0:24:23.80,Default,,0,0,0,,A nic.
+Dialogue: 0,0:24:25.43,0:24:28.93,miejsce,,0,0,0,,Dzień zrobienia Sonic Rainboom...
+Dialogue: 0,0:24:36.35,0:24:40.53,Default,,0,0,0,,Nie mogę na to patrzeć.\NOna się kurwa rozpryśnie jak jakiś owoc!
+Dialogue: 0,0:24:40.77,0:24:44.10,Default,,0,0,0,,Applejack, a jak Rainbow Dash umrze,\Nto co z Scootaloo?
+Dialogue: 0,0:24:44.31,0:24:47.88,Default,,0,0,0,,Zawarła jednostronny samobójczy pakt z Rainbow Dash!
+Dialogue: 0,0:24:48.01,0:24:51.42,Default,,0,0,0,,Aaa racja. Scootaloo wtedy też zdechnie.
+Dialogue: 0,0:25:00.60,0:25:03.82,Default,,0,0,0,,Zanim zrobie z siebie klauna\Nprzed wami wszystkimi, chce wam coś powiedzieć.
+Dialogue: 0,0:25:03.93,0:25:07.91,Default,,0,0,0,,Moja dzisiejsza obecność, nie jest z mojej woli.\NZostałam zmuszona zrobić przedstawienie,
+Dialogue: 0,0:25:07.94,0:25:10.05,Default,,0,0,0,,przez naszą niesprawiedliwą władczynię,\NKsiężniczke Celestie.
+Dialogue: 0,0:25:10.17,0:25:13.47,Default,,0,0,0,,Błagam was, pomóżcie mi ją przekonać,\Naby zakończyła już te szaleństwo!
+Dialogue: 0,0:25:14.76,0:25:17.47,Default,,0,0,0,,Nie obchodzi nas to.\NRób Sonic Rainboom.
+Dialogue: 0,0:25:23.64,0:25:25.40,Default,,0,0,0,,Patrzcie, jak szybko lata!
+Dialogue: 0,0:25:25.63,0:25:28.65,Default,,0,0,0,,Musi się wystarczająco rozpędzić,
+Dialogue: 0,0:25:28.78,0:25:32.73,Default,,0,0,0,,aby podczas spadania,\Nmogła przekroczyć barierę dźwięku.
+Dialogue: 0,0:25:32.81,0:25:37.91,Default,,0,0,0,,To jedyny sposób, aby tęcza\Nzaczeła lecieć z jej śmierdzącej dupy.
+Dialogue: 0,0:25:38.44,0:25:39.39,Default,,0,0,0,,Za wolno.
+Dialogue: 0,0:25:39.54,0:25:41.82,Default,,0,0,0,,Nie lecę wystarczająco szybko.\NNie uda mi się!
+Dialogue: 0,0:25:42.60,0:25:43.25,Default,,0,0,0,,Ale znam cię.
+Dialogue: 0,0:25:43.65,0:25:49.06,Default,,0,0,0,,Znam swoją przyjaciółke Rainbow Dash,\Ni wiem że już kiedyś zrobiła\NSonic Rainboom i wyszła z tego cało.
+Dialogue: 0,0:25:49.09,0:25:52.88,Default,,0,0,0,,Mam na myśli to, że przyjaźń nas uratuje,\Ntak jak zawsze to robi.
+Dialogue: 0,0:25:53.04,0:25:54.62,Default,,0,0,0,,Bo przyjaźń to magia.
+Dialogue: 0,0:25:56.85,0:25:58.23,Default,,0,0,0,,Nie widze jej!
+Dialogue: 0,0:25:58.77,0:26:01.84,Default,,0,0,0,,Właśnie zawróciła,\Nale nadal nie widać tęczy!
+Dialogue: 0,0:26:05.13,0:26:06.51,Default,,0,0,0,,Myślę że nie uda jej się.
+Dialogue: 0,0:26:07.38,0:26:08.55,Default,,0,0,0,,Przestań Scootaloo!
+Dialogue: 0,0:26:08.67,0:26:09.57,Default,,0,0,0,,Zostawcie mnie!
+Dialogue: 0,0:26:09.87,0:26:13.57,Default,,0,0,0,,Muszę nacisnąć spust w tej samej milisekundzie, co uderzy w ziemie,
+Dialogue: 0,0:26:13.60,0:26:15.50,Default,,0,0,0,,żebyśmy mogły umrzeć w tym samym czasie!
+Dialogue: 0,0:26:15.65,0:26:18.22,Default,,0,0,0,,Muszę zerwać z nią więzi,\Nto jedyne co mam!
+Dialogue: 0,0:26:18.25,0:26:20.49,Default,,0,0,0,,Co jest nie tak z tą suką?
+Dialogue: 0,0:26:23.67,0:26:25.74,Default,,0,0,0,,Zrobiłam to!\NZrobiłam Sonic Rainboom!
+Dialogue: 0,0:26:25.86,0:26:27.98,Default,,0,0,0,,Phil Dutra, obserwujesz mnie z piekła?
+Dialogue: 0,0:26:28.01,0:26:28.98,Default,,0,0,0,,Jesteś ze mnie dumny?
+Dialogue: 0,0:26:42.15,0:26:44.05,Default,,0,0,0,,Księżniczko Celestio,\Nwidziałaś to?
+Dialogue: 0,0:26:44.08,0:26:46.83,Default,,0,0,0,,Twilight, czy Rainbow Dash właśnie piernęła?
+Dialogue: 0,0:26:47.34,0:26:49.29,Default,,0,0,0,,W sęsie patrzysz na to samo co ja?
+Dialogue: 0,0:26:49.62,0:26:51.03,Default,,0,0,0,,Twoja przyjaciółka jest głupia.
+Dialogue: 0,0:26:51.45,0:26:54.93,Default,,0,0,0,,Właśnie zamieniła Sonic Rainboom w Atomic Rainbomb.
+Dialogue: 0,0:26:55.05,0:26:57.12,Default,,0,0,0,,Co to kurwa jest Atomic Rainbomb?
+Dialogue: 0,0:26:57.78,0:27:01.68,Default,,0,0,0,,Widziałam to zaledwie 79 razy w ciągu ostatnich trzech lat.
+Dialogue: 0,0:27:02.01,0:27:04.16,Default,,0,0,0,,Czegoś takiego nie widuje się na codzień.
+Dialogue: 0,0:27:04.34,0:27:07.83,Default,,0,0,0,,To nielegalna czynność którą\Nzakazano tysiące lat temu.
+Dialogue: 0,0:27:08.25,0:27:12.63,Default,,0,0,0,,Jeśli pegaz pierdnie w tym samym momencie,\Nw którym robi Sonic Rainboom,
+Dialogue: 0,0:27:12.90,0:27:17.63,Default,,0,0,0,,molekularny skład tęczy zostanie zmieniony\Nw coś w rodzaju bomby atomowej,
+Dialogue: 0,0:27:17.65,0:27:19.08,Default,,0,0,0,,tylko o znacznie większej mocy.
+Dialogue: 0,0:27:19.10,0:27:23.73,Default,,0,0,0,,Ponieważ zamiast być zasilana\Nenergią atomową, jest zasilana pierdami.
+Dialogue: 0,0:27:24.12,0:27:27.63,Default,,0,0,0,,To tak niszczycielska siła, jak 17 uderzeń w Hiroshimę.
+Dialogue: 0,0:27:27.84,0:27:31.02,Default,,0,0,0,,Azjaci mieli szczęście\Nw porównaniu z tym co się tu stało.
+Dialogue: 0,0:27:31.29,0:27:33.39,Default,,0,0,0,,Cloudsdale nie przetrwa tego.
+Dialogue: 0,0:27:33.90,0:27:35.74,Default,,0,0,0,,Leć ze mną Twilight.
+Dialogue: 0,0:27:35.80,0:27:38.60,Default,,0,0,0,,Leć, jeśli chcesz dożyć następnego dnia.
+Dialogue: 0,0:27:38.67,0:27:40.54,Default,,0,0,0,,A co z pozostałymi pegazami?
+Dialogue: 0,0:27:40.72,0:27:42.64,Default,,0,0,0,,Silni przeżyją, a słabi zginą.
+Dialogue: 0,0:27:42.89,0:27:45.38,Default,,0,0,0,,Do zobaczenia w Ponyville, o ile przeżyjesz.
+Dialogue: 0,0:27:45.62,0:27:49.87,Default,,0,0,0,,Lecę dokończyć Totino's Pizza,\Nbo jeszcze mi jej trochę zostało.
+Dialogue: 0,0:27:49.89,0:27:52.53,Default,,0,0,0,,A co z Rainbow Dash?\NOna tam nadal jest!
+Dialogue: 0,0:27:52.69,0:27:55.91,Default,,0,0,0,,Zostaw ją, bo przez nią\Nto wszystko się stało.
+Dialogue: 0,0:27:56.95,0:27:58.54,Default,,0,0,0,,Chodźcie wszyscy do autobusu!
+Dialogue: 0,0:28:03.45,0:28:04.82,Default,,0,0,0,,Twilight, czy ja
+Dialogue: 0,0:28:04.84,0:28:06.79,Default,,0,0,0,,zrobiłam Sonic Rainboom?
+Dialogue: 0,0:28:08.22,0:28:09.48,Default,,0,0,0,,Oczywiście kochana!
+Dialogue: 0,0:28:09.69,0:28:11.86,Default,,0,0,0,,To był najlepszy Sonic Rainboom na świeie!
+Dialogue: 0,0:28:12.62,0:28:14.63,Default,,0,0,0,,Phil Dutra byłby dumny.
+Dialogue: 0,0:28:24.93,0:28:26.40,Default,,0,0,0,,Dziękuję Rainbow Dash.
+Dialogue: 0,0:28:26.52,0:28:32.77,Default,,0,0,0,,W pojedynkę sprawiłaś, że dzisiejszy\Ndzień jest warty zapamiętania\Ni jest najzajebistrzą rocznicą mojej koronacji.
+Dialogue: 0,0:28:32.80,0:28:35.40,Default,,0,0,0,,Wiem, że prosiłam o wiele,
+Dialogue: 0,0:28:35.73,0:28:38.04,Default,,0,0,0,,Proszę, skorzystaj z wypoczynku ma który zasłużyłaś.
+Dialogue: 0,0:28:38.70,0:28:41.40,Default,,0,0,0,,Dobrze wiedzieć, że jednak są jakieś użyteczne kucyki.
+Dialogue: 0,0:28:41.70,0:28:45.09,Default,,0,0,0,,Mogłabyś się nauczyć paru rzeczy o byciu użyteczną, Twilight.
+Dialogue: 0,0:28:45.48,0:28:49.03,Default,,0,0,0,,Bo inaczej mogę wziąć nową uczennicę pod swoje skrzydła.
+Dialogue: 0,0:28:58.14,0:28:58.68,Default,,0,0,0,,Jeszcze raz!
+Dialogue: 0,0:28:58.80,0:28:59.73,Default,,0,0,0,,Ja chce jeszcze raz!
+Dialogue: 0,0:29:00.09,0:29:04.05,Default,,0,0,0,,Ale już zrobiłem cztery okrążenia, nie wiem czy dam rade zrobić jeszcze jedno.
+Dialogue: 0,0:29:04.35,0:29:04.80,Default,,0,0,0,,Ale...
+Dialogue: 0,0:29:05.10,0:29:06.51,Default,,0,0,0,,Powiedział, że ma już dość!
+Dialogue: 0,0:29:06.69,0:29:10.80,Default,,0,0,0,,Ujeżdżać możesz jedynie mnie,\Na dokładniej moje grube jaja.
+Dialogue: 0,0:29:10.92,0:29:12.63,Default,,0,0,0,,Wracamy do Ponyville, natychmiast!
+Dialogue: 0,0:29:13.17,0:29:14.46,Default,,0,0,0,,Czy kiedyś cię zobaczymy?
+Dialogue: 0,0:29:14.61,0:29:16.99,Default,,0,0,0,,Czasami Wonderbolts występują w Ponyville,
+Dialogue: 0,0:29:16.99,0:29:19.77,Default,,0,0,0,,więc następnym razem spróbuję tam być i się przywitać.
+Dialogue: 0,0:29:20.03,0:29:23.31,Default,,0,0,0,,W sumie to nie jestem z Ponyville,\Ntylko z Appleloosy.
+Dialogue: 0,0:29:23.44,0:29:26.67,Default,,0,0,0,,No cóż, nigdy wcześniej nie\Nwystępowalismy w Appleloosa.
+Dialogue: 0,0:29:26.69,0:29:29.05,Default,,0,0,0,,Poproszę o to Wonderbolts.
+Dialogue: 0,0:29:30.96,0:29:35.32,Default,,0,0,0,,Myślę że nie będą mieli problemu z tym, żeby czasem tam coś zorganizować.
+Dialogue: 0,0:29:35.94,0:29:39.12,Default,,0,0,0,,Myślę, że powinieneś posłuchać\Nkolegi z kultu, i pójść z nim.
+Dialogue: 0,0:29:39.22,0:29:40.73,Default,,0,0,0,,ale, on nie jest moim-
+Dialogue: 0,0:29:41.43,0:29:43.84,Default,,0,0,0,,Tak, w porządku.\NJuż idę.
+Dialogue: 0,0:29:45.57,0:29:49.32,Default,,0,0,0,,Sptifire, udało ci sie uciec szalona suko!\NCo będzie dalej z Cloudsdale?
+Dialogue: 0,0:29:49.53,0:29:52.98,Default,,0,0,0,,87000 pegazów straciło życie podczas eksplozji.
+Dialogue: 0,0:29:53.13,0:29:54.66,Default,,0,0,0,,Chwilę zajmie odbudowa miasta,
+Dialogue: 0,0:29:54.78,0:29:57.00,Default,,0,0,0,,ale Cloudsdale przeżyje,\Ntak samo jak my.
+Dialogue: 0,0:29:57.25,0:30:01.53,Default,,0,0,0,,No i, chciałam przeprosić was za te rasistowsikie rzeczy które powiedziałam.
+Dialogue: 0,0:30:01.80,0:30:05.34,Default,,0,0,0,,Gdybym nie mówiła takich okropnych rzeczy,\Nto nie dałabym się postrzelić jak jakaś pizda.
+Dialogue: 0,0:30:05.36,0:30:07.87,Default,,0,0,0,,No i mogłabym wtedy latać razem z tobą.
+Dialogue: 0,0:30:07.89,0:30:10.76,Default,,0,0,0,,A sprawy nie potoczyły by się tak źle.
+Dialogue: 0,0:30:10.85,0:30:15.18,Default,,0,0,0,,Nadal uważam, że jednorożce i\Nkucyki ziemne są ode mnie gorsze,\Nale postaram się z tym walczyć.
+Dialogue: 0,0:30:15.24,0:30:17.95,rasizm,,0,0,0,,{\t(\fs70)\fad(700,700}Ponieważ rasizm jest zły...
+Dialogue: 0,0:30:21.72,0:30:22.59,Default,,0,0,0,,Co robisz?
+Dialogue: 0,0:30:22.83,0:30:24.84,Default,,0,0,0,,Piszę list do Księżniczki Celestii.
+Dialogue: 0,0:30:25.08,0:30:27.94,Default,,0,0,0,,Dam jej list później, kiedy nie będzie zajęta.
+Dialogue: 0,0:30:28.70,0:30:30.17,Default,,0,0,0,,Droga Księżniczko Celestio,
+Dialogue: 0,0:30:30.35,0:30:34.22,Default,,0,0,0,,Dzisiaj nauczyłam się, że traktowanie kucyków gorzej\Ntylko dlatego, że inaczej wyglądają
+Dialogue: 0,0:30:34.25,0:30:36.96,Default,,0,0,0,,zrani mnie badziej, niż kogokolwiek innego.
+Dialogue: 0,0:30:37.37,0:30:41.63,Default,,0,0,0,,Nasza przyjaciółka została ciężko zraniona,\Nponieważ pozwoliła, by jej gniew ją pochłoną.
+Dialogue: 0,0:30:41.81,0:30:44.48,Default,,0,0,0,,Dowiedziała się, co to znaczy\Ndoigrać się, kiedy robisz z siebie debila.
+Dialogue: 0,0:30:44.81,0:30:47.21,Default,,0,0,0,,Myślę że, mimo naszych rożnic,
+Dialogue: 0,0:30:47.36,0:30:49.28,Default,,0,0,0,,tak naprawdę nie różnimy sie tak bardzo.
+Dialogue: 0,0:30:49.46,0:30:51.42,Default,,0,0,0,,Ponieważ wszyscy jesteśmy końmi.
+Dialogue: 0,0:30:51.95,0:30:54.65,Default,,0,0,0,,Jeżeli zaakceptujemy, że przyjaźń to magia,
+Dialogue: 0,0:30:54.89,0:30:57.59,Default,,0,0,0,,być może Equestria byłaby lepszym miejscem.
+Dialogue: 0,0:30:57.83,0:30:59.66,Default,,0,0,0,,Chociaż przytoczyła statystyki,
+Dialogue: 0,0:30:59.87,0:31:02.88,Default,,0,0,0,,mówiące że 87% przedstępstw jest popełniana przez jednorożce,
+Dialogue: 0,0:31:02.92,0:31:05.43,Default,,0,0,0,,które sprawdziłam w Google, okazały się prawdziwe.
+Dialogue: 0,0:31:05.69,0:31:08.75,Default,,0,0,0,,Muszę przez następną godzinę\Nposzukac dobrego kontrargumentu,
+Dialogue: 0,0:31:08.78,0:31:11.16,Default,,0,0,0,,ale jak nic nie znajdę, to coś wymyślę.
+Dialogue: 0,0:31:11.87,0:31:14.72,Default,,0,0,0,,Twoja ukochana uczennica,\NTwilight Sparkle.
+Dialogue: 0,0:31:17.63,0:31:22.55,miejsce,,0,0,0,,{\fad(700,700}Tydzień później...
+Dialogue: 0,0:31:21.18,0:31:22.97,Default,,0,0,0,,To słuchawki Rainbow Dash.
+Dialogue: 0,0:31:23.27,0:31:25.49,Default,,0,0,0,,Widziałem jak je nosiła kiedy tu była.
+Dialogue: 0,0:31:25.61,0:31:28.79,Default,,0,0,0,,Mamy tu wystarczająco dużo kopyt do pomocy, więc myślę możemy
+Dialogue: 0,0:31:28.82,0:31:31.13,Default,,0,0,0,,zrobić sobie trochę przerwy od odbudowy miasta.
+Dialogue: 0,0:31:31.43,0:31:33.65,Default,,0,0,0,,Może polecimy oddać słuchawki tej grubasce?
+Dialogue: 0,0:31:34.07,0:31:36.04,Default,,0,0,0,,W sęsie polecieć do Ponyville?
+Dialogue: 0,0:31:36.06,0:31:37.44,Default,,0,0,0,,Czemu nie?
+Dialogue: 0,0:31:42.05,0:31:43.72,Default,,0,0,0,,Wróciłem z zbierania jabłek.
+Dialogue: 0,0:31:47.81,0:31:48.95,Default,,0,0,0,,Czemu nie ma obiadu?
+Dialogue: 0,0:31:49.13,0:31:53.40,Default,,0,0,0,,Mówiłem ci, że masz przygotować gulasz wołowy do południa,\Nbo inaczej skopię ci dupę.
+Dialogue: 0,0:31:53.93,0:31:55.19,Default,,0,0,0,,Nie ważne, spociłem się.
+Dialogue: 0,0:31:55.34,0:31:56.72,Default,,0,0,0,,Muszę wziąć prysznic.
+Dialogue: 0,0:31:56.83,0:32:01.13,Default,,0,0,0,,Oby gulasz się gotował jak wyjdę,\Nbo inaczej czeka cię dużo cierpienia.
+Dialogue: 0,0:32:01.28,0:32:03.43,Default,,0,0,0,,Pozatym dzisiaj w nocy zamierzam cię ruchać w dupę.
+Dialogue: 0,0:32:03.97,0:32:05.74,Default,,0,0,0,,Nawet nie zwróciłeś uwagi na mój bagaż.
+Dialogue: 0,0:32:10.49,0:32:12.35,Default,,0,0,0,,Wracasz dzisiaj do Appleloosy?
+Dialogue: 0,0:32:12.81,0:32:15.05,Default,,0,0,0,,Mówiłem ci o tym przez cały tydzień!
+Dialogue: 0,0:32:15.20,0:32:17.20,Default,,0,0,0,,Ale nigdy mnie nie słuchałeś, kuzynie Big Mac.
+Dialogue: 0,0:32:17.73,0:32:20.60,Default,,0,0,0,,A przynajmniej zrobisz mi gulasz wołowy zanim odejdziesz?
+Dialogue: 0,0:32:21.38,0:32:22.40,Default,,0,0,0,,Bo ja nie zamierzam.
+Dialogue: 0,0:32:22.55,0:32:25.82,Default,,0,0,0,,Gotowanie to zadanie dla bab i gejów jak ty.
+Dialogue: 0,0:32:26.24,0:32:29.43,Default,,0,0,0,,Big Mac, co do tych spraw z kazirodztwem,
+Dialogue: 0,0:32:30.23,0:32:31.68,Default,,0,0,0,,Skończmy z tym!
+Dialogue: 0,0:32:34.25,0:32:35.73,Default,,0,0,0,,O kurwa! Przepraszam!
+Dialogue: 0,0:32:35.75,0:32:38.06,Default,,0,0,0,,Ale to twoja wina, że pierdolisz takie głupoty.
+Dialogue: 0,0:32:38.21,0:32:39.68,Default,,0,0,0,,Wiesz że mam problemy z agresją.
+Dialogue: 0,0:32:39.98,0:32:41.71,Default,,0,0,0,,Ile czasu przez ciebie zmarnowałem?
+Dialogue: 0,0:32:42.20,0:32:44.84,Default,,0,0,0,,Czy ten czas był dla ciebie\Njakiś wyjątkowy czy co?
+Dialogue: 0,0:32:45.02,0:32:48.53,Default,,0,0,0,,A może udawałeś zadowolonego,\Nkiedy leżałeś z podniesioną dupą i go przyjmowałeś?
+Dialogue: 0,0:32:48.89,0:32:49.52,Default,,0,0,0,,Pierdol się!
+Dialogue: 0,0:32:49.81,0:32:50.69,Default,,0,0,0,,Nie, ty się pierdol!
+Dialogue: 0,0:32:50.81,0:32:52.18,Default,,0,0,0,,Won z mojej stodoły!
+Dialogue: 0,0:33:04.01,0:33:07.76,Default,,0,0,0,,Jakbym wiedział, że mogę tak łatwo od ciebie odejść,\Nto zrobiłbym to dawno temu!
+Dialogue: 0,0:33:08.30,0:33:11.54,Default,,0,0,0,,Nie pierdol! Jeżeli odejdziesz ode mnie,\Nto kto ci zostanie?
+Dialogue: 0,0:33:11.69,0:33:15.45,Default,,0,0,0,,Żaden kucyk o zdrowych zmysłach nie przejmie się\Nlosem takiego bezwartościowego kuca jak ty!
+Dialogue: 0,0:33:15.84,0:33:19.64,Default,,0,0,0,,Mam dosyć twojego wmawiania mi, że nie jestem kimś,\No kogo warto się troszczyć.
+Dialogue: 0,0:33:19.68,0:33:22.42,Default,,0,0,0,,Na pewno jakiś kucyk się o mnie zatroszczy.\NI wiem że znajdę takiego kucyka!
+Dialogue: 0,0:33:22.82,0:33:23.27,Default,,0,0,0,,Kogo?
+Dialogue: 0,0:33:23.42,0:33:26.69,Default,,0,0,0,,Tego pedalskiego pegaza i Cloudsdale,\Nktórego więcej nie zobaczysz?
+Dialogue: 0,0:33:27.20,0:33:28.03,Default,,0,0,0,,Rozumiem,
+Dialogue: 0,0:33:28.19,0:33:29.10,Default,,0,0,0,,wszystko kurwa jasne.
+Dialogue: 0,0:33:29.24,0:33:30.12,Default,,0,0,0,,Jesteś zazdrosny!
+Dialogue: 0,0:33:30.14,0:33:32.36,Default,,0,0,0,,Zazdrościsz kucykowi który\Nnawet nie mieszka w Ponyville!
+Dialogue: 0,0:33:32.60,0:33:33.61,Default,,0,0,0,,Boże, ale jesteś żałosny.
+Dialogue: 0,0:33:33.76,0:33:36.09,Default,,0,0,0,,Naprawdę nie znasz się na tych sprawach.
+Dialogue: 0,0:33:38.87,0:33:40.19,Default,,0,0,0,,Jak możesz ze sobą żyć?
+Dialogue: 0,0:33:40.37,0:33:41.24,Default,,0,0,0,,Nie jestem zazdrosny!
+Dialogue: 0,0:33:41.51,0:33:44.21,Default,,0,0,0,,Wmawiaj tak sobie,\Nto może sam w to uwierzysz.
+Dialogue: 0,0:33:44.33,0:33:45.29,Default,,0,0,0,,Nie jestem zazdrosny!
+Dialogue: 0,0:33:45.65,0:33:48.89,Default,,0,0,0,,Tak mi cię żal, że mam nadzieję,\Nże jakaś część ciebie zacznie w to wieżyć.
+Dialogue: 0,0:33:49.10,0:33:49.94,Default,,0,0,0,,Dla twojego dobra.
+Dialogue: 0,0:33:50.24,0:33:51.89,Default,,0,0,0,,O ile to ci pomoże spać w nocy.
+Dialogue: 0,0:33:52.10,0:33:53.32,Default,,0,0,0,,Żegnaj, Big Mac.
+Dialogue: 0,0:33:53.68,0:33:55.15,Default,,0,0,0,,Braeburn, zaczekaj!\NProszę!
+Dialogue: 0,0:33:55.55,0:33:56.93,Default,,0,0,0,,Nie dotykaj mnie!
