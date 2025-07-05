@@ -49,6 +49,7 @@
         <option value="oldest">Oldest</option>
       </select>
       <label style="margin-left: 10px;"><input type="checkbox" id="badge-toggle" checked> Show Live Chat Badges</label>
+      <label style="margin-left: 10px;"><input type="checkbox" id="watchedToggle" checked> Show Watched Checkmarks</label>
       <label style="margin-left: 10px;"><input type="checkbox" id="favoritesToggle"> Show Favorites</label>
       <label style="margin-left: 10px;" for="tagFilter">Filter:</label>
       <select id="tagFilter">
@@ -63,50 +64,68 @@
       <button id="change-folder-btn" style="margin-left: 10px;">Change Video Folder</button>
     </div>
 
-    <div id="video-grid"></div>
+    <!-- Layout: grid (left), queue (right) -->
+    <div id="main-content-layout" style="display: flex; gap: 24px; align-items: flex-start;">
+      <div style="flex: 1;">
+        <div id="video-grid"></div>
 
-    <div id="video-player" style="display:none;">
-      <div id="player-controls">
-        <button onclick="closePlayer()">Back</button>
-        <label for="sizeSelector">Size:</label>
-        <select id="sizeSelector" onchange="resizePlayer(this.value)">
-          <option value="normal">Normal</option>
-          <option value="theater">Theater</option>
-        </select>
-        <label for="volumeSlider">Volume:</label>
-        <input type="range" id="volumeSlider" min="0" max="1" step="0.01" onchange="setVolume(this.value)">
-        <label for="speedSelector">Speed:</label>
-        <select id="speedSelector" onchange="setPlaybackSpeed(this.value)">
-          <option value="0.5">0.5x</option>
-          <option value="1" selected>1x</option>
-          <option value="1.5">1.5x</option>
-          <option value="2">2x</option>
-        </select>
-        <button onclick="toggleChat()">Toggle Chat</button>
-        <label for="subtitleSelector" id="subtitle-label" style="display:none;">Subtitles:</label>
-        <select id="subtitleSelector" style="display:none;">
-          <option value="">None</option>
-        </select>
+        <div id="video-player" style="display:none;">
+          <div id="player-controls">
+            <button onclick="closePlayer()">Back</button>
+            <label for="sizeSelector">Size:</label>
+            <select id="sizeSelector" onchange="resizePlayer(this.value)">
+              <option value="normal">Normal</option>
+              <option value="theater">Theater</option>
+            </select>
+            <label for="volumeSlider">Volume:</label>
+            <input type="range" id="volumeSlider" min="0" max="1" step="0.01" onchange="setVolume(this.value)">
+            <label for="speedSelector">Speed:</label>
+            <select id="speedSelector" onchange="setPlaybackSpeed(this.value)">
+              <option value="0.5">0.5x</option>
+              <option value="1" selected>1x</option>
+              <option value="1.5">1.5x</option>
+              <option value="2">2x</option>
+            </select>
+            <button onclick="toggleChat()">Toggle Chat</button>
+            <label for="subtitleSelector" id="subtitle-label" style="display:none;">Subtitles:</label>
+            <select id="subtitleSelector" style="display:none;">
+              <option value="">None</option>
+            </select>
+          </div>
+
+          <div id="player-layout">
+            <div id="video-wrapper">
+              <h2 id="player-title"></h2>
+              <div style="position: relative;">
+                <video id="player-video" controls>
+                  <track id="video-subtitle" kind="subtitles" label="English" srclang="en">
+                </video>
+              </div>
+              <p id="player-description"></p>
+              <p><span id="player-date"></span></p>
+
+              <!-- ✅ Comment section container -->
+              <div id="comments-section" style="margin-top: 30px;"></div>
+            </div>
+
+            <div id="chat-and-queue">
+              <div id="chat-pane" style="display: none;">
+                <div id="chat-messages"></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div id="player-layout">
-        <div id="video-wrapper">
-          <h2 id="player-title"></h2>
-          <div style="position: relative;">
-            <video id="player-video" controls>
-              <track id="video-subtitle" kind="subtitles" label="English" srclang="en">
-            </video>
-          </div>
-          <p id="player-description"></p>
-          <p><span id="player-date"></span></p>
-        </div>
-        <div id="chat-pane">
-          <div id="chat-messages"></div>
-        </div>
+      <!-- ALWAYS visible queue sidebar (right) -->
+      <div id="playlist-queue-container" style="display:none; min-width: 270px;">
+        <h3 style="margin-bottom:10px;">Queue</h3>
+        <div id="playlist-queue" class="playlist-queue"></div>
       </div>
     </div>
   </div>
 
+  <!-- DeviantArt -->
   <div id="deviantart-section" style="display:none;">
     <div class="controls">
       <label for="sort-select-da">Sort by:</label>
@@ -148,7 +167,7 @@
     </div>
   </div>
 
-  <!-- The ONLY static credits-section you need: -->
+  <!-- credits-section -->
   <div id="credits-section" style="display:none; padding: 20px;">
     <!-- The following are dynamically created and shown/hidden by your JS: -->
     <div id="alt-progress-bar" style="width: 100%; background: #ccc; height: 10px; margin-top: 10px; display:none;">

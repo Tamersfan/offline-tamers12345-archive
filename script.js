@@ -10,13 +10,80 @@ let favorites = new Set(JSON.parse(localStorage.getItem('favorites') || '[]'));
 let subtitlesData = {};
 let assRenderer = null;
 let currentBlobUrl = null;
+let watchedVideos = new Set(JSON.parse(localStorage.getItem('watched') || '[]'));
+let showWatched = true;
 
 function getDebugOverlay() {
   return null;
 }
 
+// === Queue Videos ===
+function loadQueue() {
+  return JSON.parse(localStorage.getItem('videoQueue') || '[]');
+}
+function saveQueue(queue) {
+  localStorage.setItem('videoQueue', JSON.stringify(queue));
+}
+function addToQueue(filename) {
+  let queue = loadQueue();
+  if (!queue.includes(filename)) {
+    queue.push(filename);
+    saveQueue(queue);
+    renderQueue();
+  }
+}
+function removeFromQueue(filename) {
+  let queue = loadQueue();
+  queue = queue.filter(f => f !== filename);
+  saveQueue(queue);
+  renderQueue();
+  renderVideoGrid();
+}
+
+
+// === renderQueue always visible ===
+function renderQueue() {
+  const queueDiv = document.getElementById('playlist-queue');
+  const queue = loadQueue();
+  queueDiv.innerHTML = '';
+  // Get currently playing filename if any
+  const currentFile = currentVideoFilename;
+
+  queue.forEach(filename => {
+    // Find video details from videos.json
+    const video = rawVideoData.find(v => v.filename === filename);
+    if (!video) return;
+    const item = document.createElement('div');
+    item.className = 'queue-item';
+    if (currentFile === filename) {
+      item.classList.add('current');
+    }
+    item.innerHTML = `
+      <img class="queue-thumb" src="${video.thumbnail}">
+      <span class="queue-title">${video.title}</span>
+      <button class="remove-queue-btn">✕</button>
+    `;
+
+    item.onclick = (e) => {
+      if (e.target.classList.contains('remove-queue-btn')) return;
+      const queue = loadQueue();
+      const idx = queue.indexOf(video.filename);
+      const videos = queue.map(f => rawVideoData.find(v => v.filename === f)).filter(Boolean);
+      showPlayer(video, videos, idx);
+    };
+
+    item.querySelector('.remove-queue-btn').onclick = (ev) => {
+      ev.stopPropagation();
+      removeFromQueue(video.filename);
+    };
+
+    queueDiv.appendChild(item);
+  });
+  document.getElementById('playlist-queue-container').style.display = queue.length ? 'block' : 'none';
+}
+
+
 // === Universal Download Progress Bar ===
-// (Add this at the top, after your global state)
 
 function formatBytes(bytes) {
   if (bytes === 0) return '0 Bytes';
@@ -45,7 +112,6 @@ function hideMainDownloadProgress() {
 }
 
 // === Progress Listeners for main process events ===
-// Place this in your startup section (DOMContentLoaded or after DOM is ready):
 window.electronAPI.onUpdateProgress?.(function (progress) {
   // progress: {percent, transferred, total, ...}
   showMainDownloadProgress(
@@ -78,6 +144,93 @@ async function loadChatFiles() {
     console.warn("Could not load chat_index.json");
   }
 }
+
+async function loadComments(video) {
+  const safeFilename = video.filename.replace(/\.mp4$/, '.json');
+  const commentContainer = document.getElementById('comments-section');
+
+  commentContainer.innerHTML = '';
+  commentContainer.style.display = 'none';
+
+  const profilePics = [
+    'PFPs/pfp1.png',
+    'PFPs/pfp2.png',
+    'PFPs/pfp3.png',
+    'PFPs/pfp4.png',
+    'PFPs/pfp5.png',
+    'PFPs/pfp6.png',
+    'PFPs/pfp7.png',
+    'PFPs/pfp8.png'
+  ];
+
+  try {
+    const res = await fetch(`comments/${safeFilename}`);
+    if (!res.ok) throw new Error('No comments file');
+    const comments = await res.json();
+
+    if (comments.length > 0) {
+      commentContainer.style.display = 'block';
+      commentContainer.innerHTML = `<h3>Comments</h3>` + comments.map((comment, index) => {
+        const randomPic = profilePics[Math.floor(Math.random() * profilePics.length)];
+        const commentId = `comment-${index}`;
+
+        let repliesHTML = '';
+        if (Array.isArray(comment.replies) && comment.replies.length > 0) {
+          repliesHTML = `
+            <div class="replies" id="${commentId}-replies" style="display:none; margin-left: 50px;">
+              ${comment.replies.map(reply => {
+                const replyPic = profilePics[Math.floor(Math.random() * profilePics.length)];
+                return `
+                  <div class="comment">
+                    <img src="${replyPic}" class="comment-avatar" alt="pfp">
+                    <div class="comment-content">
+                      <a href="${reply.author_url}" target="_blank">${reply.author}</a>
+                      <p>${reply.text}</p>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+            <div class="reply-toggle" style="margin-left: 50px; margin-bottom: 10px;">
+              <button class="show-replies-btn" onclick="
+                document.getElementById('${commentId}-replies').style.display = 'block';
+                this.style.display = 'none';
+                document.getElementById('${commentId}-hide-btn').style.display = 'inline';
+              ">
+                Show ${comment.replies.length} repl${comment.replies.length === 1 ? 'y' : 'ies'}
+              </button>
+
+              <button id="${commentId}-hide-btn" class="hide-replies-btn" style="display: none;" onclick="
+                document.getElementById('${commentId}-replies').style.display = 'none';
+                this.style.display = 'none';
+                this.previousElementSibling.style.display = 'inline';
+              ">
+                Hide replies
+              </button>
+            </div>
+          `;
+        }
+
+        return `
+          <div class="comment">
+            <img src="${randomPic}" class="comment-avatar" alt="pfp">
+            <div class="comment-content">
+              <a href="#" onclick="window.electronAPI.openExternal('${comment.author_url}'); return false;">
+                ${comment.author}
+              </a>
+
+              <p>${comment.text}</p>
+            </div>
+          </div>
+          ${repliesHTML}
+        `;
+      }).join('');
+    }
+  } catch (e) {
+    // silently fail
+  }
+}
+
 
 
 // === Alt Video URLs loaded from JSON ===
@@ -122,7 +275,7 @@ function clearAssSubtitle() {
   }
 }
 
-// ... other helper functions, UI setup, video grid, etc. ...
+// other helper functions, UI setup, video grid, etc.
 
 async function loadAssSubtitle(subtitlePath, videoElement) {
   clearAssSubtitle();
@@ -145,7 +298,6 @@ async function loadAssSubtitle(subtitlePath, videoElement) {
     assRenderer = new SubtitlesOctopus({
       video: videoElement,
       subContent: assText,
-      // No "fonts" property at all!
       workerUrl: window.SubtitlesOctopusWorkerUrl,
       legacyWorkerUrl: window.SubtitlesOctopusWorkerUrl
     });
@@ -172,6 +324,15 @@ async function init() {
   populatePlaylistOptions();
   renderVideoGrid();
 
+ const sizeSelector = document.getElementById('sizeSelector');
+if (sizeSelector) {
+  let savedSize = localStorage.getItem('videoSizeMode') || 'normal';
+  sizeSelector.value = savedSize;
+  sizeSelector.addEventListener('change', e => {
+    resizePlayer(e.target.value);
+  });
+}
+
   document.getElementById('sortOrder').addEventListener('change', e => {
     sortOrder = e.target.value;
     renderVideoGrid();
@@ -179,6 +340,11 @@ async function init() {
 
   document.getElementById('badge-toggle').addEventListener('change', e => {
     showBadges = e.target.checked;
+    renderVideoGrid();
+  });
+
+  document.getElementById('watchedToggle').addEventListener('change', e => {
+    showWatched = e.target.checked;
     renderVideoGrid();
   });
 
@@ -199,12 +365,15 @@ async function init() {
   }
 
   const playlistSelect = document.getElementById('playlistSelect');
-  if (playlistSelect) {
-    playlistSelect.addEventListener('change', e => {
-      selectedPlaylist = e.target.value;
-      renderVideoGrid();
-    });
-  }
+if (playlistSelect) {
+  playlistSelect.addEventListener('change', e => {
+    selectedPlaylist = e.target.value;
+    renderVideoGrid();
+    if (selectedPlaylist === 'all') {
+      renderQueue(); // This ensures the queue reappears when returning to All
+    }
+  });
+}
 
   const missing = await window.electronAPI.checkMissingVideos();
   if (missing.length) {
@@ -217,6 +386,8 @@ async function init() {
       }
     }
   }
+
+  renderQueue(); // Make sure queue appears on startup
 }
 
 // === Populate playlist select with unique tags (except "mlp"), in custom order ===
@@ -316,33 +487,95 @@ function renderVideoGrid() {
       <h3>${video.title}</h3>
       <p>${formatDate(video.date)}</p>
     `;
-    div.onclick = () => showPlayer(video);
-    grid.appendChild(div);
 
+    // ---- Favorite Star ----
     const star = document.createElement('span');
-    star.className = 'favorite-star' + (favorites.has(baseName) ? ' favorited' : '');
-    star.textContent = favorites.has(baseName) ? '★' : '☆';
-    star.dataset.videoId = baseName;
-    star.addEventListener('click', e => {
+    star.className = 'favorite-star';
+    star.textContent = '★';
+    if (favorites.has(baseName)) {
+      star.classList.add('favorited');
+    }
+    star.onclick = (e) => {
       e.stopPropagation();
-      const id = e.currentTarget.dataset.videoId;
-      if (favorites.has(id)) favorites.delete(id);
-      else favorites.add(id);
+      if (favorites.has(baseName)) {
+        favorites.delete(baseName);
+        star.classList.remove('favorited');
+      } else {
+        favorites.add(baseName);
+        star.classList.add('favorited');
+      }
       localStorage.setItem('favorites', JSON.stringify([...favorites]));
-      renderVideoGrid();
-    });
+    };
     div.appendChild(star);
+
+    // ---- Queue Button (bottom right, blue ⏭ when queued) ----
+    const queueBtn = document.createElement('span');
+    queueBtn.className = 'queue-btn';
+    if (loadQueue().includes(video.filename)) {
+      queueBtn.classList.add('queued');
+      queueBtn.textContent = '⏭';
+      queueBtn.title = 'Remove from queue';
+    } else {
+      queueBtn.textContent = '➕';
+      queueBtn.title = 'Add to queue';
+    }
+    queueBtn.onclick = (e) => {
+      e.stopPropagation();
+      const queue = loadQueue();
+      if (queue.includes(video.filename)) {
+        removeFromQueue(video.filename);
+        queueBtn.classList.remove('queued');
+        queueBtn.textContent = '➕';
+        queueBtn.title = 'Add to queue';
+      } else {
+        addToQueue(video.filename);
+        queueBtn.classList.add('queued');
+        queueBtn.textContent = '⏭';
+        queueBtn.title = 'Remove from queue';
+      }
+      renderQueue();
+    };
+    div.appendChild(queueBtn);
+
+    // ---- Watched Checkmark ----
+    if (watchedVideos.has(baseName) && showWatched) {
+      const check = document.createElement('span');
+      check.className = 'watched-checkmark';
+      check.textContent = '✔';
+      div.querySelector('.thumbnail-container').appendChild(check);
+    }
+
+    // ---- Video click handler ----
+    div.onclick = () => {
+      const playlist = selectedPlaylist !== 'all'
+        ? rawVideoData.filter(v => Array.isArray(v.tags) && v.tags.includes(selectedPlaylist))
+        : rawVideoData;
+      const index = playlist.findIndex(v => v.filename === video.filename);
+      showPlayer(video, playlist, index);
+    };
+
+    grid.appendChild(div);
   });
+
+  renderQueue(); // Always update queue sidebar
 }
+
 
 // === Video player & chat logic ===
 let chatData = [];
-function showPlayer(video) {
+let currentPlaylistVideos = [];
+let currentPlaylistIndex = 0;
+
+async function showPlayer(video, playlist = [], index = 0, autoplay = false) {
+  currentPlaylistVideos = playlist;
+  currentPlaylistIndex = index;
+
   document.getElementById('video-grid').style.display = 'none';
   document.getElementById('video-player').style.display = 'block';
   document.getElementById('player-title').innerText = video.title;
   document.getElementById('player-description').innerText = video.description;
   document.getElementById('player-date').innerText = formatDate(video.date);
+  loadComments(video);
 
   const player = document.getElementById('player-video');
   const subtitleSelector = document.getElementById('subtitleSelector');
@@ -351,9 +584,20 @@ function showPlayer(video) {
 
   player.src = "file://" + videoPath + "/" + video.filename;
   player.load();
-  player.className = 'normal';
+  let savedSize = localStorage.getItem('videoSizeMode') || 'normal';
+  player.className = savedSize;
+  const sizeSelector = document.getElementById('sizeSelector');
+  if (sizeSelector) sizeSelector.value = savedSize;
   player.volume = document.getElementById('volumeSlider').value;
   player.playbackRate = parseFloat(document.getElementById('speedSelector').value);
+
+  player.onloadedmetadata = () => {
+    if (autoplay) {
+      player.play().catch(err => {
+        console.warn("Autoplay failed:", err);
+      });
+    }
+  };
 
   currentVideoFilename = video.filename;
   currentAltVideo = null;
@@ -387,9 +631,11 @@ function showPlayer(video) {
     };
   }
 
+  // === Live Chat loading
   const chatPane = document.getElementById('chat-pane');
   const chatBox = document.getElementById('chat-messages');
   const toggleBtn = document.querySelector('button[onclick="toggleChat()"]');
+  const queueContainer = document.getElementById('playlist-queue-container');
 
   chatBox.innerHTML = "";
   chatPane.style.display = 'none';
@@ -397,20 +643,30 @@ function showPlayer(video) {
   chatData = [];
 
   const chatFile = `chat/${video.filename.split('/').pop().replace(/\.[^/.]+$/, '')}.csv`;
-  fetch(chatFile)
-    .then(r => { if (!r.ok) throw new Error; return r.text(); })
-    .then(txt => {
-      chatData = txt.trim().split('\n').slice(1).map(row => {
-        const [timestamp, author, message] = row.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/);
-        return { time: parseTimestamp(timestamp), author, message };
-      });
-      chatPane.style.display = 'block';
-      toggleBtn.style.display = 'inline-block';
-    })
-    .catch(() => {
-      chatPane.style.display = 'none';
-      toggleBtn.style.display = 'none';
-    });
+
+  try {
+  const res = await fetch(chatFile);
+  if (!res.ok) throw new Error();
+
+  const txt = await res.text();
+  chatData = txt.trim().split('\n').slice(1).map(row => {
+    const [timestamp, author, message] = row.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/);
+    return { time: parseTimestamp(timestamp), author, message };
+  });
+
+  const settings = await window.electronAPI.getSettings();
+  const chatVisible = settings?.chatVisible !== false; // default to true
+
+  chatPane.style.display = chatVisible ? 'block' : 'none';
+  toggleBtn.style.display = 'inline-block';
+  queueContainer.style.marginTop = chatVisible ? '16px' : '0';
+} catch (e) {
+  // No chat file—HIDE the toggle button and chat pane completely
+  chatPane.style.display = 'none';
+  toggleBtn.style.display = 'none';
+  queueContainer.style.marginTop = '0';
+}
+
 
   player.ontimeupdate = () => {
     if (!chatData.length) return;
@@ -421,6 +677,70 @@ function showPlayer(video) {
     ).join('');
     chatPane.scrollTop = chatPane.scrollHeight;
   };
+
+  // Playlist autoplay: load next video when this one ends
+  player.onended = () => {
+  const base = video.filename.split('/').pop().replace(/\.[^/.]+$/, '');
+  watchedVideos.add(base);
+  localStorage.setItem('watched', JSON.stringify([...watchedVideos]));
+  renderVideoGrid();
+
+  // Playlist autoplay if user selected a real playlist
+  if (selectedPlaylist !== 'all') {
+    const nextIndex = currentPlaylistIndex + 1;
+    if (nextIndex < currentPlaylistVideos.length) {
+      showPlayer(currentPlaylistVideos[nextIndex], currentPlaylistVideos, nextIndex, true);
+      return;
+    }
+  }
+
+  // User queue autoplay
+  // Only run this if NOT playing a playlist
+  if (selectedPlaylist === 'all') {
+    const queue = loadQueue();
+    const idx = queue.indexOf(video.filename); // <-- full filename
+    if (idx !== -1 && idx + 1 < queue.length) {
+      const nextFile = queue[idx + 1];
+      const nextVideo = rawVideoData.find(v => v.filename === nextFile);
+      if (nextVideo) {
+        showPlayer(nextVideo, [], 0, true);
+      }
+    }
+  }
+};
+
+
+  if (selectedPlaylist !== 'all') {
+  renderPlaylistQueue();
+} else {
+  renderQueue();
+  const container = document.getElementById('playlist-queue-container');
+  const queue = loadQueue();
+  if (container) container.style.display = queue.length ? 'block' : 'none';
+}
+
+}
+
+function renderPlaylistQueue() {
+  const wrap = document.getElementById('playlist-queue-container');
+  const queueContainer = document.getElementById('playlist-queue');
+
+  if (!wrap || !queueContainer || currentPlaylistVideos.length === 0) {
+    if (wrap) wrap.style.display = 'none';
+    return;
+  }
+
+  wrap.style.display = 'block';
+
+  queueContainer.innerHTML = currentPlaylistVideos.map((vid, idx) => {
+    const isCurrent = idx === currentPlaylistIndex;
+    return `
+      <div class="queue-item ${isCurrent ? 'current' : ''}" onclick="showPlayer(currentPlaylistVideos[${idx}], currentPlaylistVideos, ${idx})" style="cursor:pointer;margin-bottom:8px;padding:6px;border-radius:4px;background:${isCurrent ? '#444' : '#222'};">
+        <img src="${vid.thumbnail}" class="queue-thumb" alt="Thumbnail" style="width:80px;height:auto;margin-right:8px;vertical-align:middle;">
+        <span class="queue-title" style="vertical-align:middle;">${vid.title}</span>
+      </div>
+    `;
+  }).join('');
 }
 
 let currentVideoFilename = null;
@@ -518,16 +838,27 @@ function changeSubtitle(lang) {
 
 function closePlayer() {
   const player = document.getElementById('player-video');
+  const sizeSelector = document.getElementById('sizeSelector');
+let savedSize = localStorage.getItem('videoSizeMode') || 'normal';
+player.className = savedSize;
+if (sizeSelector) {
+  sizeSelector.value = savedSize;
+}
   player.pause();
   player.currentTime = 0;
   player.src = "";
   document.getElementById('chat-messages').innerHTML = "";
   document.getElementById('video-player').style.display = 'none';
   document.getElementById('video-grid').style.display = 'grid';
+
+  // Restore the queue sidebar based on its current contents
+  renderQueue();
 }
 
+  
 function resizePlayer(mode) {
   document.getElementById('player-video').className = mode;
+  localStorage.setItem('videoSizeMode', mode);
 }
 function setVolume(v) {
   document.getElementById('player-video').volume = v;
@@ -535,9 +866,28 @@ function setVolume(v) {
 function setPlaybackSpeed(v) {
   document.getElementById('player-video').playbackRate = parseFloat(v);
 }
-function toggleChat() {
-  const pane = document.getElementById('chat-pane');
-  pane.style.display = pane.style.display === 'none' ? 'block' : 'none';
+async function toggleChat() {
+  const chatPane = document.getElementById('chat-pane');
+  const queueContainer = document.getElementById('playlist-queue-container');
+
+  const showing = chatPane.style.display === 'block';
+  const newDisplay = showing ? 'none' : 'block';
+  chatPane.style.display = newDisplay;
+
+  // Move queue up/down
+  queueContainer.style.marginTop = newDisplay === 'none' ? '0' : '16px';
+
+  // Move queue element visually up or down
+  if (queueContainer) {
+    if (!showing) {
+      chatPane.after(queueContainer);
+    } else {
+      document.getElementById('chat-and-queue')?.appendChild(queueContainer);
+    }
+  }
+
+  // Save setting to Electron settings.json
+  await window.electronAPI.setSetting('chatVisible', newDisplay === 'block');
 }
 
 function parseTimestamp(ts) {
@@ -552,7 +902,7 @@ function formatDate(d) {
 // === Credits Tab: Render from JSON ===
 async function renderCreditsPage() {
   const creditsSection = document.getElementById('credits-section');
-  // Only clear the details, not the progress bar or status!
+  // Only clear the details, not the progress bar or status
   let detailsDiv = document.getElementById('credits-details');
   if (!detailsDiv) {
     detailsDiv = document.createElement('div');
@@ -628,10 +978,9 @@ async function renderCreditsPage() {
     });
     creditsSection._externalLinkHandlerSet = true;
   }
-} // <== End of renderCreditsPage
+}
 
-
-// === Download handler, now with debug! ===
+// === Download handler with debug ===
 async function downloadAltVideosHandler() {
   const status = document.getElementById('alt-download-status');
   const progressBar = document.getElementById('alt-progress-bar');
@@ -757,7 +1106,6 @@ async function renderMissingAltVideos() {
 
 // === Startup & tab-switching ===
 document.addEventListener('DOMContentLoaded', async () => {
-  // DEBUG overlay: Safe to add now!
   getDebugOverlay();
 
   // Patch SubtitlesOctopus worker error if not done already (for late injection cases)
