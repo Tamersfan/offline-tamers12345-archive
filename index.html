@@ -9,25 +9,82 @@
     window.SubtitlesOctopusWorkerUrl = 'libs/libass/subtitles-octopus-worker.js';
 
     document.addEventListener('DOMContentLoaded', () => {
+      // Video player load msg
       const video = document.getElementById('player-video');
-      if (!video) {
+      if (video) {
+        video.addEventListener('loadedmetadata', () => {
+          console.log("✅ Video metadata loaded — loading .ass subtitles...");
+        });
+      } else {
         console.error("❌ Video element with ID 'player-video' not found.");
-        return;
       }
 
-      video.addEventListener('loadedmetadata', () => {
-        console.log("✅ Video metadata loaded — loading .ass subtitles...");
+      // === THEME LOADING LOGIC ===
+      const storedTheme = localStorage.getItem('theme') || 'dark';
+      document.body.setAttribute('data-theme', storedTheme);
+
+      const themeSelector = document.getElementById('theme-selector');
+      if (themeSelector) {
+        themeSelector.value = storedTheme;
+        themeSelector.addEventListener('change', function() {
+          document.body.setAttribute('data-theme', this.value);
+          localStorage.setItem('theme', this.value);
+        });
+      }
+
+      // ---- TABS LOGIC ----
+      const tabs = [
+        { btn: 'tab-youtube', section: 'app-content' },
+        { btn: 'tab-deviantart', section: 'deviantart-section' },
+        { btn: 'tab-tumblr', section: 'tumblr-section' },
+        { btn: 'tab-tumblr2', section: 'tumblr2-section' },
+        { btn: 'tab-credits', section: 'credits-section' },
+        { btn: 'tab-settings', section: 'settings-section' }
+      ];
+      tabs.forEach(tab => {
+        const btn = document.getElementById(tab.btn);
+        const section = document.getElementById(tab.section);
+        if (btn && section) {
+          btn.addEventListener('click', () => {
+            tabs.forEach(t => {
+              const s = document.getElementById(t.section);
+              if (s) s.style.display = 'none';
+            });
+            document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+            section.style.display = (tab.section === 'app-content') ? '' : 'block';
+            btn.classList.add('active');
+            if (tab.section === 'settings-section' && themeSelector) {
+              themeSelector.value = document.body.getAttribute('data-theme') || 'dark';
+            }
+          });
+        }
+      });
+
+      tabs.forEach(tab => {
+        const section = document.getElementById(tab.section);
+        if (section) {
+          if (tab.section === 'app-content') section.style.display = '';
+          else section.style.display = 'none';
+        }
       });
     });
   </script>
 </head>
 <body>
+  <canvas id="matrix-bg" style="
+    position: fixed;
+    z-index: 0;
+    left: 0; top: 0; width: 100vw; height: 100vh;
+    pointer-events: none; display: none;
+  "></canvas>
+  
   <div class="tab-container">
     <button id="tab-youtube" class="tab-button active">YouTube</button>
     <button id="tab-deviantart" class="tab-button">DeviantArt</button>
     <button id="tab-tumblr" class="tab-button">Tumblr Blog 1</button>
     <button id="tab-tumblr2" class="tab-button">Tumblr Blog 2</button>
     <button id="tab-credits" class="tab-button">Credits</button>
+    <button id="tab-settings" class="tab-button">Settings</button>
   </div>
 
   <div id="startup-screen">
@@ -40,7 +97,6 @@
     <div id="channel-header">
       <img id="channel-banner" src="banner.png" alt="Channel Banner">
     </div>
-
     <div style="padding: 10px;">
       <input type="text" id="searchInput" placeholder="Search videos by title..." style="margin-right: 10px;">
       <label for="sortOrder">Sort by:</label>
@@ -49,6 +105,7 @@
         <option value="oldest">Oldest</option>
       </select>
       <label style="margin-left: 10px;"><input type="checkbox" id="badge-toggle" checked> Show Live Chat Badges</label>
+      <label style="margin-left: 10px;"><input type="checkbox" id="watchedToggle" checked> Show Watched Checkmarks</label>
       <label style="margin-left: 10px;"><input type="checkbox" id="favoritesToggle"> Show Favorites</label>
       <label style="margin-left: 10px;" for="tagFilter">Filter:</label>
       <select id="tagFilter">
@@ -62,47 +119,63 @@
       </select>
       <button id="change-folder-btn" style="margin-left: 10px;">Change Video Folder</button>
     </div>
-
-    <div id="video-grid"></div>
-
-    <div id="video-player" style="display:none;">
-      <div id="player-controls">
-        <button onclick="closePlayer()">Back</button>
-        <label for="sizeSelector">Size:</label>
-        <select id="sizeSelector" onchange="resizePlayer(this.value)">
-          <option value="normal">Normal</option>
-          <option value="theater">Theater</option>
-        </select>
-        <label for="volumeSlider">Volume:</label>
-        <input type="range" id="volumeSlider" min="0" max="1" step="0.01" onchange="setVolume(this.value)">
-        <label for="speedSelector">Speed:</label>
-        <select id="speedSelector" onchange="setPlaybackSpeed(this.value)">
-          <option value="0.5">0.5x</option>
-          <option value="1" selected>1x</option>
-          <option value="1.5">1.5x</option>
-          <option value="2">2x</option>
-        </select>
-        <button onclick="toggleChat()">Toggle Chat</button>
-        <label for="subtitleSelector" id="subtitle-label" style="display:none;">Subtitles:</label>
-        <select id="subtitleSelector" style="display:none;">
-          <option value="">None</option>
-        </select>
-      </div>
-
-      <div id="player-layout">
-        <div id="video-wrapper">
-          <h2 id="player-title"></h2>
-          <div style="position: relative;">
-            <video id="player-video" controls>
-              <track id="video-subtitle" kind="subtitles" label="English" srclang="en">
-            </video>
+    <div style="padding: 10px 0 0 0;">
+  <button id="randomVideoBtn" style="display: block; margin-right: 10px;">Random Video</button>
+</div>
+    <div id="main-content-layout" style="display: flex; gap: 24px; align-items: flex-start;">
+      <div style="flex: 1;">
+        <div id="video-grid"></div>
+        <div id="video-player" style="display:none;">
+          <div id="player-controls">
+            <button onclick="closePlayer()">Back</button>
+            <label for="sizeSelector">Size:</label>
+            <select id="sizeSelector" onchange="resizePlayer(this.value)">
+              <option value="normal">Normal</option>
+              <option value="theater">Theater</option>
+            </select>
+            <label for="volumeSlider">Volume:</label>
+            <input type="range" id="volumeSlider" min="0" max="1" step="0.01" onchange="setVolume(this.value)">
+            <label for="speedSelector">Speed:</label>
+            <select id="speedSelector" onchange="setPlaybackSpeed(this.value)">
+              <option value="0.5">0.5x</option>
+              <option value="1" selected>1x</option>
+              <option value="1.5">1.5x</option>
+              <option value="2">2x</option>
+            </select>
+            <button id="screenshot-btn" title="Take Screenshot">📸 Screenshot</button>
+            <button onclick="toggleChat()">Toggle Chat</button>
+            <label for="subtitleSelector" id="subtitle-label" style="display:none;">Subtitles:</label>
+            <select id="subtitleSelector" style="display:none;">
+              <option value="">None</option>
+            </select>
           </div>
-          <p id="player-description"></p>
-          <p><span id="player-date"></span></p>
+          <div id="player-layout">
+            <div id="video-wrapper">
+              <h2 id="player-title"></h2>
+              <div style="position: relative;">
+                <video id="player-video" controls>
+                  <track id="video-subtitle" kind="subtitles" label="English" srclang="en">
+                </video>
+              </div>
+              <p id="player-description"></p>
+              <p><span id="player-date"></span></p>
+              <div id="comments-section" style="margin-top: 30px;"></div>
+            </div>
+            <div id="chat-and-queue">
+              <div id="chat-pane" style="display: none;">
+                <div id="chat-messages"></div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div id="chat-pane">
-          <div id="chat-messages"></div>
+      </div>
+      <div id="playlist-queue-container" style="display:none; min-width: 270px;">
+        <h3 style="margin-bottom:10px;">Queue</h3>
+        <div style="margin-bottom:8px;">
+          <button id="shuffle-playlist-btn" type="button">Shuffle</button>
+          <button id="reverse-playlist-btn" type="button">Reverse</button>
         </div>
+        <div id="playlist-queue" class="playlist-queue"></div>
       </div>
     </div>
   </div>
@@ -117,7 +190,6 @@
       </select>
     </div>
     <div id="deviantart-gallery" class="grid"></div>
-
     <div id="da-modal" class="da-modal" style="display:none;">
       <div class="da-modal-content">
         <button id="da-modal-close" class="da-modal-close">✕</button>
@@ -148,9 +220,7 @@
     </div>
   </div>
 
-  <!-- The ONLY static credits-section you need: -->
   <div id="credits-section" style="display:none; padding: 20px;">
-    <!-- The following are dynamically created and shown/hidden by your JS: -->
     <div id="alt-progress-bar" style="width: 100%; background: #ccc; height: 10px; margin-top: 10px; display:none;">
       <div id="alt-progress-fill" style="width: 0%; background: #4caf50; height: 100%;"></div>
     </div>
@@ -158,7 +228,37 @@
     <div id="alt-download-status" style="margin-top: 10px; font-size: 0.9em; white-space: pre-line;"></div>
   </div>
 
-  <!-- UNIVERSAL Download Progress Bar (for updates & video downloads) -->
+  <div id="settings-section" style="display:none; padding:24px; max-width:480px;">
+    <h2>Settings</h2>
+    <label for="theme-selector" style="font-weight:bold; display:block; margin-bottom:8px;">
+      Theme:
+    </label>
+    <select id="theme-selector" style="font-size:1em; padding:6px 16px; border-radius:5px; margin-bottom: 18px;">
+      <option value="dark">Dark (Default)</option>
+      <option value="light">Light</option>
+      <option value="yotsuba">Yotsuba</option>
+      <option value="yotsubab">Yotsuba B</option>
+      <option value="futaba">Futaba</option>
+      <option value="discord">Discord</option>
+      <option value="pony">Pony Pastel</option>
+      <option value="retro">Retro CRT</option>
+      <option value="midnight">Midnight Blue</option>
+      <option value="strawberry">Strawberry Soda</option>
+      <option value="solarflair">Solar Flair</option>
+      <option value="goth">Gothic</option>
+      <option value="mobian royalty (queen aleena)">Mobian Royalty (Queen Aleena)</option>
+      <option value="popstar pink (sonia)">Popstar Pink (Sonia)</option>
+      <option value="blue blur (sonic)">Blue Blur (Sonic)</option>
+      <option value="green thief (manic)">Green Thief (Manic)</option>
+      <option value="matrix">Matrix</option>
+    </select>
+    <br>
+    <small>
+      Your theme will be remembered on this device.<br>
+      More customization coming soon!
+    </small>
+  </div>
+
   <div id="main-download-progress" style="display:none;position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#222;padding:12px 24px;border-radius:8px;color:#fff;z-index:9999;min-width:320px;box-shadow:0 2px 16px #0008;">
     <div id="main-download-status" style="margin-bottom:8px;font-size:16px;"></div>
     <div style="background:#333;height:20px;border-radius:10px;overflow:hidden;">
@@ -171,5 +271,69 @@
   <script src="deviantart.js"></script>
   <script src="tumblr.js"></script>
   <script src="tumblr2.js"></script>
+
+<script>
+window.addEventListener('DOMContentLoaded', function() {
+  // === MATRIX CODE RAIN EFFECT ===
+  (function() {
+    const canvas = document.getElementById('matrix-bg');
+    let ctx, cols, drops, animationId;
+    const fontSize = 18;
+    const chars = "アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズヅブプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+    function resize() {
+      if (!canvas) return;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      cols = Math.floor(canvas.width / fontSize);
+      drops = Array(cols).fill(1);
+    }
+
+    function draw() {
+      ctx.fillStyle = "rgba(5,14,6,0.28)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.font = fontSize + "px monospace";
+      ctx.fillStyle = "#8cff65";
+      for (let i = 0; i < drops.length; i++) {
+        const text = chars[Math.floor(Math.random() * chars.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        if (Math.random() > 0.96) drops[i] = 0;
+        drops[i]++;
+      }
+      setTimeout(draw, 50); // 50ms delay ≈ 20fps
+    }
+
+    function maybeStartMatrix() {
+      if (!canvas) return;
+      if (document.body.getAttribute('data-theme') === 'matrix') {
+        canvas.style.display = 'block';
+        ctx = canvas.getContext('2d');
+        resize();
+        if (animationId) {
+          cancelAnimationFrame(animationId);
+          animationId = null;
+        }
+        draw();
+      } else {
+        canvas.style.display = 'none';
+        if (animationId) {
+          cancelAnimationFrame(animationId);
+          animationId = null;
+        }
+      }
+    }
+
+    window.addEventListener('resize', resize);
+
+    const observer = new MutationObserver(maybeStartMatrix);
+    if (document.body) {
+      observer.observe(document.body, { attributes: true, attributeFilter: ['data-theme'] });
+    }
+
+    resize();
+    maybeStartMatrix();
+  })();
+});
+</script>
 </body>
 </html>

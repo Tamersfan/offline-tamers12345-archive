@@ -3,6 +3,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electronAPI', {
   getSettings:         () => ipcRenderer.invoke('get-settings'),
+  setSetting:          (key, value) => ipcRenderer.invoke('set-setting', key, value),
   selectVideoFolder:   () => ipcRenderer.invoke('select-video-folder'),
   readImageFiles:      () => ipcRenderer.invoke('read-image-files'),
   readTumblrHTML:      () => ipcRenderer.invoke('read-tumblr-html'),
@@ -16,7 +17,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   fileExists:          (fullPath) => ipcRenderer.invoke('file-exists', fullPath),
   saveAltVideo:        (fullPath, arrayBuffer) => ipcRenderer.invoke('save-alt-video', fullPath, arrayBuffer),
 
-  // New: Listen for update and video download progress
+  // Listen for update and video download progress
   onUpdateProgress:    (callback) => ipcRenderer.on('update-download-progress', (_event, progress) => callback(progress)),
   onVideoDownloadProgress: (callback) => ipcRenderer.on('video-download-progress', (_event, data) => callback(data)),
 

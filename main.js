@@ -111,6 +111,18 @@ ipcMain.handle('read-tumblr2-html', async () => {
     .map(f => path.join('tumblr2', f));
 });
 
+ipcMain.handle('set-setting', async (_event, key, value) => {
+  try {
+    let settings = loadJSON(settingsPath, {});
+    settings[key] = value;
+    saveJSON(settingsPath, settings);
+    return true;
+  } catch (e) {
+    console.error(`Failed to save setting "${key}":`, e);
+    return false;
+  }
+});
+
 // ── Open external link in user's default browser ─────────────
 ipcMain.handle('open-external', async (_event, url) => {
   await shell.openExternal(url);

@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0">
   <channel>
-    <title>All of Tamers’ Videos</title>
+    <title>All of Tamers' Videos</title>
     <link>https://github.com/Tamersfan/offline-tamers12345-archive</link>
     <description>Auto-download new video batches via torrent</description>
+    <lastBuildDate>Fri, 27 Jun 2025 00:00:00 GMT</lastBuildDate>
 
     <!-- Newest batch first -->
+    <item>
+      <title>Videos Batch 2025-06-27</title>
+      <link>https://raw.githubusercontent.com/Tamersfan/offline-tamers12345-archive/main/torrents/tamers%20videos%206-27-2025.torrent</link>
+      <pubDate>Fri, 27 Jun 2025 00:00:00 GMT</pubDate>
+      <guid>https://raw.githubusercontent.com/Tamersfan/offline-tamers12345-archive/main/torrents/tamers%20videos%206-27-2025.torrent</guid>
+      <enclosure 
+        url="https://raw.githubusercontent.com/Tamersfan/offline-tamers12345-archive/main/torrents/tamers%20videos%206-27-2025.torrent"
+        length="2345678"
+        type="application/x-bittorrent"/>
+    </item>
     <item>
       <title>Videos Batch 2025-06-20</title>
       <link>https://github.com/Tamersfan/offline-tamers12345-archive/releases/download/v2.0.0/tamers.videos.6-20-2025.torrent</link>
       <pubDate>Fri, 20 Jun 2025 00:00:00 GMT</pubDate>
+      <guid>https://github.com/Tamersfan/offline-tamers12345-archive/releases/download/v2.0.0/tamers.videos.6-20-2025.torrent</guid>
       <enclosure 
         url="https://github.com/Tamersfan/offline-tamers12345-archive/releases/download/v2.0.0/tamers.videos.6-20-2025.torrent"
         length="2345678"
@@ -17,19 +29,21 @@
     </item>
     <item>
       <title>Videos Batch 2025-06-13</title>
-      <link>https://raw.githubusercontent.com/Tamersfan/offline-tamers12345-archive/main/torrents/tamers%20videos%206-13-25.torrent</link>
+      <link>https://raw.githubusercontent.com/Tamersfan/offline-tamers12345-archive/main/torrents/tamers%20videos%206-13-2025.torrent</link>
       <pubDate>Fri, 13 Jun 2025 00:00:00 GMT</pubDate>
+      <guid>https://raw.githubusercontent.com/Tamersfan/offline-tamers12345-archive/main/torrents/tamers%20videos%206-13-2025.torrent</guid>
       <enclosure 
-        url="https://raw.githubusercontent.com/Tamersfan/offline-tamers12345-archive/main/torrents/tamers%20videos%206-13-25.torrent"
+        url="https://raw.githubusercontent.com/Tamersfan/offline-tamers12345-archive/main/torrents/tamers%20videos%206-13-2025.torrent"
         length="2345678"
         type="application/x-bittorrent"/>
     </item>
     <item>
       <title>Videos Batch 2025-06-09</title>
-      <link>https://raw.githubusercontent.com/Tamersfan/offline-tamers12345-archive/main/torrents/tamers%20videos%206-9-25.torrent</link>
+      <link>https://raw.githubusercontent.com/Tamersfan/offline-tamers12345-archive/main/torrents/tamers%20videos%206-09-2025.torrent</link>
       <pubDate>Mon, 09 Jun 2025 00:00:00 GMT</pubDate>
+      <guid>https://raw.githubusercontent.com/Tamersfan/offline-tamers12345-archive/main/torrents/tamers%20videos%206-09-2025.torrent</guid>
       <enclosure 
-        url="https://raw.githubusercontent.com/Tamersfan/offline-tamers12345-archive/main/torrents/tamers%20videos%206-9-25.torrent"
+        url="https://raw.githubusercontent.com/Tamersfan/offline-tamers12345-archive/main/torrents/tamers%20videos%206-09-2025.torrent"
         length="2345678"
         type="application/x-bittorrent"/>
     </item>

@@ -9,6 +9,16 @@
     { "label": "Newgrounds", "url": "https://tamers12345official.newgrounds.com/" },
     { "label": "Pony.Tube", "url": "https://pony.tube/c/tamers12345official/videos" }
   ],
+
+  "pfpcollabheader": "Special thanks to the following people for contributing to the PFP collab!",
+  "collabContributors": [
+    {
+      "name": "mehdrinkindud",
+      "link": "https://mehdrinkindud.newgrounds.com",
+      "pfp": "pfp10 Jeremy The Echidna"
+    }
+  ],
+
   "header": "Subtitles provided by those below. Thank you to all translators and contributors!",
   "contributors": [
     {
