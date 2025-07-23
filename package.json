@@ -1,16 +1,14 @@
 {
   "name": "offline-tamers12345-archive",
-  "version": "4.0.0",
+  "version": "5.0.2",
   "description": "Offline YouTube + DeviantArt + Tumblr archive",
-   "author": "TamersArchiver <TamersArchiver@proton.me>",
-   "publisher": "TamersArchiver <TamersArchiver@proton.me>",  
-   "main": "main.js",
-
+  "author": "TamersArchiver <TamersArchiver@proton.me>",
+  "publisher": "TamersArchiver@proton.me",
+  "main": "main.js",
   "scripts": {
     "start": "electron .",
     "dist": "electron-builder"
   },
-
   "build": {
     "appId": "com.tamersfan.offline-tamers12345-archive",
     "productName": "Offline Tamers12345 Archive",
@@ -18,17 +16,45 @@
     "files": [
       "**/*"
     ],
+    "asarUnpack": [
+      "ffmpeg-bin/win/**",
+      "ffmpeg-bin/mac/**",
+      "ffmpeg-bin/linux/**"
+    ],
     "directories": {
       "buildResources": "assets"
     },
-
     "win": {
       "icon": "build-icon/archive.ico",
-      "target": [
-        "nsis"
+      "target": ["nsis"],
+      "extraFiles": [
+        {
+          "from": "ffmpeg-bin/win",
+          "to": "ffmpeg-bin/win",
+          "filter": ["ffmpeg.exe"]
+        }
       ]
     },
-
+    "mac": {
+      "target": ["dmg", "zip"],
+      "extraFiles": [
+        {
+          "from": "ffmpeg-bin/mac",
+          "to": "ffmpeg-bin/mac",
+          "filter": ["ffmpeg"]
+        }
+      ]
+    },
+    "linux": {
+      "target": ["AppImage", "deb"],
+      "extraFiles": [
+        {
+          "from": "ffmpeg-bin/linux",
+          "to": "ffmpeg-bin/linux",
+          "filter": ["ffmpeg"]
+        }
+      ]
+    },
     "nsis": {
       "oneClick": false,
       "allowElevation": true,
@@ -38,21 +64,6 @@
       "createStartMenuShortcut": true,
       "shortcutName": "Offline Tamers12345 Archive"
     },
-
-    "mac": {
-      "target": [
-        "dmg",
-        "zip"
-      ]
-    },
-
-    "linux": {
-      "target": [
-        "AppImage",
-        "deb"
-      ]
-    },
-
     "publish": [
       {
         "provider": "github",
@@ -61,9 +72,10 @@
       }
     ]
   },
-
   "dependencies": {
-    "electron-updater": "^6.6.2"
+    "electron-updater": "^6.6.2",
+    "ffmpeg-static": "^5.2.0",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "electron": "^28.0.0",

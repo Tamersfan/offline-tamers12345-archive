@@ -32,7 +32,7 @@
         });
       }
 
-      // ---- TABS LOGIC ----
+      // === TABS LOGIC ===
       const tabs = [
         { btn: 'tab-youtube', section: 'app-content' },
         { btn: 'tab-deviantart', section: 'deviantart-section' },
@@ -143,12 +143,60 @@
               <option value="2">2x</option>
             </select>
             <button id="screenshot-btn" title="Take Screenshot">📸 Screenshot</button>
+            <button id="gif-btn" title="Create GIF">Create GIF</button>
+            <button id="clip-btn" title="Create Clip">Make Clip</button>
             <button onclick="toggleChat()">Toggle Chat</button>
             <label for="subtitleSelector" id="subtitle-label" style="display:none;">Subtitles:</label>
             <select id="subtitleSelector" style="display:none;">
               <option value="">None</option>
             </select>
           </div>
+             <div id="gif-export-container" style="display:none; margin-top:18px; background:#222; padding:12px; border-radius:8px; max-width:440px;">
+             <div id="gif-frame-thumbnails" style="margin-top:12px; display:flex; gap:4px; flex-wrap:wrap;"></div> 
+ <div style="margin-bottom:8px;">
+    <label>Start Time: 
+      <input id="gif-start-time" type="text" value="00:00:00" size="8" style="font-family:monospace; width:75px;">
+      <button id="gif-use-current-start">Use current timestamp</button>
+    </label>
+  </div>
+  <div style="margin-bottom:8px;">
+    <label>End Time: 
+      <input id="gif-end-time" type="text" value="00:00:05" size="8" style="font-family:monospace; width:75px;">
+      <button id="gif-use-current-end">Use current timestamp</button>
+    </label>
+  </div>
+  <div style="margin-bottom:8px;">
+    <button id="gif-preview-btn">Preview GIF</button>
+    <button id="gif-stop-preview-btn" style="display:none;">Stop Preview</button>
+    <button id="gif-export-btn" disabled>Export GIF</button>
+    <span id="gif-export-status" style="margin-left:14px; color:#9ef;"></span>
+  </div>
+</div>
+
+          <div id="clip-export-container" style="display:none; margin-top:18px; background:#222; padding:12px; border-radius:8px; max-width:440px;">
+  <div style="margin-bottom:8px;">
+    <label>Start Time: 
+      <input id="clip-start-time" type="text" value="00:00:00" size="8" style="font-family:monospace; width:75px;">
+      <button id="clip-use-current-start">Use current timestamp</button>
+    </label>
+  </div>
+  <div style="margin-bottom:8px;">
+    <label>End Time: 
+      <input id="clip-end-time" type="text" value="00:00:05" size="8" style="font-family:monospace; width:75px;">
+      <button id="clip-use-current-end">Use current timestamp</button>
+    </label>
+  </div>
+  <div style="margin-bottom:8px;">
+    <button id="clip-preview-btn">Preview Clip</button>
+    <button id="clip-stop-preview-btn" style="display:none;">Stop Preview</button>
+  </div>
+  <div style="margin-bottom:8px;">
+    <button id="clip-export-mp4-btn" disabled>Export as MP4</button>
+    <button id="clip-export-webm-btn" disabled>WebM for 4chan</button>
+    <span id="clip-export-status" style="margin-left:14px; color:#9ef;"></span>
+  </div>
+</div>
+
           <div id="player-layout">
             <div id="video-wrapper">
               <h2 id="player-title"></h2>
@@ -267,7 +315,7 @@
     <div id="main-download-label" style="font-size:13px;margin-top:6px;text-align:right;"></div>
   </div>
 
-  <script src="script.js"></script>
+  <script type="module" src="script.js"></script>
   <script src="deviantart.js"></script>
   <script src="tumblr.js"></script>
   <script src="tumblr2.js"></script>

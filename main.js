@@ -1,9 +1,33 @@
 // main.js
 const { app, BrowserWindow, dialog, ipcMain, shell } = require('electron');
 const path = require('path');
+const os = require('os');
 const fs = require('fs');
 const https = require('https');
+const { spawn } = require('child_process');
 const { autoUpdater } = require('electron-updater');
+
+function getFfmpegPath() {
+  // Handles ASAR packaging too
+  let binFolder = '';
+  let exe = 'ffmpeg';
+  switch (process.platform) {
+    case 'win32':
+      binFolder = 'win';
+      exe = 'ffmpeg.exe';
+      break;
+    case 'darwin':
+      binFolder = 'mac';
+      break;
+    case 'linux':
+      binFolder = 'linux';
+      break;
+  }
+  let dir = __dirname;
+  // If using ASAR, get path outside asar for binaries
+  if (dir.endsWith('.asar')) dir = dir.replace('.asar', '.asar.unpacked');
+  return path.join(dir, 'ffmpeg-bin', binFolder, exe);
+}
 
 const userData = app.getPath('userData');
 const settingsPath = path.join(userData, 'settings.json');
@@ -31,27 +55,219 @@ function createWindow() {
      .catch(err => console.error('   ✖ failed to load index.html:', err));
 }
 
-app.whenReady()
-  .then(() => {
-    console.log('   ↳ app.whenReady resolved');
-    createWindow();
+// === IPC for GIF creation ===
+ipcMain.handle('make-gif', async (event, { inputPath, start, duration, outputPath }) => {
+  return new Promise((resolve, reject) => {
+    const ffmpegPath = getFfmpegPath();
+    const tmpDir = os.tmpdir();
+    const palettePath = path.join(tmpDir, 'palette.png');
 
-    // ── Manual update flow ─────────────────────────────────────────────────
-    autoUpdater.autoDownload = false;  // don’t download until user agrees
-    console.log('   ↳ Checking for updates…');
-    autoUpdater.checkForUpdates();
-  })
-  .catch(err => console.error('   ✖ app.whenReady error:', err));
+    // 1. Generate palette
+    const paletteArgs = [
+      '-ss', String(start),
+      '-t', String(duration),
+      '-i', inputPath,
+      '-vf', 'fps=15,scale=480:-1:flags=lanczos,palettegen',
+      '-y', palettePath
+    ];
+    const genPalette = spawn(ffmpegPath, paletteArgs);
 
-app.on('window-all-closed', () => {
-  console.log('   ↳ all windows closed, quitting');
-  if (process.platform !== 'darwin') app.quit();
+    genPalette.on('error', reject);
+
+    genPalette.on('close', (code) => {
+      if (code !== 0 || !fs.existsSync(palettePath)) {
+        return reject(new Error('Failed to generate palette'));
+      }
+
+      // 2. Encode GIF with palette
+      const gifArgs = [
+        '-ss', String(start),
+        '-t', String(duration),
+        '-i', inputPath,
+        '-i', palettePath,
+        '-filter_complex', 'fps=15,scale=480:-1:flags=lanczos[x];[x][1:v]paletteuse',
+        '-y', outputPath
+      ];
+      const makeGif = spawn(ffmpegPath, gifArgs);
+
+      makeGif.on('error', reject);
+
+      makeGif.on('close', (gifCode) => {
+        fs.unlink(palettePath, ()=>{});
+        if (gifCode === 0 && fs.existsSync(outputPath)) {
+          resolve({ success: true, outputPath });
+        } else {
+          reject(new Error('GIF encoding failed, code: ' + gifCode));
+        }
+      });
+    });
+  });
 });
 
-app.on('activate', () => {
-  console.log('   ↳ app.activate');
-  if (BrowserWindow.getAllWindows().length === 0) createWindow();
+// === IPC to create GIF from frames ===
+ipcMain.handle('make-gif-from-frames', async (event, { framePaths, outputPath, fps }) => {
+  if (!Array.isArray(framePaths) || !framePaths.length) {
+    throw new Error('No frames provided for GIF export.');
+  }
+  return new Promise((resolve, reject) => {
+    const ffmpegPath = getFfmpegPath();
+
+    // Create a temp directory, copy the ordered frames with new names.
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'gif-export-'));
+    framePaths.forEach((src, idx) => {
+      const target = path.join(tmpDir, `frame_${String(idx+1).padStart(4,'0')}.png`);
+      fs.copyFileSync(src, target);
+    });
+    const inputPattern = path.join(tmpDir, 'frame_%04d.png');
+    const palettePath = path.join(tmpDir, 'palette.png');
+
+    // Palette generation
+    const paletteArgs = [
+      '-framerate', String(fps || 15),
+      '-i', inputPattern,
+      '-vf', 'palettegen',
+      '-y', palettePath
+    ];
+    const genPalette = spawn(ffmpegPath, paletteArgs);
+
+    genPalette.on('error', err => {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+      reject(err);
+    });
+
+    genPalette.on('close', (code) => {
+      if (code !== 0 || !fs.existsSync(palettePath)) {
+        fs.rmSync(tmpDir, { recursive: true, force: true });
+        return reject(new Error('Failed to generate palette for frames'));
+      }
+
+      // GIF encode with palette
+      const gifArgs = [
+        '-framerate', String(fps || 15),
+        '-i', inputPattern,
+        '-i', palettePath,
+        '-lavfi', 'paletteuse',
+        '-y', outputPath
+      ];
+      const makeGif = spawn(ffmpegPath, gifArgs);
+
+      makeGif.on('error', err => {
+        fs.rmSync(tmpDir, { recursive: true, force: true });
+        reject(err);
+      });
+      makeGif.on('close', (gifCode) => {
+        fs.unlink(palettePath, ()=>{});
+        fs.rmSync(tmpDir, { recursive: true, force: true });
+        if (gifCode === 0 && fs.existsSync(outputPath)) {
+          resolve({ success: true, outputPath });
+        } else {
+          reject(new Error('GIF encoding from frames failed, code: ' + gifCode));
+        }
+      });
+    });
+  });
 });
+
+// === IPC for extracting GIF frames ===
+const { v4: uuidv4 } = require('uuid');
+ipcMain.handle('extract-gif-frames', async (event, { inputPath, start, duration, fps }) => {
+  return new Promise((resolve, reject) => {
+    const ffmpegPath = getFfmpegPath();
+    const tmpDir = os.tmpdir();
+    const outDir = path.join(tmpDir, 'gif-frames-' + uuidv4());
+    fs.mkdirSync(outDir, { recursive: true });
+    const outputPattern = path.join(outDir, 'frame_%04d.png');
+
+    // Extract frames with ffmpeg
+    const args = [
+      '-ss', String(start),
+      '-t', String(duration),
+      '-i', inputPath,
+      '-vf', `fps=${fps || 15},scale=480:-1:flags=lanczos`,
+      outputPattern
+    ];
+    const ff = spawn(ffmpegPath, args);
+
+    ff.on('error', reject);
+
+    ff.on('close', (code) => {
+      if (code !== 0) {
+        return reject(new Error('Failed to extract frames, ffmpeg exit code: ' + code));
+      }
+      fs.readdir(outDir, (err, files) => {
+        if (err) return reject(err);
+        // Sort PNGs numerically
+        const framePaths = files
+          .filter(f => f.endsWith('.png'))
+          .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
+          .map(f => path.join(outDir, f));
+        // Read and encode each PNG as a data URL and keep path
+        const frames = framePaths.map(fp => {
+          try {
+            const data = fs.readFileSync(fp);
+            const b64 = data.toString('base64');
+            return { url: `data:image/png;base64,${b64}`, filePath: fp };
+          } catch {
+            return null;
+          }
+        }).filter(Boolean);
+        resolve({ success: true, frames });
+      });
+    });
+  });
+});
+
+// === Show save dialog (for  GIF and CLIP) ===
+ipcMain.handle('show-save-dialog', async (_event, defaultName, format) => {
+  let filters;
+  if (format === 'webm') {
+    filters = [{ name: 'WebM', extensions: ['webm'] }];
+  } else if (format === 'mp4') {
+    filters = [{ name: 'MP4', extensions: ['mp4'] }];
+  } else {
+    filters = [{ name: 'GIF', extensions: ['gif'] }];
+  }
+  const { canceled, filePath } = await dialog.showSaveDialog({
+    title: 'Save As',
+    defaultPath: defaultName || 'clip',
+    filters
+  });
+  return canceled ? null : filePath;
+});
+
+// === Clip Export ===
+ipcMain.handle('export-clip', async (event, { file, start, duration, format, outputPath }) => {
+  return new Promise((resolve, reject) => {
+    const ffmpegPath = getFfmpegPath();
+
+    let args = [
+      '-ss', String(start),
+      '-i', file,
+      '-t', String(duration)
+    ];
+    if (format === 'mp4') {
+      args.push('-c', 'copy', outputPath);
+    } else if (format === 'webm') {
+      // Use VP9, scale to 480p, no audio
+      args.push('-vf', 'scale=-2:480', '-an', '-c:v', 'libvpx-vp9', '-b:v', '1M', outputPath);
+    } else {
+      return reject(new Error('Unknown format: ' + format));
+    }
+
+    const proc = spawn(ffmpegPath, args);
+    proc.on('error', reject);
+
+    proc.on('close', (code) => {
+      if (code === 0 && fs.existsSync(outputPath)) {
+        resolve({ success: true, outputPath });
+      } else {
+        reject(new Error('ffmpeg export failed, code: ' + code));
+      }
+    });
+  });
+});
+
+
 
 // Utility: load or init a JSON file
 function loadJSON(filePath, defaultVal) {
@@ -71,6 +287,28 @@ function saveJSON(filePath, obj) {
     console.error(`Failed to save ${filePath}:`, e);
   }
 }
+
+app.whenReady()
+  .then(() => {
+    console.log('   ↳ app.whenReady resolved');
+    createWindow();
+
+    // ── Manual update flow ───────────────────────────────────────────────
+    autoUpdater.autoDownload = false;  // don’t download until user agrees
+    console.log('   ↳ Checking for updates…');
+    autoUpdater.checkForUpdates();
+  })
+  .catch(err => console.error('   ✖ app.whenReady error:', err));
+
+app.on('window-all-closed', () => {
+  console.log('   ↳ all windows closed, quitting');
+  if (process.platform !== 'darwin') app.quit();
+});
+
+app.on('activate', () => {
+  console.log('   ↳ app.activate');
+  if (BrowserWindow.getAllWindows().length === 0) createWindow();
+});
 
 // ── IPC Handlers ───────────────────────────────────────────────────────────
 ipcMain.handle('get-settings', async () => {

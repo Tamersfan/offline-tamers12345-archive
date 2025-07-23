@@ -15,7 +15,33 @@
     {
       "name": "mehdrinkindud",
       "link": "https://mehdrinkindud.newgrounds.com",
-      "pfp": "pfp10 Jeremy The Echidna"
+      "pfp": [
+        "pfp10 Jeremy The Echidna", 
+        "pfp11 Kevin The Hedgehog"
+      ]
+    },
+    {
+      "name": "UngulaPropriaRQ",
+      "link": "https://x.com/UngulaPropriaRQ",
+      "pfp": [
+        "pfp12 Mandy",
+        "pfp13 Manic",
+        "pfp14 Mindy",
+        "pfp15 Athair",
+        "pfp16 Sonia",
+        "pfp17 Kevin The Hedgehog",
+        "pfp18 Mark Latour",
+        "pfp19 Sonic",
+        "pfp20 Sleet",
+        "pfp21 Uncle Chuck",
+        "pfp22 Aleena",
+        "pfp23 Sonic 2",
+        "pfp24 Uncle Chuck Teletubby",
+        "pfp25 Dingo",
+        "pfp26 Flora",
+        "pfp27 Knuckles",
+        "pfp28 Robotnik"
+      ]
     }
   ],
 
@@ -38,7 +64,8 @@
         { "video": "My Little Pony The Movie The Death Of Twilight Sparkle", "language": "Polish" },
         { "video": "Rainbow Dash Must Perform the Sonic Rainboom One Finale Time Or Die Trying", "language": "Polish" },
         { "video": "Twilight Sparkle Commits Arson In The Name Of Princess Celestia", "language": "Polish" },
-        { "video": "Twilight Sparkle Shows Trixie The True Meaning Of Friendship Whether She Likes It Or Not", "language": "Polish" }
+        { "video": "Twilight Sparkle Shows Trixie The True Meaning Of Friendship Whether She Likes It Or Not", "language": "Polish" },
+        { "video": "My Little Pony The Movie： The Death Of Trixie Lulamoon", "language": "Polish" }
       ]
     }
   ]

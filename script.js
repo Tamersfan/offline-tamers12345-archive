@@ -33,8 +33,6 @@ let currentAltVideo = null;
 let youtubeTabInitialized = false;
 
 // === Mini Preview Functions ===
-
-
 function setupThumbnailPreviews() {
   document.querySelectorAll('.video-thumbnail').forEach(thumb => {
     const container = thumb.querySelector('.thumbnail-container');
@@ -56,23 +54,23 @@ function setupThumbnailPreviews() {
       previewVideo.style.display = 'none';
 
       previewVideo.addEventListener('loadedmetadata', () => {
-  // If longer than 30s, start at 15; else start at 0
-  const start = previewVideo.duration > 30 ? 15 : 0;
-  // End the preview after 15s or at the end of the video
-  const loopEnd = Math.min(start + 15, previewVideo.duration);
+        // If longer than 30s, start at 15; else start at 0
+        const start = previewVideo.duration > 30 ? 15 : 0;
+        // End the preview after 15s or at the end of the video
+        const loopEnd = Math.min(start + 15, previewVideo.duration);
 
-  previewVideo.currentTime = start;
-  previewVideo.style.display = 'block';
-  img.style.opacity = 0.15;
-  previewVideo.play();
+        previewVideo.currentTime = start;
+        previewVideo.style.display = 'block';
+        img.style.opacity = 0.15;
+        previewVideo.play();
 
-  previewVideo.ontimeupdate = () => {
-    if (previewVideo.currentTime >= loopEnd || previewVideo.ended) {
-      previewVideo.currentTime = start;
-      previewVideo.play();
-    }
-  };
-});
+        previewVideo.ontimeupdate = () => {
+          if (previewVideo.currentTime >= loopEnd || previewVideo.ended) {
+            previewVideo.currentTime = start;
+            previewVideo.play();
+          }
+        };
+      });
       container.appendChild(previewVideo);
     });
 
@@ -95,9 +93,410 @@ function getFilenameFromThumb(thumb) {
   return src.replace(/\.(png|jpg|jpeg|webp)$/i, ".mp4");
 }
 
+
+// === Time helpers (GIF and Clip) ===
+function parseHMS(hms) {
+  if (typeof hms !== "string") return 0;
+  let parts = hms.split(":").map(Number);
+  if (parts.length === 3) return parts[0]*3600 + parts[1]*60 + parts[2];
+  if (parts.length === 2) return parts[0]*60 + parts[1];
+  if (parts.length === 1) return parts[0];
+  return 0;
+}
+function formatHMS(sec) {
+  sec = Math.max(0, Math.round(sec));
+  const h = Math.floor(sec/3600);
+  const m = Math.floor((sec%3600)/60);
+  const s = Math.floor(sec%60);
+  return h > 0
+    ? [h,m,s].map(v=>v.toString().padStart(2,"0")).join(":")
+    : [m,s].map(v=>v.toString().padStart(2,"0")).join(":");
+}
+
+// === CLIP MAKER LOGIC ===
+const clipBtn = document.getElementById('clip-btn');
+const clipExportContainer = document.getElementById('clip-export-container');
+const clipStartTime = document.getElementById('clip-start-time');
+const clipEndTime = document.getElementById('clip-end-time');
+const clipUseCurrentStart = document.getElementById('clip-use-current-start');
+const clipUseCurrentEnd = document.getElementById('clip-use-current-end');
+const clipPreviewBtn = document.getElementById('clip-preview-btn');
+const clipStopPreviewBtn = document.getElementById('clip-stop-preview-btn');
+const clipExportMP4Btn = document.getElementById('clip-export-mp4-btn');
+const clipExportWebMBtn = document.getElementById('clip-export-webm-btn');
+const clipExportStatus = document.getElementById('clip-export-status');
+
+let clipPreviewing = false;
+let clipStart = 0, clipEnd = 5; // seconds
+
+clipBtn.addEventListener('click', () => {
+  // Hide GIF panel when opening Clip Maker, and vice versa
+  document.getElementById('gif-export-container').style.display = 'none';
+  if (clipExportContainer.style.display === 'block') {
+    clipExportContainer.style.display = 'none';
+    clipExportMP4Btn.disabled = true;
+    clipExportWebMBtn.disabled = true;
+    clipExportStatus.textContent = "";
+  } else {
+    clipExportContainer.style.display = 'block';
+    updateClipBtns();
+    clipExportStatus.textContent = "";
+  }
+});
+
+clipUseCurrentStart.addEventListener('click', () => {
+  const player = window.player;
+  clipStartTime.value = formatHMS(player.currentTime);
+  updateClipBtns();
+});
+clipUseCurrentEnd.addEventListener('click', () => {
+  const player = window.player;
+  clipEndTime.value = formatHMS(player.currentTime);
+  updateClipBtns();
+});
+
+function updateClipBtns() {
+  let s = parseHMS(clipStartTime.value);
+  let e = parseHMS(clipEndTime.value);
+  let valid = (e > s && s >= 0 && e <= player.duration);
+  clipExportMP4Btn.disabled = clipExportWebMBtn.disabled = !valid;
+}
+
+clipStartTime.addEventListener('input', updateClipBtns);
+clipEndTime.addEventListener('input', updateClipBtns);
+
+// Preview selected segment in main player
+clipPreviewBtn.addEventListener('click', () => {
+  const player = window.player;
+  clipStart = parseHMS(clipStartTime.value);
+  clipEnd = parseHMS(clipEndTime.value);
+  if (clipEnd <= clipStart) return;
+  player.currentTime = clipStart;
+  player.play();
+  clipPreviewing = true;
+  clipStopPreviewBtn.style.display = '';
+  clipPreviewBtn.disabled = true;
+  player.addEventListener('timeupdate', stopClipPreviewIfNeeded);
+});
+clipStopPreviewBtn.addEventListener('click', stopClipPreview);
+
+
+function stopClipPreviewIfNeeded() {
+  const player = window.player;
+  if (clipPreviewing && player.currentTime >= clipEnd) {
+    stopClipPreview();
+  }
+}
+function stopClipPreview() {
+  const player = window.player;
+  player.pause();
+  clipPreviewing = false;
+  clipStopPreviewBtn.style.display = 'none';
+  clipPreviewBtn.disabled = false;
+  player.removeEventListener('timeupdate', stopClipPreviewIfNeeded);
+}
+
+//=== Export with Save Dialog ===
+clipExportMP4Btn.addEventListener('click', async () => {
+  clipExportMP4Btn.disabled = true;
+  await exportClip('mp4');
+  clipExportMP4Btn.disabled = false;
+});
+clipExportWebMBtn.addEventListener('click', async () => {
+  clipExportWebMBtn.disabled = true;
+  await exportClip('webm');
+  clipExportWebMBtn.disabled = false;
+});
+
+async function exportClip(format) {
+  clipExportStatus.textContent = 'Exporting...';
+  let s = parseHMS(clipStartTime.value);
+  let e = parseHMS(clipEndTime.value);
+  let duration = e - s;
+  let file = videoPath + '/' + currentVideoFilename;
+  let defaultExt = (format === 'mp4') ? 'mp4' : 'webm';
+  let defaultBase = currentVideoFilename.replace(/\.\w+$/, '');
+  let defaultFileName = `${defaultBase}_${clipStartTime.value.replace(/:/g,'-')}-${clipEndTime.value.replace(/:/g,'-')}.${defaultExt}`;
+  let outputPath = await window.electronAPI.showSaveDialog(defaultFileName);
+  if (!outputPath) {
+    clipExportStatus.textContent = "❌ Export cancelled.";
+    return;
+  }
+  window.electronAPI.exportClip({
+    file, start: s, duration, format, outputPath
+  }).then(() => {
+    clipExportStatus.textContent = 'Export complete!';
+  }).catch(err => {
+    clipExportStatus.textContent = 'Error: ' + (err?.message || err);
+    console.error(err);
+  });
+}
+
+// --- DOM ---
+const gifStartInput = document.getElementById('gif-start-time');
+const gifEndInput   = document.getElementById('gif-end-time');
+const gifUseCurrentStart = document.getElementById('gif-use-current-start');
+const gifUseCurrentEnd   = document.getElementById('gif-use-current-end');
+const gifPreviewBtn      = document.getElementById('gif-preview-btn');
+const gifStopPreviewBtn  = document.getElementById('gif-stop-preview-btn');
+const gifExportBtn       = document.getElementById('gif-export-btn');
+const gifExportStatus    = document.getElementById('gif-export-status');
+
+function updateExportButtonState() {
+  let s = parseHMS(gifStartInput.value);
+  let e = parseHMS(gifEndInput.value);
+  let valid = (e > s && s >= 0 && e <= player.duration && (e - s) > 0.5);
+  gifExportBtn.disabled = !valid;
+}
+function validateGifTimes() {
+  let s = parseHMS(gifStartInput.value);
+  let e = parseHMS(gifEndInput.value);
+  return (e > s && s >= 0 && e <= player.duration && (e - s) > 0.5);
+}
+
+// --- State ---
+let gifPreviewActive = false;
+let gifPreviewLoopId = null;
+let extractedGifFrames = []; // Array of {url, index}
+let currentPreviewFrame = 0;
+let previewFramesTimer = null;
+
+// --- Wire up input events ---
+gifStartInput.oninput = gifEndInput.oninput = updateExportButtonState;
+
+gifUseCurrentStart.onclick = function() {
+  const player = window.player;
+  gifStartInput.value = formatHMS(player.currentTime);
+  updateExportButtonState();
+};
+gifUseCurrentEnd.onclick = function() {
+  const player = window.player;
+  gifEndInput.value = formatHMS(player.currentTime);
+  updateExportButtonState();
+};
+
+
+
+// --- Preview with frames and frame editor ---
+gifPreviewBtn.onclick = async function() {
+  let start = parseHMS(gifStartInput.value);
+  let end   = parseHMS(gifEndInput.value);
+  if (!validateGifTimes()) return;
+
+  gifPreviewBtn.disabled = true;
+  gifPreviewBtn.textContent = 'Extracting frames...';
+  gifExportStatus.textContent = "Extracting frames for GIF preview...";
+
+  // Ask main process to extract frames (returns array of base64 images)
+  const inputPath = currentVideoFilename ? (videoPath + '/' + currentVideoFilename) : null;
+  if (!inputPath) {
+    gifExportStatus.textContent = "No video loaded!";
+    gifPreviewBtn.disabled = false;
+    gifPreviewBtn.textContent = 'Preview GIF';
+    return;
+  }
+  const duration = end - start;
+
+  // Clear any previous frames shown
+  showGifFramesEditor([]);
+  extractedGifFrames = [];
+
+  try {
+    // This should return an array of { url: 'data:image/png;base64,...' }
+    // Assumes window.electronAPI.extractGifFrames({inputPath, start, duration, fps: 15})
+    const frames = await window.electronAPI.extractGifFrames({ inputPath, start, duration, fps: 15 });
+if (!Array.isArray(frames) || frames.length === 0) throw new Error("No frames extracted");
+extractedGifFrames = frames.map((f, i) => ({ url: f.url, filePath: f.filePath, index: i }));
+showGifFramesEditor(extractedGifFrames);
+
+previewGifFramesSequence(extractedGifFrames, 1000 / 15);
+
+
+    // Preview: play the sequence in an <img> below video
+    previewGifFramesSequence(extractedGifFrames, 1000 / 15);
+
+    gifExportStatus.textContent = "";
+  } catch (err) {
+    gifExportStatus.textContent = "❌ Failed to extract frames: " + (err.message || err);
+  }
+  gifPreviewBtn.disabled = false;
+  gifPreviewBtn.textContent = 'Preview GIF';
+};
+
+gifStopPreviewBtn.onclick = function() {
+  stopPreviewGifFrames();
+};
+
+function previewGifFramesSequence(frames, interval) {
+  stopPreviewGifFrames();
+
+  if (!frames.length) return;
+  const previewDiv = document.getElementById('gif-preview-anim');
+  if (!previewDiv) return;
+  previewDiv.innerHTML = '';
+  const img = document.createElement('img');
+  img.style.maxWidth = '400px';
+  img.style.display = 'block';
+  previewDiv.appendChild(img);
+
+  let idx = 0;
+  function showNextFrame() {
+    if (!frames.length) return;
+    img.src = frames[idx % frames.length].url;
+    idx++;
+    if (idx < frames.length) {
+      previewFramesTimer = setTimeout(showNextFrame, interval);
+    } else {
+      // Pause on last frame for 2 seconds, then loop
+      previewFramesTimer = setTimeout(() => {
+        idx = 0;
+        showNextFrame();
+      }, 2000);
+    }
+  }
+  showNextFrame();
+}
+
+function stopPreviewGifFrames() {
+  if (previewFramesTimer) {
+    clearTimeout(previewFramesTimer);
+    previewFramesTimer = null;
+  }
+  const previewDiv = document.getElementById('gif-preview-anim');
+  if (previewDiv) previewDiv.innerHTML = '';
+}
+
+// === Frame Deletion / Editor UI ===
+function showGifFramesEditor(frames) {
+  // Container for preview animation 
+  let previewDiv = document.getElementById('gif-preview-anim');
+  if (!previewDiv) {
+    previewDiv = document.createElement('div');
+    previewDiv.id = 'gif-preview-anim';
+    previewDiv.style.margin = "18px 0";
+    document.getElementById('gif-export-container').appendChild(previewDiv);
+  } else {
+    previewDiv.innerHTML = '';
+  }
+
+  // Container for frame thumbnails with delete buttons
+  let thumbDiv = document.getElementById('gif-frames-thumbnails');
+  if (!thumbDiv) {
+    thumbDiv = document.createElement('div');
+    thumbDiv.id = 'gif-frames-thumbnails';
+    thumbDiv.style.display = "flex";
+    thumbDiv.style.flexWrap = "wrap";
+    thumbDiv.style.gap = "6px";
+    thumbDiv.style.marginTop = "12px";
+    document.getElementById('gif-export-container').appendChild(thumbDiv);
+  } else {
+    thumbDiv.innerHTML = '';
+  }
+
+  // Display all frame thumbnails (and delete buttons)
+  frames.forEach((frame, i) => {
+    // If frames are objects: frame.url; if just strings, use frame directly.
+    const frameUrl = typeof frame === 'string' ? frame : frame.url;
+
+    const wrap = document.createElement('div');
+    wrap.style.position = 'relative';
+
+    // === Here is the img for each frame ===
+    let img = document.createElement('img');
+    img.src = frameUrl;
+    img.style.width = '70px';
+    img.style.height = 'auto';
+    img.style.border = "1px solid #888";
+    img.style.borderRadius = "5px";
+    wrap.appendChild(img);
+
+    // === Delete button for each frame ===
+    const del = document.createElement('button');
+    del.textContent = "✕";
+    del.title = "Delete this frame";
+    del.style.position = "absolute";
+    del.style.top = "1px";
+    del.style.right = "1px";
+    del.style.background = "#d22";
+    del.style.color = "#fff";
+    del.style.border = "none";
+    del.style.borderRadius = "3px";
+    del.style.cursor = "pointer";
+    del.onclick = () => {
+      extractedGifFrames.splice(i, 1);
+      showGifFramesEditor(extractedGifFrames);
+      previewGifFramesSequence(extractedGifFrames, 1000 / 15);
+    };
+    wrap.appendChild(del);
+
+    thumbDiv.appendChild(wrap);
+  });
+}
+
+// Escape key cancels preview
+document.addEventListener('keydown', function(e){
+  if (gifPreviewActive && e.key === "Escape") gifStopPreviewBtn.onclick();
+});
+
+// --- Export Logic ---
+gifExportBtn.onclick = async function() {
+  let inputPath = currentVideoFilename ? (videoPath + '/' + currentVideoFilename) : null;
+  if (!inputPath) {
+    gifExportStatus.textContent = "No video loaded!";
+    return;
+  }
+  let start = parseHMS(gifStartInput.value);
+  let end   = parseHMS(gifEndInput.value);
+  let duration = end - start;
+  if (!validateGifTimes()) {
+    gifExportStatus.textContent = "Invalid times.";
+    return;
+  }
+  let defaultFileName = currentVideoFilename.replace(/\.\w+$/, '') + `_${gifStartInput.value.replace(/:/g,'-')}-${gifEndInput.value.replace(/:/g,'-')}.gif`;
+  let outputPath = await window.electronAPI.showSaveDialog(defaultFileName);
+  if (!outputPath) {
+    gifExportStatus.textContent = "❌ Export cancelled.";
+    return;
+  }
+  gifExportStatus.textContent = 'Exporting...';
+  try {
+    let result;
+    if (Array.isArray(extractedGifFrames) && extractedGifFrames.length && extractedGifFrames[0].filePath) {
+      // deleted frames, export using ONLY those frames
+      let framePaths = extractedGifFrames.map(f => f.filePath);
+      result = await window.electronAPI.makeGifFromFrames({
+        framePaths,
+        outputPath,
+        fps: 15
+      });
+    } else {
+      result = await window.electronAPI.makeGif({ inputPath, start, duration, outputPath });
+    }
+    if (result && result.success) {
+      gifExportStatus.textContent = '✅ GIF exported: ' + result.outputPath;
+      setTimeout(() => { gifExportStatus.textContent = ""; }, 2500);
+    }
+  } catch (e) {
+    gifExportStatus.textContent = "❌ Failed: " + e.message;
+  }
+};
+
+
+function hideGifExportUI() {
+  document.getElementById('gif-export-container').style.display = 'none';
+  stopPreviewGifFrames();
+}
+function showGifExportUI() {
+  document.getElementById('gif-export-container').style.display = '';
+  updateExportButtonState();
+  showGifFramesEditor([]); // Clear previous frames
+  stopPreviewGifFrames();
+}
+
+
+
 // === YouTube Tab Initialization Function ===
 async function initializeYouTubeTab(force = false) {
-  // Prevent duplicate event listeners and redundant state setup
   if (youtubeTabInitialized && !force) return;
   youtubeTabInitialized = true;
 
@@ -117,7 +516,7 @@ async function initializeYouTubeTab(force = false) {
   populatePlaylistOptions();
   renderVideoGrid();
 
-  // === Set up all YouTube grid/queue/filter controls, but only once ===
+  // === Set up all YouTube grid/queue/filter controls ===
   if (!initializeYouTubeTab._listenersAdded) {
     const sizeSelector = document.getElementById('sizeSelector');
     if (sizeSelector) {
@@ -188,7 +587,7 @@ async function initializeYouTubeTab(force = false) {
       reverseBtn._listenerSet = true;
     }
 
-    // Shuffle/reverse (grid, if you have them)
+    // Shuffle/reverse
     const shuffleGridBtn = document.getElementById('shuffle-grid-btn');
     const reverseGridBtn = document.getElementById('reverse-grid-btn');
     if (shuffleGridBtn) {
@@ -206,7 +605,7 @@ async function initializeYouTubeTab(force = false) {
   }
 
   // Only check for missing videos ONCE
-  if (!initializeYouTubeTab._missingCheckDone) {
+    if (!initializeYouTubeTab._missingCheckDone) {
     const missing = await window.electronAPI.checkMissingVideos();
     if (missing.length) {
       if (confirm(`You’re missing ${missing.length} videos. Download them now?`)) {
@@ -222,10 +621,6 @@ async function initializeYouTubeTab(force = false) {
   }
 
   renderQueue();
-}
-
-function getDebugOverlay() {
-  return null;
 }
 
 // === Attach Random Video Button Event Handler after videos are loaded ===
@@ -389,83 +784,98 @@ async function loadComments(video) {
   commentContainer.innerHTML = '';
   commentContainer.style.display = 'none';
 
-  const profilePics = [
-    'PFPs/pfp1.png',
-    'PFPs/pfp2.png',
-    'PFPs/pfp3.png',
-    'PFPs/pfp4.png',
-    'PFPs/pfp5.png',
-    'PFPs/pfp6.png',
-    'PFPs/pfp7.png',
-    'PFPs/pfp8.png',
-    'PFPs/pfp9.png',
-    'PFPs/pfp10.png'
-  ];
+  const profilePics = [...Array(28)].map((_, i) => `PFPs/pfp${i + 1}.png`);
+
+  let comments = null;
+  let usedLegacy = false;
 
   try {
     const res = await fetch(`comments/${safeFilename}`);
     if (!res.ok) throw new Error('No comments file');
-    const comments = await res.json();
-
-    if (comments.length > 0) {
-      commentContainer.style.display = 'block';
-      commentContainer.innerHTML = `<h3>Comments</h3>` + comments.map((comment, index) => {
-        const randomPic = profilePics[Math.floor(Math.random() * profilePics.length)];
-        const commentId = `comment-${index}`;
-
-        let repliesHTML = '';
-        if (Array.isArray(comment.replies) && comment.replies.length > 0) {
-          repliesHTML = `
-            <div class="replies" id="${commentId}-replies" style="display:none; margin-left: 50px;">
-              ${comment.replies.map(reply => {
-                const replyPic = profilePics[Math.floor(Math.random() * profilePics.length)];
-                return `
-                  <div class="comment">
-                    <img src="${replyPic}" class="comment-avatar" alt="pfp">
-                    <div class="comment-content">
-                      <a href="${reply.author_url}" target="_blank">${reply.author}</a>
-                      <p>${reply.text}</p>
-                    </div>
-                  </div>
-                `;
-              }).join('')}
-            </div>
-            <div class="reply-toggle" style="margin-left: 50px; margin-bottom: 10px;">
-              <button class="show-replies-btn" onclick="
-                document.getElementById('${commentId}-replies').style.display = 'block';
-                this.style.display = 'none';
-                document.getElementById('${commentId}-hide-btn').style.display = 'inline';
-              ">
-                Show ${comment.replies.length} repl${comment.replies.length === 1 ? 'y' : 'ies'}
-              </button>
-              <button id="${commentId}-hide-btn" class="hide-replies-btn" style="display: none;" onclick="
-                document.getElementById('${commentId}-replies').style.display = 'none';
-                this.style.display = 'none';
-                this.previousElementSibling.style.display = 'inline';
-              ">
-                Hide replies
-              </button>
-            </div>
-          `;
-        }
-
-        return `
-          <div class="comment">
-            <img src="${randomPic}" class="comment-avatar" alt="pfp">
-            <div class="comment-content">
-              <a href="#" onclick="window.electronAPI.openExternal('${comment.author_url}'); return false;">
-                ${comment.author}
-              </a>
-              <p>${comment.text}</p>
-            </div>
-          </div>
-          ${repliesHTML}
-        `;
-      }).join('');
-    }
+    comments = await res.json();
   } catch (e) {
-    // silently fail
+    const dateStr = (video.date || '').trim();
+    const isOldVideo = /^\d{8}$/.test(dateStr) && parseInt(dateStr, 10) < 20250213;
+
+    if (isOldVideo) {
+      try {
+        const legacyMetaPath = `metadata/${safeFilename}`;
+        const metaRes = await fetch(legacyMetaPath);
+        if (metaRes.ok) {
+          const metadata = await metaRes.json();
+          if (Array.isArray(metadata.comments)) {
+            comments = metadata.comments;
+            usedLegacy = true;
+          }
+        }
+      } catch (err) {
+        // Silent fail
+      }
+    }
   }
+
+  if (!comments || !comments.length) return;
+
+  commentContainer.style.display = 'block';
+  commentContainer.innerHTML =
+    `<h3>Comments</h3>` +
+    (usedLegacy ? `
+      <p style="color:#999;font-size:12px;margin-top:-10px;">
+        Unfortunately I was not able to archive all of the comments from Tamers' old channel. At the time, I did not have a consistent way to scrape the comments like I do now. What you see below are only <em>some</em> of the comments that were preserved in the video's metadata files, and they do not reflect the actual number or full range of comments these videos once had.
+      </p>` : '') +
+    comments.map((comment, index) => {
+      const randomPic = profilePics[Math.floor(Math.random() * profilePics.length)];
+      const commentId = `comment-${index}`;
+
+      let repliesHTML = '';
+      if (Array.isArray(comment.replies) && comment.replies.length > 0) {
+        repliesHTML = `
+          <div class="replies" id="${commentId}-replies" style="display:none; margin-left: 50px;">
+            ${comment.replies.map(reply => {
+              const replyPic = profilePics[Math.floor(Math.random() * profilePics.length)];
+              return `
+                <div class="comment">
+                  <img src="${replyPic}" class="comment-avatar" alt="pfp">
+                  <div class="comment-content">
+                    <a href="${reply.author_url || '#'}" target="_blank">${reply.author || 'Anonymous'}</a>
+                    <p>${reply.text}</p>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+          <div class="reply-toggle" style="margin-left: 50px; margin-bottom: 10px;">
+            <button class="show-replies-btn" onclick="
+              document.getElementById('${commentId}-replies').style.display = 'block';
+              this.style.display = 'none';
+              document.getElementById('${commentId}-hide-btn').style.display = 'inline';
+            ">
+              Show ${comment.replies.length} repl${comment.replies.length === 1 ? 'y' : 'ies'}
+            </button>
+            <button id="${commentId}-hide-btn" class="hide-replies-btn" style="display: none;" onclick="
+              document.getElementById('${commentId}-replies').style.display = 'none';
+              this.style.display = 'none';
+              this.previousElementSibling.style.display = 'inline';
+            ">
+              Hide replies
+            </button>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="comment">
+          <img src="${randomPic}" class="comment-avatar" alt="pfp">
+          <div class="comment-content">
+            <a href="#" onclick="window.electronAPI.openExternal('${comment.author_url || '#'}'); return false;">
+              ${comment.author || 'Anonymous'}
+            </a>
+            <p>${comment.text}</p>
+          </div>
+        </div>
+        ${repliesHTML}
+      `;
+    }).join('');
 }
 
 // === Alt Video URLs loaded from JSON ===
@@ -699,7 +1109,44 @@ function renderVideoGrid() {
   renderQueue();
 }
 
+function toggleGifExportUI() {
+  const gifContainer = document.getElementById('gif-export-container');
+  if (!gifContainer) return;
+  if (gifContainer.style.display === 'none' || gifContainer.style.display === '') {
+    // Show the container
+    gifContainer.style.display = 'block';
+    updateExportButtonState();
+    showGifFramesEditor([]);
+    stopPreviewGifFrames();
+  } else {
+    // Hide the container
+    gifContainer.style.display = 'none';
+    stopPreviewGifFrames();
+  }
+}
+
+function hideClipExportUI() {
+  if (clipExportContainer) {
+    clipExportContainer.style.display = 'none';
+    clipExportMP4Btn.disabled = true;
+    clipExportWebMBtn.disabled = true;
+    clipExportStatus.textContent = "";
+  }
+}
+
 async function showPlayer(video, playlist = [], index = 0, autoplay = false) {
+  const oldPlayer = document.getElementById('player-video');
+  if (oldPlayer) {
+    const parent = oldPlayer.parentElement;
+    const newPlayer = oldPlayer.cloneNode(false); // clone without children
+    newPlayer.id = oldPlayer.id; // preserve ID
+    newPlayer.className = oldPlayer.className; // preserve class
+    parent.replaceChild(newPlayer, oldPlayer);
+    window.player = newPlayer;
+  }
+  // Always use window.player
+  const player = window.player;
+  hideGifExportUI();
   currentPlaylistVideos = playlist.slice();
   currentPlaylistIndex = index;
 
@@ -729,15 +1176,15 @@ async function showPlayer(video, playlist = [], index = 0, autoplay = false) {
   document.getElementById('player-date').innerText = formatDate(video.date);
   loadComments(video);
 
-  const player = document.getElementById('player-video');
+  document.getElementById('gif-btn').onclick = toggleGifExportUI;
+
   const subtitleSelector = document.getElementById('subtitleSelector');
   const subtitleLabel = document.getElementById('subtitle-label');
-  const track = document.getElementById('video-subtitle');
 
   player.src = "file://" + videoPath + "/" + video.filename;
   player.load();
 
-  // --- Resume Progress If Saved ---
+  // === Resume Progress If Saved ===
   const baseName = video.filename.split('/').pop().replace(/\.[^/.]+$/, '');
   const watchedProgress = loadWatchedProgress();
   player.addEventListener('loadedmetadata', function restoreProgressOnce() {
@@ -797,11 +1244,36 @@ async function showPlayer(video, playlist = [], index = 0, autoplay = false) {
     }
   };
 
-  // Reset subtitle UI
-  track.removeAttribute('src');
-  subtitleSelector.innerHTML = '<option value="">None</option>';
-  subtitleSelector.style.display = 'none';
-  subtitleLabel.style.display = 'none';
+  // === Robust subtitle track clearing (fixes subtitle "sticking" bug) ===
+const videoElem = player;
+const selector = subtitleSelector;
+const label = subtitleLabel;
+
+// Remove all <track> elements and reset their src before removal
+[...videoElem.querySelectorAll('track')].forEach(tr => {
+  tr.src = '';
+  tr.mode = 'disabled';
+  tr.remove();
+});
+// Recreate <track>
+const newTrack = document.createElement('track');
+newTrack.id = 'video-subtitle';
+newTrack.kind = 'subtitles';
+newTrack.label = '';
+newTrack.srclang = '';
+videoElem.appendChild(newTrack);
+
+newTrack.mode = "disabled";
+selector.innerHTML = '<option value="">None</option>';
+selector.style.display = 'none';
+label.style.display = 'none';
+
+// If textTracks persist (rare), forcibly disable all:
+if (videoElem.textTracks && videoElem.textTracks.length) {
+  for (let i = 0; i < videoElem.textTracks.length; ++i) {
+    videoElem.textTracks[i].mode = 'disabled';
+  }
+}
 
   const subInfo = subtitlesData[video.filename];
   if (subInfo) {
@@ -811,7 +1283,6 @@ async function showPlayer(video, playlist = [], index = 0, autoplay = false) {
       opt.textContent = lang;
       subtitleSelector.appendChild(opt);
     }
-
     subtitleSelector.style.display = 'inline-block';
     subtitleLabel.style.display = 'inline-block';
     subtitleSelector.onchange = () => {
@@ -826,7 +1297,7 @@ async function showPlayer(video, playlist = [], index = 0, autoplay = false) {
     };
   }
 
-  // === Live Chat loading
+  // === Live Chat loading ===
   const chatPane = document.getElementById('chat-pane');
   const chatBox = document.getElementById('chat-messages');
   const toggleBtn = document.querySelector('button[onclick="toggleChat()"]');
@@ -920,17 +1391,43 @@ function renderPlaylistQueue() {
     if (wrap) wrap.style.display = 'none';
     return;
   }
+
   wrap.style.display = 'block';
-  queueContainer.innerHTML = currentPlaylistVideos.map((vid, idx) => {
+  queueContainer.innerHTML = '';
+
+  currentPlaylistVideos.forEach((vid, idx) => {
     const isCurrent = idx === currentPlaylistIndex;
-    return `
-      <div class="queue-item ${isCurrent ? 'current' : ''}" onclick="showPlayer(currentPlaylistVideos[${idx}], currentPlaylistVideos, ${idx})" style="cursor:pointer;margin-bottom:8px;padding:6px;border-radius:4px;background:${isCurrent ? '#444' : '#222'};">
-        <img src="${vid.thumbnail}" class="queue-thumb" alt="Thumbnail" style="width:80px;height:auto;margin-right:8px;vertical-align:middle;">
-        <span class="queue-title" style="vertical-align:middle;">${vid.title}</span>
-      </div>
-    `;
-  }).join('');
+
+    const div = document.createElement('div');
+    div.className = 'queue-item' + (isCurrent ? ' current' : '');
+    div.style.cursor = 'pointer';
+    div.style.marginBottom = '8px';
+    div.style.padding = '6px';
+    div.style.borderRadius = '4px';
+    div.style.background = isCurrent ? '#444' : '#222';
+
+    const img = document.createElement('img');
+    img.src = vid.thumbnail;
+    img.className = 'queue-thumb';
+    img.alt = 'Thumbnail';
+    img.style.width = '80px';
+    img.style.marginRight = '8px';
+    img.style.verticalAlign = 'middle';
+
+    const title = document.createElement('span');
+    title.className = 'queue-title';
+    title.style.verticalAlign = 'middle';
+    title.textContent = vid.title;
+
+    div.appendChild(img);
+    div.appendChild(title);
+
+    div.onclick = () => showPlayer(vid, currentPlaylistVideos, idx);
+
+    queueContainer.appendChild(div);
+  });
 }
+
 
 // --- Shuffle and Reverse for playlist queue ---
 
@@ -1025,8 +1522,8 @@ function handleReverse(isSidebar = true) {
 }
 
 function changeSubtitle(lang) {
+  const video = window.player;
   const track = document.getElementById('video-subtitle');
-  const video = document.getElementById('player-video');
   const currentTime = video.currentTime;
 
   clearAssSubtitle();
@@ -1117,7 +1614,8 @@ function closePlayer() {
     clearInterval(progressInterval);
     progressInterval = null;
   }
-  const player = document.getElementById('player-video');
+  clearAssSubtitle();
+  const player = window.player;
   const sizeSelector = document.getElementById('sizeSelector');
   let savedSize = localStorage.getItem('videoSizeMode') || 'normal';
   player.className = savedSize;
@@ -1129,19 +1627,31 @@ function closePlayer() {
   document.getElementById('video-player').style.display = 'none';
   document.getElementById('video-grid').style.display = 'grid';
   renderQueue();
-  renderVideoGrid()
+  renderVideoGrid();
+  hideGifExportUI(); 
+  hideClipExportUI();
 }
+
+window.closePlayer = closePlayer;
 
 function resizePlayer(mode) {
   document.getElementById('player-video').className = mode;
   localStorage.setItem('videoSizeMode', mode);
 }
+window.resizePlayer = resizePlayer;
+
 function setVolume(v) {
   document.getElementById('player-video').volume = v;
 }
+window.setVolume = setVolume;
+
 function setPlaybackSpeed(v) {
   document.getElementById('player-video').playbackRate = parseFloat(v);
 }
+window.setPlaybackSpeed = setPlaybackSpeed;
+
+window.toggleChat = toggleChat;
+
 async function toggleChat() {
   const chatPane = document.getElementById('chat-pane');
   const queueContainer = document.getElementById('playlist-queue-container');
@@ -1182,7 +1692,7 @@ function seekFrame(video, direction) {
 
 document.addEventListener('keydown', function(e) {
   // Only trigger when player is visible
-  const player = document.getElementById('player-video');
+  const player = window.player;
   const playerContainer = document.getElementById('video-player');
   if (!player || !playerContainer || playerContainer.style.display === 'none') return;
 
@@ -1243,9 +1753,17 @@ async function renderCreditsPage() {
         } else {
           html += `<strong>${c.name}</strong>`;
         }
-        if (c.pfp) html += `: <span style="color:#7cf;">${c.pfp}</span>`;
-        html += `</li>`;
-      }
+        if (Array.isArray(c.pfp) && c.pfp.length) {
+    html += `:<ul style="margin:0; padding-left: 1.5em; color:#7cf;">` +
+      c.pfp.map(p => `<li>${p}</li>`).join('') +
+      `</ul>`;
+  } else if (c.pfp) {
+    // Fallback: treat as single string
+    html += `: <span style="color:#7cf;">${c.pfp}</span>`;
+  }
+
+  html += `</li>`;
+}
       html += `</ul>`;
     }
 
@@ -1345,7 +1863,7 @@ async function downloadAltVideosHandler() {
       // Begin download UI
       progressLabel.textContent = `Starting: ${filename}`;
 
-      // --- Real-time progress download ---
+      // === Real-time progress download ===
       const response = await fetch(url);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
@@ -1466,22 +1984,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Screenshot
   document.getElementById('screenshot-btn').onclick = function() {
-    const video = document.getElementById('player-video');
-    const canvas = document.createElement('canvas');
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+  const player = window.player;
+  const canvas = document.createElement('canvas');
+  canvas.width = player.videoWidth;
+  canvas.height = player.videoHeight;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(player, 0, 0, canvas.width, canvas.height);
 
-    // Download as PNG
-    const a = document.createElement('a');
-    a.href = canvas.toDataURL('image/png');
-    a.download = 'screenshot.png';
-    a.click();
-  };
+  // Download as PNG
+  const a = document.createElement('a');
+  a.href = canvas.toDataURL('image/png');
+  a.download = 'screenshot.png';
+  a.click();
+};
 
 
-  // --- Tab switching ---
+  // === Tab switching ===
   const ytBtn = document.getElementById('tab-youtube');
   const daBtn = document.getElementById('tab-deviantart');
   const tu1Btn = document.getElementById('tab-tumblr');
@@ -1549,4 +2067,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   settingsBtn.addEventListener('click', () => showSection('settings'));
 
   showSection('youtube');
+  window.player = document.getElementById('player-video');
+  window.showPlayer = showPlayer;
 });
