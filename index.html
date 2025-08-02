@@ -120,8 +120,8 @@
       <button id="change-folder-btn" style="margin-left: 10px;">Change Video Folder</button>
     </div>
     <div style="padding: 10px 0 0 0;">
-  <button id="randomVideoBtn" style="display: block; margin-right: 10px;">Random Video</button>
-</div>
+      <button id="randomVideoBtn" style="display: block; margin-right: 10px;">Random Video</button>
+    </div>
     <div id="main-content-layout" style="display: flex; gap: 24px; align-items: flex-start;">
       <div style="flex: 1;">
         <div id="video-grid"></div>
@@ -142,6 +142,7 @@
               <option value="1.5">1.5x</option>
               <option value="2">2x</option>
             </select>
+            <!-- FULLSCREEN BUTTON REMOVED FROM HERE -->
             <button id="screenshot-btn" title="Take Screenshot">📸 Screenshot</button>
             <button id="gif-btn" title="Create GIF">Create GIF</button>
             <button id="clip-btn" title="Create Clip">Make Clip</button>
@@ -151,57 +152,60 @@
               <option value="">None</option>
             </select>
           </div>
-             <div id="gif-export-container" style="display:none; margin-top:18px; background:#222; padding:12px; border-radius:8px; max-width:440px;">
-             <div id="gif-frame-thumbnails" style="margin-top:12px; display:flex; gap:4px; flex-wrap:wrap;"></div> 
- <div style="margin-bottom:8px;">
-    <label>Start Time: 
-      <input id="gif-start-time" type="text" value="00:00:00" size="8" style="font-family:monospace; width:75px;">
-      <button id="gif-use-current-start">Use current timestamp</button>
-    </label>
-  </div>
-  <div style="margin-bottom:8px;">
-    <label>End Time: 
-      <input id="gif-end-time" type="text" value="00:00:05" size="8" style="font-family:monospace; width:75px;">
-      <button id="gif-use-current-end">Use current timestamp</button>
-    </label>
-  </div>
-  <div style="margin-bottom:8px;">
-    <button id="gif-preview-btn">Preview GIF</button>
-    <button id="gif-stop-preview-btn" style="display:none;">Stop Preview</button>
-    <button id="gif-export-btn" disabled>Export GIF</button>
-    <span id="gif-export-status" style="margin-left:14px; color:#9ef;"></span>
-  </div>
-</div>
-
+          <div id="gif-export-container" style="display:none; margin-top:18px; background:#222; padding:12px; border-radius:8px; max-width:440px;">
+            <div id="gif-frames-thumbnails" style="margin-top:12px; display:flex; gap:4px; flex-wrap:wrap;"></div>
+            <div style="margin-bottom:8px;">
+              <label>Start Time: 
+                <input id="gif-start-time" type="text" value="00:00:00" size="8" style="font-family:monospace; width:75px;">
+                <button id="gif-use-current-start">Use current timestamp</button>
+              </label>
+            </div>
+            <div style="margin-bottom:8px;">
+              <label>End Time: 
+                <input id="gif-end-time" type="text" value="00:00:05" size="8" style="font-family:monospace; width:75px;">
+                <button id="gif-use-current-end">Use current timestamp</button>
+              </label>
+            </div>
+            <div style="margin-bottom:8px;">
+              <button id="gif-preview-btn">Preview GIF</button>
+              <button id="gif-stop-preview-btn" style="display:none;">Stop Preview</button>
+              <button id="gif-export-btn" disabled>Export GIF</button>
+              <span id="gif-export-status" style="margin-left:14px; color:#9ef;"></span>
+            </div>
+          </div>
           <div id="clip-export-container" style="display:none; margin-top:18px; background:#222; padding:12px; border-radius:8px; max-width:440px;">
-  <div style="margin-bottom:8px;">
-    <label>Start Time: 
-      <input id="clip-start-time" type="text" value="00:00:00" size="8" style="font-family:monospace; width:75px;">
-      <button id="clip-use-current-start">Use current timestamp</button>
-    </label>
-  </div>
-  <div style="margin-bottom:8px;">
-    <label>End Time: 
-      <input id="clip-end-time" type="text" value="00:00:05" size="8" style="font-family:monospace; width:75px;">
-      <button id="clip-use-current-end">Use current timestamp</button>
-    </label>
-  </div>
-  <div style="margin-bottom:8px;">
-    <button id="clip-preview-btn">Preview Clip</button>
-    <button id="clip-stop-preview-btn" style="display:none;">Stop Preview</button>
-  </div>
-  <div style="margin-bottom:8px;">
-    <button id="clip-export-mp4-btn" disabled>Export as MP4</button>
-    <button id="clip-export-webm-btn" disabled>WebM for 4chan</button>
-    <span id="clip-export-status" style="margin-left:14px; color:#9ef;"></span>
-  </div>
-</div>
-
+            <div style="margin-bottom:8px;">
+              <label>Start Time: 
+                <input id="clip-start-time" type="text" value="00:00:00" size="8" style="font-family:monospace; width:75px;">
+                <button id="clip-use-current-start">Use current timestamp</button>
+              </label>
+            </div>
+            <div style="margin-bottom:8px;">
+              <label>End Time: 
+                <input id="clip-end-time" type="text" value="00:00:05" size="8" style="font-family:monospace; width:75px;">
+                <button id="clip-use-current-end">Use current timestamp</button>
+              </label>
+            </div>
+            <div style="margin-bottom:8px;">
+              <button id="clip-preview-btn">Preview Clip</button>
+              <button id="clip-stop-preview-btn" style="display:none;">Stop Preview</button>
+            </div>
+            <div style="margin-bottom:8px;">
+              <button id="clip-export-mp4-btn" disabled>Export as MP4</button>
+              <button id="clip-export-webm-btn" disabled>WebM for 4chan</button>
+              <span id="clip-export-status" style="margin-left:14px; color:#9ef;"></span>
+            </div>
+          </div>
           <div id="player-layout">
             <div id="video-wrapper">
               <h2 id="player-title"></h2>
-              <div style="position: relative;">
-                <video id="player-video" controls>
+              <div id="video-fullscreen-container" style="position: relative;">
+                <!-- SINGLE FULLSCREEN TOGGLE BUTTON HERE -->
+                <button id="fullscreen-btn" title="Toggle Fullscreen" aria-label="Toggle Fullscreen"
+                  style="position:absolute;top:18px;right:18px;z-index:1001;font-size:1.5em;background:rgba(32,32,32,0.4);color:#fff;border:none;border-radius:6px;padding:4px 10px;cursor:pointer;">
+                  ⛶
+                </button>
+                <video id="player-video" controls controlsList="nofullscreen">
                   <track id="video-subtitle" kind="subtitles" label="English" srclang="en">
                 </video>
               </div>
@@ -381,7 +385,28 @@ window.addEventListener('DOMContentLoaded', function() {
     resize();
     maybeStartMatrix();
   })();
+
+    // === FULLSCREEN TOGGLE LOGIC ===
+  const fsBtn = document.getElementById('fullscreen-btn');
+  const fsContainer = document.getElementById('video-fullscreen-container');
+
+  function isFullscreen() {
+    return document.fullscreenElement != null;
+  }
+
+  function toggleFullscreen() {
+    if (isFullscreen()) {
+      document.exitFullscreen();
+    } else {
+      fsContainer.requestFullscreen();
+    }
+  }
+
+  if (fsBtn && fsContainer) {
+    fsBtn.onclick = toggleFullscreen;
+  }
 });
 </script>
 </body>
 </html>
+

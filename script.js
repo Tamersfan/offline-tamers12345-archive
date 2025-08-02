@@ -438,6 +438,16 @@ document.addEventListener('keydown', function(e){
   if (gifPreviewActive && e.key === "Escape") gifStopPreviewBtn.onclick();
 });
 
+document.addEventListener('fullscreenchange', () => {
+  if (assRenderer && typeof assRenderer.resize === 'function') {
+    assRenderer.resize();
+  }
+});
+
+document.getElementById('player-video').addEventListener('dblclick', e => {
+  e.preventDefault();
+});
+
 // --- Export Logic ---
 gifExportBtn.onclick = async function() {
   let inputPath = currentVideoFilename ? (videoPath + '/' + currentVideoFilename) : null;
@@ -778,17 +788,34 @@ async function loadChatFiles() {
   }
 }
 
-async function loadComments(video) {
+async function loadComments(video, sortType = localStorage.getItem('commentSortType') || "newest") {
   const safeFilename = video.filename.replace(/\.mp4$/, '.json');
   const commentContainer = document.getElementById('comments-section');
   commentContainer.innerHTML = '';
   commentContainer.style.display = 'none';
 
-  const profilePics = [...Array(28)].map((_, i) => `PFPs/pfp${i + 1}.png`);
+  // --- CONFIGURATION ---
+  const profilePics = [...Array(31)].map((_, i) => `PFPs/pfp${i + 1}.png`);
+  const TAMERS_AUTHORS = ["@Tamers12345Official", "Tamers12345"];
+  const TAMERS_PFP = "PFPs/tamers.png";
 
+  // --- HELPERS ---
+  function formatDate(ts) {
+    if (!ts) return '';
+    const d = new Date(ts * 1000);
+    return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+  }
+  function getAvatar(author, fallbackPic) {
+    return TAMERS_AUTHORS.includes(author) ? TAMERS_PFP : fallbackPic;
+  }
+  function hasTamersReply(comment) {
+    return Array.isArray(comment.replies) &&
+      comment.replies.some(r => TAMERS_AUTHORS.includes(r.author));
+  }
+
+  // --- Fetch comments (modern or legacy) ---
   let comments = null;
   let usedLegacy = false;
-
   try {
     const res = await fetch(`comments/${safeFilename}`);
     if (!res.ok) throw new Error('No comments file');
@@ -796,7 +823,6 @@ async function loadComments(video) {
   } catch (e) {
     const dateStr = (video.date || '').trim();
     const isOldVideo = /^\d{8}$/.test(dateStr) && parseInt(dateStr, 10) < 20250213;
-
     if (isOldVideo) {
       try {
         const legacyMetaPath = `metadata/${safeFilename}`;
@@ -813,31 +839,109 @@ async function loadComments(video) {
       }
     }
   }
+  if (!comments || !comments.length) {
+    commentContainer.style.display = 'block';
+    commentContainer.innerHTML = `<h3>No comments available for this video.</h3>`;
+    return;
+  }
 
-  if (!comments || !comments.length) return;
+  // === Sorting logic ===
+  function sortComments(comments, sortType) {
+    let sorted = [...comments];
+    if (sortType === "oldest") {
+      sorted.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+    } else if (sortType === "newest") {
+      sorted.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+    } else if (sortType === "likes") {
+      sorted.sort((a, b) => (b.like_count || 0) - (a.like_count || 0));
+    } else if (sortType === "tamers_reply") {
+      sorted.sort((a, b) => {
+        const aHas = hasTamersReply(a) ? 1 : 0;
+        const bHas = hasTamersReply(b) ? 1 : 0;
+        if (bHas !== aHas) return bHas - aHas;
+        return (b.timestamp || 0) - (a.timestamp || 0);
+      });
+    } else if (sortType === "favorited") {
+      sorted.sort((a, b) => {
+        const aFav = a.is_favorited ? 1 : 0;
+        const bFav = b.is_favorited ? 1 : 0;
+        if (bFav !== aFav) return bFav - aFav;
+        return (b.timestamp || 0) - (a.timestamp || 0);
+      });
+    }
+    return sorted;
+  }
+  const sortedComments = sortComments(comments, sortType);
 
   commentContainer.style.display = 'block';
   commentContainer.innerHTML =
-    `<h3>Comments</h3>` +
+    `<h3>Comments</h3>
+     <div id="comment-sort-container" style="margin-bottom: 10px;">
+      <label for="comment-sort-select" style="font-size:0.98em;">Sort by:</label>
+      <select id="comment-sort-select">
+        <option value="newest">Newest</option>
+        <option value="oldest">Oldest</option>
+        <option value="likes">Most Likes</option>
+        <option value="tamers_reply">Tamers Replied</option>
+        <option value="favorited">Favorited</option>
+      </select>
+     </div>` +
     (usedLegacy ? `
       <p style="color:#999;font-size:12px;margin-top:-10px;">
         Unfortunately I was not able to archive all of the comments from Tamers' old channel. At the time, I did not have a consistent way to scrape the comments like I do now. What you see below are only <em>some</em> of the comments that were preserved in the video's metadata files, and they do not reflect the actual number or full range of comments these videos once had.
       </p>` : '') +
-    comments.map((comment, index) => {
+    sortedComments.map((comment, index) => {
+      // Randomize comment PFP
       const randomPic = profilePics[Math.floor(Math.random() * profilePics.length)];
+      const avatarPic = getAvatar(comment.author, randomPic);
+      const isTamers = TAMERS_AUTHORS.includes(comment.author);
       const commentId = `comment-${index}`;
+      const likeCount = typeof comment.like_count !== "undefined"
+        ? `<span class="comment-likes"><span class="like-emoji">👍</span> ${comment.like_count}</span>` : '';
+      const postDate = comment.timestamp ? `<span class="comment-date">${formatDate(comment.timestamp)}</span>` : '';
+      const favoritedBadge = comment.is_favorited
+        ? `
+          <span class="comment-favorited">
+            <img class="uploader-fav-pfp" src="${TAMERS_PFP}" alt="Uploader">
+            <span class="fav-heart">&#10084;&#65039;</span>
+          </span>
+        `
+        : '';
 
       let repliesHTML = '';
       if (Array.isArray(comment.replies) && comment.replies.length > 0) {
+        // Detect if Tamers replied
+        const tamersReply = comment.replies.some(reply => TAMERS_AUTHORS.includes(reply.author));
+        // PFP badge if Tamers replied
+        const tamersBadge = tamersReply
+          ? `<img src="${TAMERS_PFP}" title="Uploader replied" style="width:16px;height:16px;border-radius:50%;vertical-align:middle;margin-left:6px;box-shadow:0 0 2px #0005;">`
+          : '';
+
         repliesHTML = `
           <div class="replies" id="${commentId}-replies" style="display:none; margin-left: 50px;">
             ${comment.replies.map(reply => {
-              const replyPic = profilePics[Math.floor(Math.random() * profilePics.length)];
+              const replyRandomPic = profilePics[Math.floor(Math.random() * profilePics.length)];
+              const replyAvatarPic = getAvatar(reply.author, replyRandomPic);
+              const replyLikeCount = typeof reply.like_count !== "undefined"
+                ? `<span class="comment-likes"><span class="like-emoji">👍</span> ${reply.like_count}</span>` : '';
+              const replyPostDate = reply.timestamp ? `<span class="comment-date">${formatDate(reply.timestamp)}</span>` : '';
+              const replyFavoritedBadge = reply.is_favorited
+                ? `<span class="comment-favorited">
+                    <img class="uploader-fav-pfp" src="${TAMERS_PFP}" alt="Uploader">
+                    <span class="fav-heart">&#10084;&#65039;</span>
+                  </span>` : '';
               return `
                 <div class="comment">
-                  <img src="${replyPic}" class="comment-avatar" alt="pfp">
+                  <img src="${replyAvatarPic}" class="comment-avatar" alt="pfp">
                   <div class="comment-content">
-                    <a href="${reply.author_url || '#'}" target="_blank">${reply.author || 'Anonymous'}</a>
+                    <a href="#" onclick="window.electronAPI.openExternal('${reply.author_url || '#'}'); return false;">
+                      ${reply.author || 'Anonymous'}
+                    </a>
+                    <div class="comment-meta-row">
+                      ${replyPostDate}
+                      ${replyLikeCount}
+                      ${replyFavoritedBadge}
+                    </div>
                     <p>${reply.text}</p>
                   </div>
                 </div>
@@ -851,6 +955,7 @@ async function loadComments(video) {
               document.getElementById('${commentId}-hide-btn').style.display = 'inline';
             ">
               Show ${comment.replies.length} repl${comment.replies.length === 1 ? 'y' : 'ies'}
+              ${tamersBadge}
             </button>
             <button id="${commentId}-hide-btn" class="hide-replies-btn" style="display: none;" onclick="
               document.getElementById('${commentId}-replies').style.display = 'none';
@@ -865,18 +970,37 @@ async function loadComments(video) {
 
       return `
         <div class="comment">
-          <img src="${randomPic}" class="comment-avatar" alt="pfp">
+          <img src="${avatarPic}" class="comment-avatar" alt="pfp">
           <div class="comment-content">
             <a href="#" onclick="window.electronAPI.openExternal('${comment.author_url || '#'}'); return false;">
               ${comment.author || 'Anonymous'}
+              ${isTamers ? '<span class="yt-uploader-label" style="font-size:12px;color:#e43c53;margin-left:4px;">Uploader</span>' : ''}
             </a>
+            <div class="comment-meta-row">
+              ${postDate}
+              ${likeCount}
+              ${favoritedBadge}
+            </div>
             <p>${comment.text}</p>
           </div>
         </div>
         ${repliesHTML}
       `;
     }).join('');
+
+  // --- comment sort by dropdown event handling ---
+  const sortSelect = document.getElementById('comment-sort-select');
+  if (sortSelect) {
+    sortSelect.value = sortType;
+    sortSelect.onchange = null;
+    sortSelect.addEventListener('change', function(e) {
+      localStorage.setItem('commentSortType', e.target.value);
+      loadComments(video, e.target.value);
+    });
+  }
 }
+
+
 
 // === Alt Video URLs loaded from JSON ===
 async function loadAltVideoURLs() {
@@ -918,11 +1042,13 @@ async function loadAssSubtitle(subtitlePath, videoElement) {
     const response = await fetch(subtitlePath);
     if (!response.ok) throw new Error(`Failed to fetch subtitle file: ${subtitlePath}`);
     const assText = await response.text();
+    const parent = document.getElementById('video-fullscreen-container');
     assRenderer = new SubtitlesOctopus({
       video: videoElement,
       subContent: assText,
       workerUrl: window.SubtitlesOctopusWorkerUrl,
-      legacyWorkerUrl: window.SubtitlesOctopusWorkerUrl
+      legacyWorkerUrl: window.SubtitlesOctopusWorkerUrl,
+      parent: parent
     });
   } catch (e) {
     console.error("❌ Failed to load .ass subtitle:", e);
@@ -1997,6 +2123,33 @@ document.addEventListener('DOMContentLoaded', async () => {
   a.download = 'screenshot.png';
   a.click();
 };
+
+// === Fullscreen button ===
+const fsBtn = document.getElementById('fullscreen-btn');
+const fsContainer = document.getElementById('video-fullscreen-container');
+
+if (fsBtn) {
+  fsBtn.onclick = () => {
+    // Toggle fullscreen on the container div, not just the video!
+    if (document.fullscreenElement === fsContainer) {
+      document.exitFullscreen();
+    } else {
+      fsContainer.requestFullscreen();
+    }
+  };
+}
+
+// --- fullscreenchange handler for ASS subtitles ---
+document.addEventListener('fullscreenchange', () => {
+  // Resize subtitles on any fullscreen change, after layout!
+  setTimeout(() => {
+    if (assRenderer && typeof assRenderer.resize === 'function') {
+      assRenderer.resize();
+      console.log("SubtitlesOctopus: called resize() on fullscreenchange");
+    }
+  }, 100);
+});
+
 
 
   // === Tab switching ===

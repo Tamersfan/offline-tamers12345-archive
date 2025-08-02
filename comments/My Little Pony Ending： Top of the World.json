@@ -300,7 +300,23 @@
     "is_favorited": false,
     "_time_text": "9 days ago",
     "timestamp": 1740096000,
-    "is_pinned": false
+    "is_pinned": false,
+    "replies": [
+      {
+        "text": "Wait really? Omg!",
+        "like_count": 0,
+        "author_id": "UCBwqf5RIgdi2-5yy9is6WLg",
+        "author": "@sara17_animation",
+        "author_thumbnail": "https://yt3.ggpht.com/jARpi6cknjL6J8iSOVTCJ6EfujGpmhXtvi2KheQVMyF2Ql9Ysfg4RmX_i9SS9b-5tOhj2bbXDQ=s88-c-k-c0x00ffffff-no-rj",
+        "author_is_uploader": false,
+        "author_is_verified": false,
+        "author_url": "https://www.youtube.com/@sara17_animation",
+        "is_favorited": false,
+        "_time_text": "1 hour ago",
+        "timestamp": 1753966800,
+        "is_pinned": false
+      }
+    ]
   },
   {
     "text": "GUYS US THUS THE REAL TAMERS!???",
@@ -486,7 +502,23 @@
     "is_favorited": false,
     "_time_text": "9 days ago",
     "timestamp": 1740096000,
-    "is_pinned": false
+    "is_pinned": false,
+    "replies": [
+      {
+        "text": "Yeahh",
+        "like_count": 0,
+        "author_id": "UCBwqf5RIgdi2-5yy9is6WLg",
+        "author": "@sara17_animation",
+        "author_thumbnail": "https://yt3.ggpht.com/jARpi6cknjL6J8iSOVTCJ6EfujGpmhXtvi2KheQVMyF2Ql9Ysfg4RmX_i9SS9b-5tOhj2bbXDQ=s88-c-k-c0x00ffffff-no-rj",
+        "author_is_uploader": false,
+        "author_is_verified": false,
+        "author_url": "https://www.youtube.com/@sara17_animation",
+        "is_favorited": false,
+        "_time_text": "1 hour ago",
+        "timestamp": 1753966800,
+        "is_pinned": false
+      }
+    ]
   },
   {
     "text": "Just fwi this song is from a fucking barbie movie",
@@ -1364,7 +1396,23 @@
     "is_favorited": false,
     "_time_text": "10 days ago",
     "timestamp": 1740009600,
-    "is_pinned": false
+    "is_pinned": false,
+    "replies": [
+      {
+        "text": "Do you know the name of the song?",
+        "like_count": 0,
+        "author_id": "UCBwqf5RIgdi2-5yy9is6WLg",
+        "author": "@sara17_animation",
+        "author_thumbnail": "https://yt3.ggpht.com/jARpi6cknjL6J8iSOVTCJ6EfujGpmhXtvi2KheQVMyF2Ql9Ysfg4RmX_i9SS9b-5tOhj2bbXDQ=s88-c-k-c0x00ffffff-no-rj",
+        "author_is_uploader": false,
+        "author_is_verified": false,
+        "author_url": "https://www.youtube.com/@sara17_animation",
+        "is_favorited": false,
+        "_time_text": "1 hour ago",
+        "timestamp": 1753966800,
+        "is_pinned": false
+      }
+    ]
   },
   {
     "text": "❤❤❤❤",
@@ -1877,6 +1925,34 @@
     "is_favorited": false,
     "_time_text": "7 hours ago",
     "timestamp": 1752825600,
+    "is_pinned": false
+  },
+  {
+    "text": "I LOVE how foreshadowing this is with the infection movie!",
+    "like_count": 0,
+    "author_id": "UCk6n8ZDFwc4OAiVpbhwPGIQ",
+    "author": "@FARTTHING-x3",
+    "author_thumbnail": "https://yt3.ggpht.com/ahYgHedBUZp3zvnafPyGIdatknyyImDmQGtUPuZyxgWaVLr0pC3_osT_NwBehjtnLQ-Hxp_2Gg=s88-c-k-c0x00ffffff-no-rj",
+    "author_is_uploader": false,
+    "author_is_verified": false,
+    "author_url": "https://www.youtube.com/@FARTTHING-x3",
+    "is_favorited": false,
+    "_time_text": "4 hours ago",
+    "timestamp": 1753527600,
+    "is_pinned": false
+  },
+  {
+    "text": "great video, keep it up!!! :D",
+    "like_count": 0,
+    "author_id": "UCBp3tfsprtnwcGJKsQEdylQ",
+    "author": "@Lo0ps-z3c",
+    "author_thumbnail": "https://yt3.ggpht.com/y-mcP1-1dNpzlq9HtoLlQbHstsoPd-hsbzaCeDcLIMp5njDbDnA3sOtg_hD20zgzl6mYQYEl=s88-c-k-c0x00ffffff-no-rj",
+    "author_is_uploader": false,
+    "author_is_verified": false,
+    "author_url": "https://www.youtube.com/@Lo0ps-z3c",
+    "is_favorited": false,
+    "_time_text": "10 hours ago",
+    "timestamp": 1753506000,
     "is_pinned": false
   }
 ]

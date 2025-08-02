@@ -12,6 +12,7 @@ An Electron‐based desktop app that lets you browse Tamers12345's YouTube chann
   - In-player: video controls (size/volume/speed), description, and synced live-chat playback
   - Custom playlist dropdown (e.g. Holiday Special, SU Lore Arc 1, etc…) 
   - “Everything”, “Everything but MLP”, “Only MLP” filters   
+  - View the YouTube comments section under every video
 - ### DeviantArt Gallery  
   - View all of Tamers12345's artworks  
   - Background music with full playlist controls  
