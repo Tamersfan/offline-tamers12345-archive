@@ -85,6 +85,8 @@ function setupThumbnailPreviews() {
   });
 }
 
+
+
 // Helper for thumbnails: derive .mp4 from thumbnail image name
 function getFilenameFromThumb(thumb) {
   const img = thumb.querySelector('img');
@@ -1091,6 +1093,17 @@ function populatePlaylistOptions() {
   });
 }
 
+function formatRuntime(seconds) {
+  seconds = Number(seconds);
+  if (!isFinite(seconds) || seconds <= 0) return '';
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = Math.floor(seconds % 60);
+  return h > 0
+    ? `${h}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`
+    : `${m}:${s.toString().padStart(2, '0')}`;
+}
+
 function renderVideoGrid() {
   const grid = document.getElementById('video-grid');
   grid.innerHTML = '';
@@ -1134,7 +1147,7 @@ function renderVideoGrid() {
     div.innerHTML = `
       <div class="thumbnail-container">
         <img src="${video.thumbnail}" alt="${video.title}">
-        ${hasChat && showBadges ? '<span class="chat-badge">LIVE CHAT AVAILABLE</span>' : ''}
+        ${hasChat && showBadges ? '<span class="chat-badge top-center">LIVE CHAT AVAILABLE</span>' : ''}
       </div>
       <h3>${video.title}</h3>
       <p>${formatDate(video.date)}</p>
@@ -1195,6 +1208,14 @@ function renderVideoGrid() {
       check.className = 'watched-checkmark';
       check.textContent = '✔';
       div.querySelector('.thumbnail-container').appendChild(check);
+    }
+
+    // ---- RUNTIME OVERLAY ----
+    if (video.runtime) {
+      const runtimeSpan = document.createElement('span');
+      runtimeSpan.className = 'runtime-overlay';
+      runtimeSpan.textContent = formatRuntime(video.runtime);
+      div.querySelector('.thumbnail-container').appendChild(runtimeSpan);
     }
 
     // ---- Video click handler ----

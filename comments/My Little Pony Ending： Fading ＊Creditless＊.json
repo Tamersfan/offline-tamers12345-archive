@@ -1797,7 +1797,23 @@
     "is_favorited": false,
     "_time_text": "40 minutes ago",
     "timestamp": 1751790960,
-    "is_pinned": false
+    "is_pinned": false,
+    "replies": [
+      {
+        "text": "I need it too! I tried to look for this song, but only after I saw that it was modified... 😔",
+        "like_count": 0,
+        "author_id": "UCeU1qIyTu6Puuxx70y0X0cg",
+        "author": "@Diaas_silva",
+        "author_thumbnail": "https://yt3.ggpht.com/4Y23DHCk3I6In5u3tXZ2TMN4okySLLSmgwIK1psmOQyS2FJo1P7hyKiP1YSaatl2FovoEbATKZc=s88-c-k-c0x00ffffff-no-rj",
+        "author_is_uploader": false,
+        "author_is_verified": false,
+        "author_url": "https://www.youtube.com/@Diaas_silva",
+        "is_favorited": false,
+        "_time_text": "3 hours ago",
+        "timestamp": 1754132400,
+        "is_pinned": false
+      }
+    ]
   },
   {
     "text": "Real great stuff ❤",
@@ -1867,6 +1883,20 @@
     "is_favorited": false,
     "_time_text": "7 hours ago",
     "timestamp": 1753081200,
+    "is_pinned": false
+  },
+  {
+    "text": "Mari is my head buddy <33",
+    "like_count": 0,
+    "author_id": "UC3GfixGYlrpRMGYnASiMlHw",
+    "author": "@ayyo-bun3534",
+    "author_thumbnail": "https://yt3.ggpht.com/ytc/AIdro_lI6zk1HePZgzbrWX8p6cTwH7s2su9FRt5qPSgKrig2BQk=s88-c-k-c0x00ffffff-no-rj",
+    "author_is_uploader": false,
+    "author_is_verified": false,
+    "author_url": "https://www.youtube.com/@ayyo-bun3534",
+    "is_favorited": false,
+    "_time_text": "20 minutes ago",
+    "timestamp": 1754832540,
     "is_pinned": false
   }
 ]

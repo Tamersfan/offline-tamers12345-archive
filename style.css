@@ -112,16 +112,29 @@ video.theater {
 
 .chat-badge {
   position: absolute;
-  bottom: 6px;
-  right: 6px;
-  background-color: #d22;
-  color: white;
-  font-size: 0.65em;
-  font-weight: bold;
-  padding: 2px 6px;
-  border-radius: 3px;
+  top: 0;
+  right: 0;
+  background: #e11d48;
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 0 4px 0 4px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  z-index: 4;
   pointer-events: none;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  line-height: 1.6;
+  white-space: nowrap;
 }
+
+.thumbnail-container {
+  position: relative;
+}
+
+
+
+
 
 /* Favorite star styling */
 .video-thumbnail {
@@ -1340,4 +1353,22 @@ video.theater {
   pointer-events: none !important;
   z-index: 999 !important;
   display: block !important;
+}
+
+.runtime-overlay {
+  position: absolute;
+  right: 7px;
+  bottom: 7px;
+  background: rgba(0,0,0,0.78);
+  color: #fff;
+  padding: 2px 7px;
+  border-radius: 3px;
+  font-size: 13px;
+  font-weight: bold;
+  pointer-events: none;
+  z-index: 3;
+  letter-spacing: 0.2px;
+}
+.thumbnail-container {
+  position: relative;
 }
