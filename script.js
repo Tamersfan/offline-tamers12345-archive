@@ -1859,75 +1859,117 @@ document.addEventListener('keydown', function(e) {
   }
 });
 
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 async function renderCreditsPage() {
   const creditsSection = document.getElementById('credits-section');
+
+  let patreonDiv = document.getElementById('patreon-supporters');
+  if (!patreonDiv) {
+    patreonDiv = document.createElement('div');
+    patreonDiv.id = 'patreon-supporters';
+    creditsSection.prepend(patreonDiv);
+  } else {
+    patreonDiv.innerHTML = '';
+  }
+
   let detailsDiv = document.getElementById('credits-details');
   if (!detailsDiv) {
     detailsDiv = document.createElement('div');
     detailsDiv.id = 'credits-details';
-    creditsSection.prepend(detailsDiv);
+    patreonDiv.insertAdjacentElement('afterend', detailsDiv);
+  } else if (detailsDiv.previousElementSibling !== patreonDiv) {
+    patreonDiv.insertAdjacentElement('afterend', detailsDiv);
   }
-  detailsDiv.innerHTML = "";
+  detailsDiv.innerHTML = '';
 
-  try {
-    const res = await fetch('data/credits.json');
-    const data = await res.json();
+  let data = null;
+try {
+  const res = await fetch('data/credits.json');
+  if (res.ok) {
+    data = await res.json();
+  }
+} catch (e) {
+  console.error("Failed to load credits.json", e);
+}
 
+
+  if (data) {
+    // Patreon supporters
+    const patreon = data.patreon || {};
+    const patreonURL = patreon.url || 'https://www.patreon.com/TamersArchiver';
+    const patreonMsg = patreon.message || 'Thank you to the following people for supporting this project:';
+    const supporters = Array.isArray(patreon.supporters) ? patreon.supporters : [];
+
+    patreonDiv.innerHTML = `
+      <h2>Patreon Supporters</h2>
+      <p>${escapeHtml(patreonMsg)} <a href="${patreonURL}" target="_blank" rel="noopener">Support on Patreon</a></p>
+      <ul class="supporter-list">
+        ${
+          supporters.length
+            ? supporters.map(n => `<li>${escapeHtml(n)}</li>`).join('')
+            : '<li><em>Add supporter names in data/credits.json → patreon.supporters</em></li>'
+        }
+      </ul>
+      <hr>
+    `;
+
+    // Build the rest of credits
     let html = '';
-    // === Creator and Links ===
     if (data.creator) {
-      html += `<h2 style="margin-bottom:0.25em;">${data.creator}</h2>`;
+      html += `<h2 style="margin-bottom:0.25em;">${escapeHtml(data.creator)}</h2>`;
     }
     if (Array.isArray(data.creatorLinks) && data.creatorLinks.length) {
-      html += `<div style="margin-bottom:1em;">`;
-      html += data.creatorLinks.map(link =>
-        `<a href="${link.url}" target="_blank" rel="noopener" style="margin-right: 10px; color:#4af;">${link.label}</a>`
-      ).join('');
-      html += `</div>`;
+      html += `<div style="margin-bottom:1em;">` +
+        data.creatorLinks.map(link =>
+          `<a href="${link.url}" target="_blank" rel="noopener" style="margin-right: 10px; color:#4af;">${escapeHtml(link.label)}</a>`
+        ).join('') +
+        `</div>`;
     }
     html += `<h2>Credits</h2>`;
 
-    // === Collab Contributors ===
     if (data.collabHeader || data.pfpcollabheader) {
-      html += `<p>${data.collabHeader || data.pfpcollabheader}</p>`;
+      html += `<p>${escapeHtml(data.collabHeader || data.pfpcollabheader)}</p>`;
     }
     if (Array.isArray(data.collabContributors) && data.collabContributors.length) {
       html += `<ul>`;
       for (const c of data.collabContributors) {
         html += `<li>`;
         if (c.link) {
-          html += `<strong><a href="${c.link}" target="_blank" rel="noopener" style="color:#4af;text-decoration:underline;">${c.name}</a></strong>`;
+          html += `<strong><a href="${c.link}" target="_blank" rel="noopener" style="color:#4af;text-decoration:underline;">${escapeHtml(c.name)}</a></strong>`;
         } else {
-          html += `<strong>${c.name}</strong>`;
+          html += `<strong>${escapeHtml(c.name)}</strong>`;
         }
         if (Array.isArray(c.pfp) && c.pfp.length) {
-    html += `:<ul style="margin:0; padding-left: 1.5em; color:#7cf;">` +
-      c.pfp.map(p => `<li>${p}</li>`).join('') +
-      `</ul>`;
-  } else if (c.pfp) {
-    // Fallback: treat as single string
-    html += `: <span style="color:#7cf;">${c.pfp}</span>`;
-  }
-
-  html += `</li>`;
-}
+          html += `:<ul style="margin:0; padding-left: 1.5em; color:#7cf;">${c.pfp.map(p => `<li>${escapeHtml(p)}</li>`).join('')}</ul>`;
+        } else if (c.pfp) {
+          html += `: <span style="color:#7cf;">${escapeHtml(c.pfp)}</span>`;
+        }
+        html += `</li>`;
+      }
       html += `</ul>`;
     }
 
-    // === Subtitle Contributors ===
     if (data.subtitleheader || data.header) {
-      html += `<p>${data.subtitleheader || data.header}</p>`;
+      html += `<p>${escapeHtml(data.subtitleheader || data.header)}</p>`;
     }
     if (Array.isArray(data.contributors) && data.contributors.length) {
       html += `<ul>`;
       for (const c of data.contributors) {
         if (c.link) {
-          html += `<li><strong><a href="${c.link}" target="_blank" rel="noopener" style="color:#4af;text-decoration:underline;">${c.name}</a></strong>:<ul>`;
+          html += `<li><strong><a href="${c.link}" target="_blank" rel="noopener" style="color:#4af;text-decoration:underline;">${escapeHtml(c.name)}</a></strong>:<ul>`;
         } else {
-          html += `<li><strong>${c.name}</strong>:<ul>`;
+          html += `<li><strong>${escapeHtml(c.name)}</strong>:<ul>`;
         }
         for (const w of c.works) {
-          html += `<li>${w.video} <span style="color:#666;">(${w.language})</span></li>`;
+          html += `<li>${escapeHtml(w.video)} <span style="color:#666;">(${escapeHtml(w.language)})</span></li>`;
         }
         html += `</ul></li>`;
       }
@@ -1946,19 +1988,29 @@ async function renderCreditsPage() {
       <label><input type="checkbox" id="force-redownload"> Force Redownload</label><br>
       <button id="download-selected-alt-videos">Download Selected Alt Videos</button>
     `;
-
     detailsDiv.innerHTML = html;
-  } catch (e) {
-    detailsDiv.innerHTML = "<h2>Credits</h2><p>❌ Failed to load credits.</p>";
   }
 
-  await renderMissingAltVideos();
-  document.getElementById('download-selected-alt-videos').onclick = downloadAltVideosHandler;
+  // Missing-alt list render (safe)
+  const missingListEl = document.getElementById('missing-alt-video-list');
+  if (typeof renderMissingAltVideos === 'function') {
+    await renderMissingAltVideos();
+  } else if (missingListEl) {
+    missingListEl.innerHTML = '';
+  }
+
+  // Download handler wiring (safe)
+  const dlBtn = document.getElementById('download-selected-alt-videos');
+  if (dlBtn && typeof downloadAltVideosHandler === 'function') {
+    dlBtn.onclick = downloadAltVideosHandler;
+  } else if (dlBtn) {
+    dlBtn.style.display = 'none';
+  }
 
   // External link handler for Electron
   if (creditsSection && !creditsSection._externalLinkHandlerSet) {
     creditsSection.addEventListener('click', function (event) {
-      const a = event.target.closest('a[target=\"_blank\"]');
+      const a = event.target.closest('a[target="_blank"]');
       if (a && a.href.startsWith('http')) {
         event.preventDefault();
         window.electronAPI.openExternal(a.href);
@@ -1968,129 +2020,7 @@ async function renderCreditsPage() {
   }
 }
 
-// === Download handler with debug ===
-async function downloadAltVideosHandler() {
-  const status = document.getElementById('alt-download-status');
-  const progressBar = document.getElementById('alt-progress-bar');
-  const progressFill = document.getElementById('alt-progress-fill');
-  const progressLabel = document.getElementById('alt-progress-label');
-  const forceRedownload = document.getElementById('force-redownload').checked;
-  const form = document.getElementById('alt-video-form');
-  if (!form) {
-    status.textContent = '❌ No video checklist found.';
-    return;
-  }
 
-  const checkedBoxes = Array.from(form.querySelectorAll('input[name="altfile"]:checked'));
-  const selected = checkedBoxes.map(el => el.value);
-
-  if (selected.length === 0) {
-    status.textContent = '⚠️ No videos selected.';
-    return;
-  }
-
-  let completed = 0;
-  status.textContent = '';
-  progressBar.style.display = 'block';
-  progressFill.style.width = '0%';
-  progressLabel.style.display = 'block';
-  progressLabel.textContent = '';
-
-  for (const filename of selected) {
-    const url = altVideoURLs[filename];
-    if (!url) continue;
-    try {
-      const exists = await fileExistsInVideoFolder(filename);
-      if (exists && !forceRedownload) {
-        status.textContent += `⏩ Skipped: ${filename}\n`;
-        completed++;
-        continue;
-      }
-
-      // Begin download UI
-      progressLabel.textContent = `Starting: ${filename}`;
-
-      // === Real-time progress download ===
-      const response = await fetch(url);
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-      const contentLength = response.headers.get('content-length');
-      const total = contentLength ? parseInt(contentLength) : null;
-
-      let received = 0;
-      let chunks = [];
-      const reader = response.body.getReader();
-
-      while (true) {
-        const {done, value} = await reader.read();
-        if (done) break;
-        chunks.push(value);
-        received += value.length;
-        let percent = total ? ((received / total) * 100).toFixed(1) : null;
-
-        // Update progress bar and label in real-time
-        progressFill.style.width = total ? `${percent}%` : '0%';
-        progressLabel.textContent =
-          `Downloading: ${filename}\n` +
-          (total ? `${formatBytes(received)} / ${formatBytes(total)} (${percent}%)` : `${formatBytes(received)} downloaded`);
-      }
-
-      // Combine chunks into a single ArrayBuffer
-      let buffer = new Uint8Array(received);
-      let pos = 0;
-      for (let chunk of chunks) {
-        buffer.set(chunk, pos);
-        pos += chunk.length;
-      }
-      await saveAltVideoToFolder(filename, buffer);
-
-      status.textContent += `✅ Downloaded: ${filename}\n`;
-    } catch (err) {
-      console.error('Error downloading:', filename, err);
-      status.textContent += `❌ Failed: ${filename}\n`;
-    }
-    completed++;
-  }
-
-  // Hide progress bar when done
-  progressBar.style.display = 'none';
-  progressLabel.style.display = 'none';
-}
-
-async function renderMissingAltVideos() {
-  const listDiv = document.getElementById('missing-alt-video-list');
-  listDiv.innerHTML = '<strong>Missing Alt Videos:</strong><br>';
-
-  try {
-    const res = await fetch('data/subtitles.json');
-    const subtitles = await res.json();
-
-    const missing = [];
-    for (const langs of Object.values(subtitles)) {
-      for (const langData of Object.values(langs)) {
-        const filename = langData.altVideo;
-        if (!filename || !altVideoURLs[filename]) continue;
-        const exists = await fileExistsInVideoFolder(filename);
-        if (!exists) missing.push(filename);
-      }
-    }
-
-    if (missing.length === 0) {
-      listDiv.innerHTML += '<p>✅ All alt videos are present.</p>';
-      return;
-    }
-    let formHtml = '<form id="alt-video-form">';
-    missing.forEach(name => {
-      formHtml += `<label><input type="checkbox" name="altfile" value="${name}" checked> ${name}</label><br>`;
-    });
-    formHtml += '</form>';
-    listDiv.innerHTML += formHtml;
-
-  } catch (e) {
-    console.error('Failed to render missing alt videos:', e);
-    listDiv.innerHTML += '<p>❌ Failed to scan for missing alt videos.</p>';
-  }
-}
 
 // === Startup & tab-switching ===
 document.addEventListener('DOMContentLoaded', async () => {

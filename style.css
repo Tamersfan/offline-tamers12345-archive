@@ -1372,3 +1372,8 @@ video.theater {
 .thumbnail-container {
   position: relative;
 }
+
+.credits-section { margin-bottom: 1rem; }
+.supporter-list { list-style: disc; padding-left: 1.25rem; margin: 0.5rem 0 0; }
+#patreon-supporters h2 { margin: 0 0 0.25rem; }
+#patreon-supporters p { margin: 0.25rem 0; }

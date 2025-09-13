@@ -1,7 +1,7 @@
 {
   "creator": "All original videos, art, and content in this archive were created by Tamers12345.",
   "creatorLinks": [
-    { "label": "YouTube", "url": "https://www.youtube.com/@Tamers12345Official" },
+    { "label": "YouTube", "url": "https://www.youtube.com/@Tamers12345mlp" },
     { "label": "Twitter/X", "url": "https://x.com/TheTamers12345" },
     { "label": "Patreon", "url": "https://www.patreon.com/Tamers12345" },
     { "label": "Tumblr Blog 1", "url": "https://tamers12345-blog-blog.tumblr.com/" },
@@ -9,18 +9,23 @@
     { "label": "Newgrounds", "url": "https://tamers12345official.newgrounds.com/" },
     { "label": "Pony.Tube", "url": "https://pony.tube/c/tamers12345official/videos" }
   ],
-
+  "patreon": {
+    "message": "If you would like to you can support this project on Patreon! If you join, you can have your name added to this list of supporters.",
+    "url": "https://www.patreon.com/TamersArchiver",
+    "supporters": [
+      "KewKo (Bucket Pone)",
+      "RickSteubens",
+      "DeDuder I"
+    ]
+  },
   "pfpcollabheader": "Special thanks to the following people for contributing to the PFP collab!",
   "collabContributors": [
     {
       "name": "mehdrinkindud",
       "link": "https://mehdrinkindud.newgrounds.com",
       "pfp": [
-        "pfp10 Jeremy The Echidna", 
-        "pfp11 Kevin The Hedgehog",
-        "pfp29 Dr. Troberkon",
-        "pfp30 Mark Latour",
-        "pfp31 Jared's Pa"
+        "pfp10 Jeremy The Echidna",
+        "pfp11 Kevin The Hedgehog"
       ]
     },
     {
@@ -47,7 +52,6 @@
       ]
     }
   ],
-
   "header": "Subtitles provided by those below. Thank you to all translators and contributors!",
   "contributors": [
     {
