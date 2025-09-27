@@ -797,8 +797,8 @@ async function loadComments(video, sortType = localStorage.getItem('commentSortT
   commentContainer.style.display = 'none';
 
   // --- CONFIGURATION ---
-  const profilePics = [...Array(31)].map((_, i) => `PFPs/pfp${i + 1}.png`);
-  const TAMERS_AUTHORS = ["@Tamers12345Official", "Tamers12345"];
+  const profilePics = [...Array(34)].map((_, i) => `PFPs/pfp${i + 1}.png`);
+  const TAMERS_AUTHORS = ["@Tamers12345Official", "Tamers12345Official", "@Tamers12345mlp", "Tamers12345mlp", "@Tamers12345MLP", "Tamers12345MLP", "@Tamers12345", "Tamers12345", "@tamers12345", "tamers12345"];
   const TAMERS_PFP = "PFPs/tamers.png";
 
   // --- HELPERS ---
@@ -1003,7 +1003,6 @@ async function loadComments(video, sortType = localStorage.getItem('commentSortT
 }
 
 
-
 // === Alt Video URLs loaded from JSON ===
 async function loadAltVideoURLs() {
   try {
@@ -1022,6 +1021,125 @@ async function fileExistsInVideoFolder(filename) {
 async function saveAltVideoToFolder(filename, arrayBuffer) {
   if (!videoPath) throw new Error("No video path selected!");
   return await window.electronAPI.saveAltVideo(`${videoPath}/${filename}`, arrayBuffer);
+}
+
+// === Build the "Missing Alt Videos" list and checkboxes ===
+async function renderMissingAltVideos() {
+  const listDiv = document.getElementById('missing-alt-video-list');
+  if (!listDiv) return;
+  listDiv.innerHTML = '<strong>Missing Alt Videos:</strong><br>';
+
+  if (!altVideoURLs || !Object.keys(altVideoURLs).length) {
+    await loadAltVideoURLs();
+  }
+
+  let subs = subtitlesData;
+  if (!subs || !Object.keys(subs).length) {
+    try {
+      const r = await fetch('data/subtitles.json');
+      if (r.ok) subs = await r.json();
+    } catch (_) {}
+  }
+  if (!subs || !Object.keys(subs).length) {
+    listDiv.innerHTML += '<p>❌ No subtitles metadata available, cannot detect alt videos.</p>';
+    return;
+  }
+
+  const referenced = new Set();
+  const stack = [subs];
+  while (stack.length) {
+    const node = stack.pop();
+    if (node && typeof node === 'object') {
+      for (const v of Object.values(node)) {
+        if (v && typeof v === 'object') {
+          if (Object.prototype.hasOwnProperty.call(v, 'altVideo') && v.altVideo) {
+            referenced.add(String(v.altVideo));
+          }
+          stack.push(v);
+        }
+      }
+    }
+  }
+
+  const candidates = [...referenced].filter(name => !!altVideoURLs[name]);
+
+  const missing = [];
+  for (const filename of candidates) {
+    const exists = await fileExistsInVideoFolder(filename);
+    if (!exists) missing.push(filename);
+  }
+
+  if (missing.length === 0) {
+    listDiv.innerHTML += '<p>✅ All alt videos are present.</p>';
+    return;
+  }
+
+  let formHtml = '<form id="alt-video-form" style="margin-top:6px;">';
+  formHtml += missing.map(f => `
+    <label style="display:block;margin:3px 0;">
+      <input type="checkbox" name="alt" value="${f}" checked> ${f}
+    </label>`).join('');
+  formHtml += '</form>';
+  listDiv.innerHTML += formHtml;
+}
+
+// === Download selected alt videos to the video folder ===
+async function downloadAltVideosHandler() {
+  const form = document.getElementById('alt-video-form');
+  const listDiv = document.getElementById('missing-alt-video-list');
+  const force = !!document.getElementById('force-redownload')?.checked;
+
+  if (!form) {
+    alert('Nothing to download.');
+    return;
+  }
+
+  const selected = [...form.querySelectorAll('input[name="alt"]:checked')].map(i => i.value);
+  if (!selected.length) {
+    alert('Select at least one alt video.');
+    return;
+  }
+
+  if (!videoPath) {
+    alert('Select your video folder first in Settings.');
+    return;
+  }
+
+  const statusId = 'alt-dl-status';
+  let status = document.getElementById(statusId);
+  if (!status) {
+    status = document.createElement('div');
+    status.id = statusId;
+    status.style.marginTop = '8px';
+    listDiv.appendChild(status);
+  }
+
+  let ok = 0, fail = 0;
+  for (const filename of selected) {
+    const url = altVideoURLs[filename];
+    if (!url) { fail++; continue; }
+
+    try {
+      if (!force) {
+        const exists = await fileExistsInVideoFolder(filename);
+        if (exists) { ok++; continue; }
+      }
+
+      status.textContent = `Downloading ${filename} …`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const buf = await res.arrayBuffer();
+
+      await saveAltVideoToFolder(filename, buf);
+      ok++;
+    } catch (e) {
+      console.error('Alt video download failed:', filename, e);
+      fail++;
+    }
+  }
+
+  status.textContent = `Done. Success: ${ok}, Failed: ${fail}.`;
+  await renderMissingAltVideos();
 }
 
 function isAss(path) {
@@ -1285,13 +1403,13 @@ async function showPlayer(video, playlist = [], index = 0, autoplay = false) {
   const oldPlayer = document.getElementById('player-video');
   if (oldPlayer) {
     const parent = oldPlayer.parentElement;
-    const newPlayer = oldPlayer.cloneNode(false); // clone without children
-    newPlayer.id = oldPlayer.id; // preserve ID
-    newPlayer.className = oldPlayer.className; // preserve class
+    const newPlayer = oldPlayer.cloneNode(false);
+    newPlayer.id = oldPlayer.id;
+    newPlayer.className = oldPlayer.className;
     parent.replaceChild(newPlayer, oldPlayer);
     window.player = newPlayer;
   }
-  // Always use window.player
+
   const player = window.player;
   hideGifExportUI();
   currentPlaylistVideos = playlist.slice();
@@ -1331,7 +1449,6 @@ async function showPlayer(video, playlist = [], index = 0, autoplay = false) {
   player.src = "file://" + videoPath + "/" + video.filename;
   player.load();
 
-  // === Resume Progress If Saved ===
   const baseName = video.filename.split('/').pop().replace(/\.[^/.]+$/, '');
   const watchedProgress = loadWatchedProgress();
   player.addEventListener('loadedmetadata', function restoreProgressOnce() {
@@ -1364,7 +1481,6 @@ async function showPlayer(video, playlist = [], index = 0, autoplay = false) {
   currentVideoFilename = video.filename;
   currentAltVideo = null;
 
-  // --- Save Watched Progress Regularly ---
   if (progressInterval) clearInterval(progressInterval);
   progressInterval = setInterval(() => {
     if (player.duration > 0 && player.currentTime > 0 && player.currentTime < player.duration - 2) {
@@ -1374,7 +1490,6 @@ async function showPlayer(video, playlist = [], index = 0, autoplay = false) {
     }
   }, 4000);
 
-  // Save when paused or seeked
   player.onpause = player.onseeked = () => {
     const progress = loadWatchedProgress();
     if (
@@ -1392,39 +1507,36 @@ async function showPlayer(video, playlist = [], index = 0, autoplay = false) {
   };
 
   // === Robust subtitle track clearing (fixes subtitle "sticking" bug) ===
-const videoElem = player;
-const selector = subtitleSelector;
-const label = subtitleLabel;
+  const videoElem = player;
+  const selector = subtitleSelector;
+  const label = subtitleLabel;
 
-// Remove all <track> elements and reset their src before removal
-[...videoElem.querySelectorAll('track')].forEach(tr => {
-  tr.src = '';
-  tr.mode = 'disabled';
-  tr.remove();
-});
-// Recreate <track>
-const newTrack = document.createElement('track');
-newTrack.id = 'video-subtitle';
-newTrack.kind = 'subtitles';
-newTrack.label = '';
-newTrack.srclang = '';
-videoElem.appendChild(newTrack);
+  [...videoElem.querySelectorAll('track')].forEach(tr => {
+    tr.src = '';
+    tr.mode = 'disabled';
+    tr.remove();
+  });
+  const newTrack = document.createElement('track');
+  newTrack.id = 'video-subtitle';
+  newTrack.kind = 'subtitles';
+  newTrack.label = '';
+  newTrack.srclang = '';
+  videoElem.appendChild(newTrack);
 
-newTrack.mode = "disabled";
-selector.innerHTML = '<option value="">None</option>';
-selector.style.display = 'none';
-label.style.display = 'none';
+  newTrack.mode = "disabled";
+  selector.innerHTML = '<option value="">None</option>';
+  selector.style.display = 'none';
+  label.style.display = 'none';
 
-// If textTracks persist (rare), forcibly disable all:
-if (videoElem.textTracks && videoElem.textTracks.length) {
-  for (let i = 0; i < videoElem.textTracks.length; ++i) {
-    videoElem.textTracks[i].mode = 'disabled';
+  if (videoElem.textTracks && videoElem.textTracks.length) {
+    for (let i = 0; i < videoElem.textTracks.length; ++i) {
+      videoElem.textTracks[i].mode = 'disabled';
+    }
   }
-}
 
   const subInfo = subtitlesData[video.filename];
   if (subInfo) {
-    for (const [lang, data] of Object.entries(subInfo)) {
+    for (const [lang] of Object.entries(subInfo)) {
       const opt = document.createElement('option');
       opt.value = lang;
       opt.textContent = lang;
@@ -1529,6 +1641,7 @@ if (videoElem.textTracks && videoElem.textTracks.length) {
     if (container) container.style.display = queue.length ? 'block' : 'none';
   }
 }
+
 
 function renderPlaylistQueue() {
   const wrap = document.getElementById('playlist-queue-container');
