@@ -992,7 +992,7 @@ async function loadComments(video, sortType = localStorage.getItem('commentSortT
 
   // --- comment sort by dropdown event handling ---
   const sortSelect = document.getElementById('comment-sort-select');
-  if (sortSelect) {
+    if (sortSelect) {
     sortSelect.value = sortType;
     sortSelect.onchange = null;
     sortSelect.addEventListener('change', function(e) {
@@ -1000,7 +1000,10 @@ async function loadComments(video, sortType = localStorage.getItem('commentSortT
       loadComments(video, e.target.value);
     });
   }
+  const _c = document.getElementById('comments-section');
+  if (_c) _c.scrollTop = 0;
 }
+
 
 
 // === Alt Video URLs loaded from JSON ===
@@ -1438,10 +1441,22 @@ async function showPlayer(video, playlist = [], index = 0, autoplay = false) {
   document.getElementById('video-player').style.display = 'block';
   document.getElementById('player-title').innerText = video.title;
   document.getElementById('player-description').innerText = video.description;
-  document.getElementById('player-date').innerText = formatDate(video.date);
+    document.getElementById('player-date').innerText = formatDate(video.date);
   loadComments(video);
 
+  history.scrollRestoration = 'manual';
+  requestAnimationFrame(() => {
+    window.scrollTo(0, 0);
+    const layout = document.getElementById('player-layout');
+    if (layout) layout.scrollIntoView({ block: 'start' });
+    const comments = document.getElementById('comments-section');
+    if (comments) comments.scrollTop = 0;
+    const chat = document.getElementById('chat-pane');
+    if (chat) chat.scrollTop = 0;
+  });
+
   document.getElementById('gif-btn').onclick = toggleGifExportUI;
+
 
   const subtitleSelector = document.getElementById('subtitleSelector');
   const subtitleLabel = document.getElementById('subtitle-label');
@@ -1506,7 +1521,7 @@ async function showPlayer(video, playlist = [], index = 0, autoplay = false) {
     }
   };
 
-  // === Robust subtitle track clearing (fixes subtitle "sticking" bug) ===
+  // === Subtitle track clearing ===
   const videoElem = player;
   const selector = subtitleSelector;
   const label = subtitleLabel;
