@@ -1,8 +1,13 @@
+// === Storage Keys ===
+const STORAGE_KEYS = {
+  tagFilter: 'tagFilterValue'
+};
+
 // === Global State ===
 let chatFiles = new Set();
 let showBadges = true;
 let sortOrder = 'newest';
-let tagFilter = 'all';
+let tagFilter = localStorage.getItem(STORAGE_KEYS.tagFilter) || 'all';
 let selectedPlaylist = 'all';
 let rawVideoData = [];
 let videoPath = "";
@@ -28,6 +33,20 @@ let isQueueShuffled = false;
 let isQueueReversed = false;
 let currentVideoFilename = null;
 let currentAltVideo = null;
+
+function syncTagFilterUIFromState() {
+  const sel = document.getElementById('tagFilter');
+  if (!sel) return;
+
+  const hasOption = Array.from(sel.options).some(o => o.value === tagFilter);
+  if (hasOption) {
+    sel.value = tagFilter;
+  } else {
+    tagFilter = 'all';
+    sel.value = 'all';
+    localStorage.setItem(STORAGE_KEYS.tagFilter, 'all');
+  }
+}
 
 // === YouTube Tab Initialization Flag ===
 let youtubeTabInitialized = false;
@@ -526,6 +545,7 @@ async function initializeYouTubeTab(force = false) {
   }
 
   populatePlaylistOptions();
+  syncTagFilterUIFromState()
   renderVideoGrid();
 
   // === Set up all YouTube grid/queue/filter controls ===
@@ -572,6 +592,7 @@ async function initializeYouTubeTab(force = false) {
     if (filterSelect) {
       filterSelect.addEventListener('change', e => {
         tagFilter = e.target.value;
+        localStorage.setItem(STORAGE_KEYS.tagFilter, tagFilter);
         renderVideoGrid();
       });
     }
@@ -645,6 +666,7 @@ if (randomBtn && !randomBtn._handlerAdded) {
     }
     selectedPlaylist = 'all';
     tagFilter = 'all';
+    localStorage.setItem(STORAGE_KEYS.tagFilter, 'all');
     document.getElementById('playlistSelect').value = 'all';
     document.getElementById('tagFilter').value = 'all';
     renderVideoGrid();
@@ -798,7 +820,7 @@ async function loadComments(video, sortType = localStorage.getItem('commentSortT
 
   // --- CONFIGURATION ---
   const profilePics = [...Array(34)].map((_, i) => `PFPs/pfp${i + 1}.png`);
-  const TAMERS_AUTHORS = ["@Tamers12345Official", "Tamers12345Official", "@Tamers12345mlp", "Tamers12345mlp", "@Tamers12345MLP", "Tamers12345MLP", "@Tamers12345", "Tamers12345", "@tamers12345", "tamers12345"];
+  const TAMERS_AUTHORS = ["@Tamers12345Official", "Tamers12345Official", "@Tamers12345mlp", "Tamers12345mlp", "@Tamers12345MLP", "Tamers12345MLP", "@Tamers12345", "Tamers12345", "@tamers12345", "tamers12345", "@TamersDandysWorld", "TamersDandysWorld"];
   const TAMERS_PFP = "PFPs/tamers.png";
 
   // --- HELPERS ---
@@ -1183,22 +1205,34 @@ async function loadAssSubtitle(subtitlePath, videoElement) {
 function populatePlaylistOptions() {
   const playlistSelect = document.getElementById('playlistSelect');
   if (!playlistSelect || !Array.isArray(rawVideoData)) return;
+
   playlistSelect.innerHTML = '<option value="all">All</option>';
+
+  // Tags that should NOT appear as playlist options, these are for the filters
+ const excluded = new Set(['mlp', "Dandy's World"]);
+
   const tagSet = new Set();
+
   rawVideoData.forEach(video => {
     if (Array.isArray(video.tags)) {
       video.tags.forEach(t => {
-        if (t !== 'mlp') tagSet.add(t);
+        if (!excluded.has(t)) tagSet.add(t);
       });
     }
   });
+
   const tagArray = Array.from(tagSet);
+
   const customOrder = [
-    'SU Episodes', 'MLP Episodes', 'SU Lore Arc 1 (The Prophecy/The Boys)',
+    'SU Episodes',
+    'MLP Episodes',
+    "Dandy's World Episodes",
+    'SU Lore Arc 1 (The Prophecy/The Boys)',
     'Obama Arc', 'Parodies', 'Zatch Bell', 'Holiday Special', 'Christmas',
     'Halloween', 'Thanksgiving', "Valentine's Day", '4th of July',
     "St. Patrick's Day", '9/11'
   ];
+
   tagArray.sort((a, b) => {
     const ai = customOrder.indexOf(a), bi = customOrder.indexOf(b);
     if (ai !== -1 && bi !== -1) return ai - bi;
@@ -1206,6 +1240,7 @@ function populatePlaylistOptions() {
     if (bi !== -1) return 1;
     return a.localeCompare(b, undefined, { sensitivity: 'base' });
   });
+
   tagArray.forEach(tag => {
     const opt = document.createElement('option');
     opt.value = tag;
@@ -1252,12 +1287,31 @@ function renderVideoGrid() {
       Array.isArray(v.tags) && v.tags.includes(selectedPlaylist)
     );
   } else {
-    if (tagFilter === 'only-mlp') {
-      videos = videos.filter(v => Array.isArray(v.tags) && v.tags.includes('mlp'));
-    } else if (tagFilter === 'no-mlp') {
-      videos = videos.filter(v => !(Array.isArray(v.tags) && v.tags.includes('mlp')));
-    }
+  const normalizeTag = (t) => String(t || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  const hasNormTag = (v, norm) => Array.isArray(v.tags) && v.tags.some(t => normalizeTag(t) === norm);
+
+  const isMLP = (v) => hasNormTag(v, 'mlp');
+  const isDandysWorld = (v) => hasNormTag(v, 'dandysworld'); // matches: "dandysworld", "dandy's world", "dandys-world", etc.
+
+  if (tagFilter === 'only-mlp') {
+    videos = videos.filter(isMLP);
+
+  } else if (tagFilter === 'no-mlp') {
+    videos = videos.filter(v => !isMLP(v));
+
+  } else if (tagFilter === 'only-dandys-world') {
+    videos = videos.filter(isDandysWorld);
+
+  } else if (tagFilter === 'no-dandys-world') {
+    videos = videos.filter(v => !isDandysWorld(v));
+
+  } else if (tagFilter === 'no-mlp-no-dandys-world') {
+    videos = videos.filter(v => !isMLP(v) && !isDandysWorld(v));
+
+  } else if (tagFilter === 'only-mlp-dandys-world') {
+    videos = videos.filter(v => isMLP(v) || isDandysWorld(v));
   }
+}
 
   videos.forEach(video => {
     const baseName = video.filename.split('/').pop().replace(/\.[^/.]+$/, '');
