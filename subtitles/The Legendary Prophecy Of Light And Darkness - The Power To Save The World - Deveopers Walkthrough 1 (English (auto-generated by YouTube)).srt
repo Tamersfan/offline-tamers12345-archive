@@ -1,0 +1,556 @@
+1
+00:00:00,640 --> 00:00:14,490
+[Music]
+
+2
+00:00:14,500 --> 00:00:17,980
+sup everyone came with a five here with
+
+3
+00:00:17,990 --> 00:00:19,990
+the very first developer's update for my
+
+4
+00:00:20,000 --> 00:00:22,359
+video game the ledger a prophecy of
+
+5
+00:00:22,369 --> 00:00:24,490
+light and darkness the power to save the
+
+6
+00:00:24,500 --> 00:00:27,519
+world in the developers update I'll be
+
+7
+00:00:27,529 --> 00:00:29,890
+showing you many things from a bit of
+
+8
+00:00:29,900 --> 00:00:32,200
+gameplay to the how the mechanics work
+
+9
+00:00:32,210 --> 00:00:35,440
+within my game first off as you can say
+
+10
+00:00:35,450 --> 00:00:37,600
+you use the arrow keys to walk around
+
+11
+00:00:37,610 --> 00:00:40,090
+you use spacebar to interact with the
+
+12
+00:00:40,100 --> 00:00:44,080
+objects like so I love apples my book
+
+13
+00:00:44,090 --> 00:00:46,060
+from bumble bee owns an apple tree so I
+
+14
+00:00:46,070 --> 00:00:48,759
+get fresh ones every day I have to sneak
+
+15
+00:00:48,769 --> 00:00:50,410
+them into our bedroom to eat them though
+
+16
+00:00:50,420 --> 00:00:53,219
+uncle chip gets angled we eat food
+
+17
+00:00:53,229 --> 00:00:56,320
+without permission even if it is given
+
+18
+00:00:56,330 --> 00:00:59,439
+to us now as you can see this right here
+
+19
+00:00:59,449 --> 00:01:02,530
+is a playable character saying now if
+
+20
+00:01:02,540 --> 00:01:05,469
+you press the X button you can bring up
+
+21
+00:01:05,479 --> 00:01:10,240
+the menu on this side of the screen will
+
+22
+00:01:10,250 --> 00:01:12,000
+be your party as you can see right now
+
+23
+00:01:12,010 --> 00:01:14,530
+saying it is all in the only kitchen
+
+24
+00:01:14,540 --> 00:01:16,660
+Authority and your subtitle is here
+
+25
+00:01:16,670 --> 00:01:19,240
+because he is the hero of our story he
+
+26
+00:01:19,250 --> 00:01:22,929
+is killing level 1 and we got 0 gold the
+
+27
+00:01:22,939 --> 00:01:24,700
+reason of this is because we are still
+
+28
+00:01:24,710 --> 00:01:26,770
+at the beginning of the game over here
+
+29
+00:01:26,780 --> 00:01:29,410
+you can see many other things such as
+
+30
+00:01:29,420 --> 00:01:32,980
+your items skills equips status
+
+31
+00:01:32,990 --> 00:01:36,190
+formation options save and game and
+
+32
+00:01:36,200 --> 00:01:39,789
+right now the menu isn't all the flesh
+
+33
+00:01:39,799 --> 00:01:42,130
+out but in due time I will be however if
+
+34
+00:01:42,140 --> 00:01:47,050
+you go skill and look at talk skills you
+
+35
+00:01:47,060 --> 00:01:48,450
+can see that right now
+
+36
+00:01:48,460 --> 00:01:54,219
+no stew erase heal and spa then not only
+
+37
+00:01:54,229 --> 00:01:55,990
+can you interact with objects in the
+
+38
+00:01:56,000 --> 00:01:56,800
+overworld
+
+39
+00:01:56,810 --> 00:01:58,959
+but you can also interact with other
+
+40
+00:01:58,969 --> 00:02:01,870
+characters this green man right here is
+
+41
+00:02:01,880 --> 00:02:06,389
+named the man he is sentenced twin rova
+
+42
+00:02:06,399 --> 00:02:09,820
+warning saying you aged potatoes it's
+
+43
+00:02:09,830 --> 00:02:11,980
+almost sunrise the man
+
+44
+00:02:11,990 --> 00:02:14,950
+I'm not picking taters today bro don't
+
+45
+00:02:14,960 --> 00:02:16,990
+say that so loud you don't want to chip
+
+46
+00:02:17,000 --> 00:02:19,540
+to get mad at you I'm serious bro I
+
+47
+00:02:19,550 --> 00:02:22,390
+don't care uncle chip hears me he needs
+
+48
+00:02:22,400 --> 00:02:24,600
+to know the way he treats us his
+
+49
+00:02:24,610 --> 00:02:28,770
+family now as you can probably tell the
+
+50
+00:02:28,780 --> 00:02:30,690
+story is gonna be pretty damn deep
+
+51
+00:02:30,700 --> 00:02:34,140
+if you're wondering what by the
+
+52
+00:02:34,150 --> 00:02:35,430
+way if you're wondering why I'm filming
+
+53
+00:02:35,440 --> 00:02:36,900
+with the camera it's because Mac appear
+
+54
+00:02:36,910 --> 00:02:39,660
+kind of sucks boss so I can find any
+
+55
+00:02:39,670 --> 00:02:41,400
+girl according to some week to record
+
+56
+00:02:41,410 --> 00:02:45,990
+the game without my computer lagging now
+
+57
+00:02:46,000 --> 00:02:48,150
+over here we can see swooping around
+
+58
+00:02:48,160 --> 00:02:51,690
+if we talk to a dis is Stephanie
+
+59
+00:02:51,700 --> 00:02:55,530
+hey Stephanie you're up oh well yeah I
+
+60
+00:02:55,540 --> 00:02:57,270
+gotta get to what kind of tell you this
+
+61
+00:02:57,280 --> 00:02:59,280
+last week I've got to count them and
+
+62
+00:02:59,290 --> 00:03:01,800
+uncle Chet B miles like steel-drum I saw
+
+63
+00:03:01,810 --> 00:03:05,100
+so don't want that again now over the
+
+64
+00:03:05,110 --> 00:03:07,170
+course of the game you'll be writing to
+
+65
+00:03:07,180 --> 00:03:10,590
+many people not just your sibs and
+
+66
+00:03:10,600 --> 00:03:12,840
+shared but many people who will be
+
+67
+00:03:12,850 --> 00:03:14,820
+coming with you longer right along the
+
+68
+00:03:14,830 --> 00:03:19,740
+way now this is this is just begin the
+
+69
+00:03:19,750 --> 00:03:23,250
+game however to continue the story we
+
+70
+00:03:23,260 --> 00:03:25,620
+will go here go down as you could see in
+
+71
+00:03:25,630 --> 00:03:27,210
+on our cuts and you'll be pulled into a
+
+72
+00:03:27,220 --> 00:03:30,630
+cutscene well today's a day the day that
+
+73
+00:03:30,640 --> 00:03:32,850
+we begin our families freedom bro away
+
+74
+00:03:32,860 --> 00:03:35,880
+yeah you're not going to fire without us
+
+75
+00:03:35,890 --> 00:03:38,640
+are you Oh looks like the man said you
+
+76
+00:03:38,650 --> 00:03:39,449
+are coming with us
+
+77
+00:03:39,459 --> 00:03:43,080
+that's cool the more manpower as you can
+
+78
+00:03:43,090 --> 00:03:45,240
+see we are heading that's just you go
+
+79
+00:03:45,250 --> 00:03:50,520
+Bianca tips act now as you can see right
+
+80
+00:03:50,530 --> 00:03:54,060
+here there are other pathways however of
+
+81
+00:03:54,070 --> 00:03:54,449
+course
+
+82
+00:03:54,459 --> 00:03:56,820
+Nachi you cannot leave until your
+
+83
+00:03:56,830 --> 00:04:00,180
+objectives finish and an objective right
+
+84
+00:04:00,190 --> 00:04:02,390
+now is to take down uncle chug
+
+85
+00:04:02,400 --> 00:04:07,140
+uncle chair now and you can see uncle
+
+86
+00:04:07,150 --> 00:04:09,870
+chip is walking right now we can't let
+
+87
+00:04:09,880 --> 00:04:13,949
+that we got a beats and ass well if
+
+88
+00:04:13,959 --> 00:04:16,920
+isn't my three little I'll see
+
+89
+00:04:16,930 --> 00:04:19,409
+y'all killing any taters and just about
+
+90
+00:04:19,419 --> 00:04:21,840
+stand it's just about sunrise that means
+
+91
+00:04:21,850 --> 00:04:23,340
+y'all about tennis late for when you're
+
+92
+00:04:23,350 --> 00:04:25,590
+supposed to begin harvesting do you live
+
+93
+00:04:25,600 --> 00:04:27,330
+boys and girls need a spanking as
+
+94
+00:04:27,340 --> 00:04:29,670
+punishment you should shut the up
+
+95
+00:04:29,680 --> 00:04:32,580
+or man yeah you're not going to be
+
+96
+00:04:32,590 --> 00:04:34,440
+treating us as your cute little
+
+97
+00:04:34,450 --> 00:04:38,719
+any longer what do you just say Punk now
+
+98
+00:04:38,729 --> 00:04:41,580
+you'll be able to see be able to see
+
+99
+00:04:41,590 --> 00:04:43,260
+more of the conversation when you play
+
+100
+00:04:43,270 --> 00:04:45,300
+the game itself now for now I'll be
+
+101
+00:04:45,310 --> 00:04:47,940
+skipping straight to the striking of
+
+102
+00:04:47,950 --> 00:04:50,930
+being in the battle as you can see once
+
+103
+00:04:50,940 --> 00:04:54,990
+the battle began tough playing each
+
+104
+00:04:55,000 --> 00:04:59,640
+other so this is this is a song for the
+
+105
+00:04:59,650 --> 00:05:00,870
+football cause you can see
+
+106
+00:05:00,880 --> 00:05:03,870
+thankful for us to attack who we will
+
+107
+00:05:03,880 --> 00:05:08,100
+hit the spacebar does uncle chip the
+
+108
+00:05:08,110 --> 00:05:12,330
+male attacking kid again attack and you
+
+109
+00:05:12,340 --> 00:05:14,370
+continue to give it damage and she took
+
+110
+00:05:14,380 --> 00:05:35,290
+us down this is we would nothing
+
+111
+00:05:35,300 --> 00:05:38,379
+however as you can see this wasn't
+
+112
+00:05:38,389 --> 00:05:42,640
+unwinnable battle one thing that my game
+
+113
+00:05:42,650 --> 00:05:45,309
+makes it unique is some Bells are just
+
+114
+00:05:45,319 --> 00:05:49,930
+out rods unwinnable and when this
+
+115
+00:05:49,940 --> 00:05:53,080
+happens I guess you gotta you just gotta
+
+116
+00:05:53,090 --> 00:05:56,529
+move on it's demon - as you can see
+
+117
+00:05:56,539 --> 00:05:58,360
+I'll go check carry this over to the
+
+118
+00:05:58,370 --> 00:05:59,260
+waterfall
+
+119
+00:05:59,270 --> 00:06:06,640
+Tim's begging um and he throws he jet he
+
+120
+00:06:06,650 --> 00:06:10,270
+just grabs singing by the ass and close
+
+121
+00:06:10,280 --> 00:06:23,559
+him off the water bro no bro
+
+122
+00:06:23,569 --> 00:06:33,189
+say bandits is visiting wow that's fun I
+
+123
+00:06:33,199 --> 00:06:37,680
+think if you wanted to stop by my Silvia
+
+124
+00:06:37,690 --> 00:06:41,490
+what's gonna happen
+
+125
+00:06:41,500 --> 00:06:45,939
+what's this it was on that day that my
+
+126
+00:06:45,949 --> 00:06:48,790
+best friend my life on the hold of my
+
+127
+00:06:48,800 --> 00:06:53,700
+heart
+
+128
+00:06:53,710 --> 00:06:57,490
+say saying my love is that you as you
+
+129
+00:06:57,500 --> 00:07:02,170
+can see the prologue has ended and this
+
+130
+00:07:02,180 --> 00:07:06,850
+is will your story will begin when you
+
+131
+00:07:06,860 --> 00:07:11,080
+buy my game peace out
+
+132
+00:07:11,090 --> 00:07:13,899
+this has been the end of the first
+
+133
+00:07:13,909 --> 00:07:18,700
+developers update I hope you enjoy my
+
+134
+00:07:18,710 --> 00:07:21,879
+fun my kickstart will be up soon I
+
+135
+00:07:21,889 --> 00:07:26,680
+really hope that your project if
+
+136
+00:07:26,690 --> 00:07:28,240
+this looks good to you your final
+
+137
+00:07:28,250 --> 00:07:31,270
+project and we can and we can make this
+
+138
+00:07:31,280 --> 00:07:35,499
+the best game ever game of 2018 whoa
+
+139
+00:07:35,509 --> 00:07:38,979
+let's go
+

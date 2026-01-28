@@ -1261,6 +1261,21 @@ video::-moz-media-controls-fullscreen-button {
   object-fit: contain;
 }
 
+/* Center WebVTT/SRT subtitles */
+#player-video::cue {
+  text-align: center;
+}
+/* Force full-width centering for subtitles */
+#player-video::-webkit-media-text-track-container {
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: flex-end !important;
+  margin: 0 !important;
+}
+
 video.normal {
   width: 960px;
   height: 540px;
@@ -1402,4 +1417,3 @@ video.theater {
   transform: translateZ(0);
   will-change: scroll-position;
 }
-

@@ -1923,6 +1923,24 @@ function changeSubtitle(lang) {
         });
       }, 100);
     } else {
+      const centerHtmlTrackCues = () => {
+        const tt = track?.track;
+        if (!tt) return;
+        const apply = () => {
+          if (!tt.cues) return;
+          for (const cue of tt.cues) {
+            try {
+              cue.align = 'center';
+              cue.position = 50;
+              cue.positionAlign = 'center';
+              cue.size = 80;
+            } catch (e) {}
+          }
+        };
+        apply();
+        tt.oncuechange = apply;
+      };
+      track.addEventListener('load', centerHtmlTrackCues, { once: true });
       track.src = subtitlePath;
       track.label = lang;
       track.srclang = "pl";
@@ -1933,6 +1951,7 @@ function changeSubtitle(lang) {
         if (video.textTracks.length > 0) {
           video.textTracks[0].mode = 'showing';
         }
+        centerHtmlTrackCues();
       };
     }
   }
