@@ -35,6 +35,7 @@
       // === TABS LOGIC ===
       const tabs = [
         { btn: 'tab-youtube', section: 'app-content' },
+        { btn: 'tab-youtube-posts', section: 'youtube-posts-section' },
         { btn: 'tab-deviantart', section: 'deviantart-section' },
         { btn: 'tab-tumblr', section: 'tumblr-section' },
         { btn: 'tab-tumblr2', section: 'tumblr2-section' },
@@ -80,6 +81,7 @@
   
   <div class="tab-container">
     <button id="tab-youtube" class="tab-button active">YouTube</button>
+    <button id="tab-youtube-posts" class="tab-button">YouTube Posts</button>
     <button id="tab-deviantart" class="tab-button">DeviantArt</button>
     <button id="tab-tumblr" class="tab-button">Tumblr Blog 1</button>
     <button id="tab-tumblr2" class="tab-button">Tumblr Blog 2</button>
@@ -235,6 +237,10 @@
         <div id="playlist-queue" class="playlist-queue"></div>
       </div>
     </div>
+  </div>
+
+  <div id="youtube-posts-section" style="display:none;">
+    <div id="youtube-posts-feed" class="yt-posts-feed"></div>
   </div>
 
   <div id="deviantart-section" style="display:none;">
@@ -418,4 +424,3 @@ window.addEventListener('DOMContentLoaded', function() {
 </script>
 </body>
 </html>
-

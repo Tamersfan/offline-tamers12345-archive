@@ -261,6 +261,7 @@ window.initDeviantArt = () => {
 // Tab handlers
 document.addEventListener('DOMContentLoaded', () => {
   const ytTab  = document.getElementById('tab-youtube');
+  const postsTab = document.getElementById('tab-youtube-posts');
   const daTab  = document.getElementById('tab-deviantart');
   const tu1Tab = document.getElementById('tab-tumblr');
   const tu2Tab = document.getElementById('tab-tumblr2');
@@ -268,6 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Pause DeviantArt audio when switching away
   ytTab?.addEventListener('click',  () => { audio.pause(); updateMusicUI(); });
+  postsTab?.addEventListener('click', () => { audio.pause(); updateMusicUI(); });
   tu1Tab?.addEventListener('click', () => { audio.pause(); updateMusicUI(); });
   tu2Tab?.addEventListener('click', () => { audio.pause(); updateMusicUI(); });
   creditsTab?.addEventListener('click', () => { audio.pause(); updateMusicUI(); }); // <--- ADD THIS LINE

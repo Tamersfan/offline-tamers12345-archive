@@ -11,6 +11,7 @@
 .tab-container,
 #startup-screen,
 #app-content,
+#youtube-posts-section,
 #deviantart-section,
 #tumblr-section,
 #tumblr2-section,
@@ -1227,6 +1228,831 @@ video::-webkit-media-controls-fullscreen-button {
 
 video::-moz-media-controls-fullscreen-button {
   display: none !important;
+}
+
+/* === YouTube Posts === */
+#youtube-posts-section {
+  padding: 18px 0 40px;
+}
+
+.yt-posts-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 16px 32px;
+}
+
+.yt-posts-loading,
+.yt-posts-empty {
+  text-align: center;
+  color: #bbb;
+  padding: 24px 0;
+}
+
+.yt-post-card {
+  background: #1c1c1c;
+  border: 1px solid #2b2b2b;
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 4px 14px #0004;
+}
+
+.yt-post-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.yt-post-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #111;
+  border: 1px solid #2b2b2b;
+}
+
+.yt-post-author {
+  font-weight: 700;
+  font-size: 1.05em;
+}
+
+.yt-post-meta {
+  color: #b6b6b6;
+  font-size: 0.9em;
+}
+
+.yt-post-text {
+  margin: 6px 0 12px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+}
+
+.yt-post-media {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.yt-post-image {
+  width: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid #2b2b2b;
+  background: #111;
+}
+
+.yt-post-link-preview {
+  width: auto;
+  max-width: 360px;
+  justify-self: start;
+}
+
+.yt-post-comments {
+  margin-top: 8px;
+  border-top: 1px solid #2a2a2a;
+  padding-top: 12px;
+}
+
+.yt-post-comments h4 {
+  margin: 0 0 10px;
+  font-size: 1.02em;
+}
+
+.yt-post-comments-toggle {
+  background: none;
+  color: #8cf;
+  border: none;
+  cursor: pointer;
+  font-size: 0.95em;
+  padding: 4px 0 8px;
+  text-align: left;
+}
+
+.yt-post-comments-toggle:hover {
+  text-decoration: underline;
+}
+
+.yt-post-comments .yt-posts-empty {
+  text-align: left;
+  padding: 4px 0;
+}
+
+.yt-post-comments .comment {
+  border-bottom: none;
+  padding-bottom: 6px;
+  margin-bottom: 12px;
+}
+
+.yt-post-comment-pinned {
+  font-size: 0.82em;
+  color: #f6b73c;
+  font-weight: 700;
+}
+
+.yt-poll {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 6px 0 12px;
+}
+
+.yt-poll-option {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: #161616;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.yt-poll-option img {
+  width: 120px;
+  height: 70px;
+  border-radius: 6px;
+  object-fit: cover;
+  border: 1px solid #2b2b2b;
+  background: #101010;
+}
+
+.yt-poll-option-body {
+  flex: 1;
+}
+
+.yt-poll-option-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.yt-poll-option-sub {
+  font-size: 0.88em;
+  color: #b6b6b6;
+  margin-top: 2px;
+}
+
+.yt-poll-bar {
+  height: 8px;
+  background: #2a2a2a;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.yt-poll-bar-fill {
+  height: 100%;
+  background: #3ea6ff;
+}
+
+.yt-poll-percent {
+  font-size: 0.88em;
+  color: #c2c2c2;
+  margin-top: 4px;
+}
+
+.yt-poll-votes {
+  font-size: 0.85em;
+  color: #b6b6b6;
+  margin-top: 4px;
+}
+
+body[data-theme="light"] .yt-post-card {
+  background: #ffffff;
+  border-color: #d9d9d9;
+  color: #1b1b1b;
+  box-shadow: 0 4px 14px #0001;
+}
+body[data-theme="light"] .yt-post-meta {
+  color: #555;
+}
+body[data-theme="light"] .yt-post-image,
+body[data-theme="light"] .yt-poll-option img {
+  border-color: #d9d9d9;
+}
+body[data-theme="light"] .yt-poll-option {
+  background: #f2f2f2;
+  border-color: #d9d9d9;
+}
+body[data-theme="light"] .yt-poll-bar {
+  background: #dcdcdc;
+}
+
+body[data-theme="pony"] .yt-post-card {
+  background: #f7dfff;
+  color: #5935a2;
+  border-color: #d7b8ef;
+  box-shadow: 0 4px 14px #0001;
+}
+body[data-theme="pony"] .yt-post-meta {
+  color: #7a4de3;
+}
+body[data-theme="pony"] .yt-post-comments {
+  border-top-color: #d7b8ef;
+}
+body[data-theme="pony"] .yt-post-comments-toggle {
+  color: #7a4de3;
+}
+body[data-theme="pony"] .yt-post-image,
+body[data-theme="pony"] .yt-post-avatar,
+body[data-theme="pony"] .yt-poll-option img {
+  border-color: #d7b8ef;
+  background: #fff;
+}
+body[data-theme="pony"] .yt-poll-option {
+  background: #f3ffe6;
+  border-color: #d7f0c5;
+  color: #5935a2;
+}
+body[data-theme="pony"] .yt-poll-bar {
+  background: #e7d1f6;
+}
+body[data-theme="pony"] .yt-poll-option-sub,
+body[data-theme="pony"] .yt-poll-percent,
+body[data-theme="pony"] .yt-poll-votes {
+  color: #6c3fbf;
+}
+
+body[data-theme="retro"] .yt-post-card {
+  background: #141d26;
+  color: #39ff14;
+  border-color: #0ff;
+  box-shadow: 0 4px 14px #0004;
+}
+body[data-theme="retro"] .yt-post-meta {
+  color: #39ff14;
+}
+body[data-theme="retro"] .yt-post-comments {
+  border-top-color: #0ff;
+}
+body[data-theme="retro"] .yt-post-comments-toggle {
+  color: #0ff;
+}
+body[data-theme="retro"] .yt-post-image,
+body[data-theme="retro"] .yt-post-avatar,
+body[data-theme="retro"] .yt-poll-option img {
+  border-color: #0ff;
+  background: #0b1118;
+}
+body[data-theme="retro"] .yt-poll-option {
+  background: #0f1a22;
+  border-color: #0ff;
+  color: #39ff14;
+}
+body[data-theme="retro"] .yt-poll-bar {
+  background: #0b1118;
+}
+body[data-theme="retro"] .yt-poll-bar-fill {
+  background: #39ff14;
+}
+body[data-theme="retro"] .yt-poll-option-sub,
+body[data-theme="retro"] .yt-poll-percent,
+body[data-theme="retro"] .yt-poll-votes {
+  color: #39ff14;
+}
+
+body[data-theme="midnight"] .yt-post-card {
+  background: #122646;
+  color: #e0f0ff;
+  border-color: #476fb2;
+  box-shadow: 0 4px 14px #0004;
+}
+body[data-theme="midnight"] .yt-post-meta {
+  color: #b2d3ef;
+}
+body[data-theme="midnight"] .yt-post-comments {
+  border-top-color: #476fb2;
+}
+body[data-theme="midnight"] .yt-post-comments-toggle {
+  color: #8bb5f0;
+}
+body[data-theme="midnight"] .yt-post-image,
+body[data-theme="midnight"] .yt-post-avatar,
+body[data-theme="midnight"] .yt-poll-option img {
+  border-color: #476fb2;
+  background: #0d1f3a;
+}
+body[data-theme="midnight"] .yt-poll-option {
+  background: #1d3250;
+  border-color: #476fb2;
+  color: #e0f0ff;
+}
+body[data-theme="midnight"] .yt-poll-bar {
+  background: #0d1f3a;
+}
+body[data-theme="midnight"] .yt-poll-option-sub,
+body[data-theme="midnight"] .yt-poll-percent,
+body[data-theme="midnight"] .yt-poll-votes {
+  color: #c1e6ff;
+}
+
+body[data-theme="goth"] .yt-post-card {
+  background: #2a1d2f;
+  color: #faf6ff;
+  border-color: #d3005b;
+  box-shadow: 0 4px 14px #0004;
+}
+body[data-theme="goth"] .yt-post-meta {
+  color: #f3c2d8;
+}
+body[data-theme="goth"] .yt-post-comments {
+  border-top-color: #d3005b;
+}
+body[data-theme="goth"] .yt-post-comments-toggle {
+  color: #d3005b;
+}
+body[data-theme="goth"] .yt-post-image,
+body[data-theme="goth"] .yt-post-avatar,
+body[data-theme="goth"] .yt-poll-option img {
+  border-color: #d3005b;
+  background: #1f1524;
+}
+body[data-theme="goth"] .yt-poll-option {
+  background: #341c3a;
+  border-color: #d3005b;
+  color: #faf6ff;
+}
+body[data-theme="goth"] .yt-poll-bar {
+  background: #1f1524;
+}
+body[data-theme="goth"] .yt-poll-bar-fill {
+  background: #d3005b;
+}
+body[data-theme="goth"] .yt-poll-option-sub,
+body[data-theme="goth"] .yt-poll-percent,
+body[data-theme="goth"] .yt-poll-votes {
+  color: #f3c2d8;
+}
+
+body[data-theme="solarflair"] .yt-post-card {
+  background: #ffd74b;
+  color: #b37006;
+  border-color: #ff9c1a;
+  box-shadow: 0 4px 14px #0002;
+}
+body[data-theme="solarflair"] .yt-post-meta {
+  color: #b37006;
+}
+body[data-theme="solarflair"] .yt-post-comments {
+  border-top-color: #ff9c1a;
+}
+body[data-theme="solarflair"] .yt-post-comments-toggle {
+  color: #ff9c1a;
+}
+body[data-theme="solarflair"] .yt-post-image,
+body[data-theme="solarflair"] .yt-post-avatar,
+body[data-theme="solarflair"] .yt-poll-option img {
+  border-color: #ff9c1a;
+  background: #fff3bf;
+}
+body[data-theme="solarflair"] .yt-poll-option {
+  background: #ffeb8a;
+  border-color: #ff9c1a;
+  color: #b37006;
+}
+body[data-theme="solarflair"] .yt-poll-bar {
+  background: #ffd74b;
+}
+body[data-theme="solarflair"] .yt-poll-bar-fill {
+  background: #ff9c1a;
+}
+body[data-theme="solarflair"] .yt-poll-option-sub,
+body[data-theme="solarflair"] .yt-poll-percent,
+body[data-theme="solarflair"] .yt-poll-votes {
+  color: #b37006;
+}
+
+body[data-theme="yotsuba"] .yt-post-card {
+  background: #b6ddb5;
+  color: #254217;
+  border-color: #8bbf7f;
+  box-shadow: 0 4px 14px #0002;
+}
+body[data-theme="yotsuba"] .yt-post-meta {
+  color: #3b5b2b;
+}
+body[data-theme="yotsuba"] .yt-post-comments {
+  border-top-color: #8bbf7f;
+}
+body[data-theme="yotsuba"] .yt-post-comments-toggle {
+  color: #3b5b2b;
+}
+body[data-theme="yotsuba"] .yt-post-image,
+body[data-theme="yotsuba"] .yt-post-avatar,
+body[data-theme="yotsuba"] .yt-poll-option img {
+  border-color: #8bbf7f;
+  background: #eef9ed;
+}
+body[data-theme="yotsuba"] .yt-poll-option {
+  background: #d0e7d2;
+  border-color: #8bbf7f;
+  color: #254217;
+}
+body[data-theme="yotsuba"] .yt-poll-bar {
+  background: #b6ddb5;
+}
+body[data-theme="yotsuba"] .yt-poll-bar-fill {
+  background: #8bbf7f;
+}
+body[data-theme="yotsuba"] .yt-poll-option-sub,
+body[data-theme="yotsuba"] .yt-poll-percent,
+body[data-theme="yotsuba"] .yt-poll-votes {
+  color: #254217;
+}
+
+body[data-theme="discord"] .yt-post-card {
+  background: #2f3136;
+  color: #fff;
+  border-color: #5865f2;
+  box-shadow: 0 4px 14px #0004;
+}
+body[data-theme="discord"] .yt-post-meta {
+  color: #c6c9ff;
+}
+body[data-theme="discord"] .yt-post-comments {
+  border-top-color: #5865f2;
+}
+body[data-theme="discord"] .yt-post-comments-toggle {
+  color: #c6c9ff;
+}
+body[data-theme="discord"] .yt-post-image,
+body[data-theme="discord"] .yt-post-avatar,
+body[data-theme="discord"] .yt-poll-option img {
+  border-color: #5865f2;
+  background: #23272a;
+}
+body[data-theme="discord"] .yt-poll-option {
+  background: #23272a;
+  border-color: #5865f2;
+  color: #fff;
+}
+body[data-theme="discord"] .yt-poll-bar {
+  background: #1d2024;
+}
+body[data-theme="discord"] .yt-poll-bar-fill {
+  background: #5865f2;
+}
+body[data-theme="discord"] .yt-poll-option-sub,
+body[data-theme="discord"] .yt-poll-percent,
+body[data-theme="discord"] .yt-poll-votes {
+  color: #c6c9ff;
+}
+
+body[data-theme="strawberry"] .yt-post-card {
+  background: #ff6090;
+  color: #fff;
+  border-color: #b3114b;
+  box-shadow: 0 4px 14px #0002;
+}
+body[data-theme="strawberry"] .yt-post-meta {
+  color: #ffe4f3;
+}
+body[data-theme="strawberry"] .yt-post-comments {
+  border-top-color: #b3114b;
+}
+body[data-theme="strawberry"] .yt-post-comments-toggle {
+  color: #ffe4f3;
+}
+body[data-theme="strawberry"] .yt-post-image,
+body[data-theme="strawberry"] .yt-post-avatar,
+body[data-theme="strawberry"] .yt-poll-option img {
+  border-color: #b3114b;
+  background: #ffdbe7;
+}
+body[data-theme="strawberry"] .yt-poll-option {
+  background: #ffdbe7;
+  border-color: #b3114b;
+  color: #b3114b;
+}
+body[data-theme="strawberry"] .yt-poll-bar {
+  background: #ffb4cf;
+}
+body[data-theme="strawberry"] .yt-poll-bar-fill {
+  background: #b3114b;
+}
+body[data-theme="strawberry"] .yt-poll-option-sub,
+body[data-theme="strawberry"] .yt-poll-percent,
+body[data-theme="strawberry"] .yt-poll-votes {
+  color: #b3114b;
+}
+
+body[data-theme="coconut"] .yt-post-card {
+  background: #fff;
+  color: #40322f;
+  border-color: #e7ceb2;
+  box-shadow: 0 4px 14px #0001;
+}
+body[data-theme="coconut"] .yt-post-meta {
+  color: #6d5a55;
+}
+body[data-theme="coconut"] .yt-post-comments {
+  border-top-color: #e7ceb2;
+}
+body[data-theme="coconut"] .yt-post-comments-toggle {
+  color: #7ec49d;
+}
+body[data-theme="coconut"] .yt-post-image,
+body[data-theme="coconut"] .yt-post-avatar,
+body[data-theme="coconut"] .yt-poll-option img {
+  border-color: #e7ceb2;
+  background: #f8f7f3;
+}
+body[data-theme="coconut"] .yt-poll-option {
+  background: #e7ceb2;
+  border-color: #7ec49d;
+  color: #40322f;
+}
+body[data-theme="coconut"] .yt-poll-bar {
+  background: #f1e2d4;
+}
+body[data-theme="coconut"] .yt-poll-bar-fill {
+  background: #7ec49d;
+}
+body[data-theme="coconut"] .yt-poll-option-sub,
+body[data-theme="coconut"] .yt-poll-percent,
+body[data-theme="coconut"] .yt-poll-votes {
+  color: #40322f;
+}
+
+body[data-theme="yotsubab"] .yt-post-card {
+  background: #f0f5fa;
+  color: #222;
+  border-color: #b7c5d9;
+  box-shadow: 0 4px 14px #0001;
+}
+body[data-theme="yotsubab"] .yt-post-meta {
+  color: #5a6a84;
+}
+body[data-theme="yotsubab"] .yt-post-comments {
+  border-top-color: #b7c5d9;
+}
+body[data-theme="yotsubab"] .yt-post-comments-toggle {
+  color: #789922;
+}
+body[data-theme="yotsubab"] .yt-post-image,
+body[data-theme="yotsubab"] .yt-post-avatar,
+body[data-theme="yotsubab"] .yt-poll-option img {
+  border-color: #b7c5d9;
+  background: #fff;
+}
+body[data-theme="yotsubab"] .yt-poll-option {
+  background: #d6daf0;
+  border-color: #b7c5d9;
+  color: #222;
+}
+body[data-theme="yotsubab"] .yt-poll-bar {
+  background: #c6d2e6;
+}
+body[data-theme="yotsubab"] .yt-poll-bar-fill {
+  background: #789922;
+}
+body[data-theme="yotsubab"] .yt-poll-option-sub,
+body[data-theme="yotsubab"] .yt-poll-percent,
+body[data-theme="yotsubab"] .yt-poll-votes {
+  color: #44515f;
+}
+
+body[data-theme="futaba"] .yt-post-card {
+  background: #fffceb;
+  color: #222;
+  border-color: #ea9600;
+  box-shadow: 0 4px 14px #0001;
+}
+body[data-theme="futaba"] .yt-post-meta {
+  color: #6f4a00;
+}
+body[data-theme="futaba"] .yt-post-comments {
+  border-top-color: #ea9600;
+}
+body[data-theme="futaba"] .yt-post-comments-toggle {
+  color: #ea9600;
+}
+body[data-theme="futaba"] .yt-post-image,
+body[data-theme="futaba"] .yt-post-avatar,
+body[data-theme="futaba"] .yt-poll-option img {
+  border-color: #ea9600;
+  background: #fff;
+}
+body[data-theme="futaba"] .yt-poll-option {
+  background: #f5deb3;
+  border-color: #ea9600;
+  color: #222;
+}
+body[data-theme="futaba"] .yt-poll-bar {
+  background: #f5deb3;
+}
+body[data-theme="futaba"] .yt-poll-bar-fill {
+  background: #ea9600;
+}
+body[data-theme="futaba"] .yt-poll-option-sub,
+body[data-theme="futaba"] .yt-poll-percent,
+body[data-theme="futaba"] .yt-poll-votes {
+  color: #6f4a00;
+}
+
+body[data-theme="aleenian-royalty"] .yt-post-card,
+body[data-theme="mobian royalty (queen aleena)"] .yt-post-card {
+  background: #37205a;
+  color: #f4e8ff;
+  border-color: #e5c2ff;
+  box-shadow: 0 4px 14px #0004;
+}
+body[data-theme="aleenian-royalty"] .yt-post-meta,
+body[data-theme="mobian royalty (queen aleena)"] .yt-post-meta {
+  color: #e5c2ff;
+}
+body[data-theme="aleenian-royalty"] .yt-post-comments,
+body[data-theme="mobian royalty (queen aleena)"] .yt-post-comments {
+  border-top-color: #e5c2ff;
+}
+body[data-theme="aleenian-royalty"] .yt-post-comments-toggle,
+body[data-theme="mobian royalty (queen aleena)"] .yt-post-comments-toggle {
+  color: #e5c2ff;
+}
+body[data-theme="aleenian-royalty"] .yt-post-image,
+body[data-theme="aleenian-royalty"] .yt-post-avatar,
+body[data-theme="aleenian-royalty"] .yt-poll-option img,
+body[data-theme="mobian royalty (queen aleena)"] .yt-post-image,
+body[data-theme="mobian royalty (queen aleena)"] .yt-post-avatar,
+body[data-theme="mobian royalty (queen aleena)"] .yt-poll-option img {
+  border-color: #7a4ce3;
+  background: #2b1846;
+}
+body[data-theme="aleenian-royalty"] .yt-poll-option,
+body[data-theme="mobian royalty (queen aleena)"] .yt-poll-option {
+  background: #7a4ce3;
+  border-color: #e5c2ff;
+  color: #fff;
+}
+body[data-theme="aleenian-royalty"] .yt-poll-bar,
+body[data-theme="mobian royalty (queen aleena)"] .yt-poll-bar {
+  background: #2b1846;
+}
+body[data-theme="aleenian-royalty"] .yt-poll-bar-fill,
+body[data-theme="mobian royalty (queen aleena)"] .yt-poll-bar-fill {
+  background: #e5c2ff;
+}
+body[data-theme="aleenian-royalty"] .yt-poll-option-sub,
+body[data-theme="aleenian-royalty"] .yt-poll-percent,
+body[data-theme="aleenian-royalty"] .yt-poll-votes,
+body[data-theme="mobian royalty (queen aleena)"] .yt-poll-option-sub,
+body[data-theme="mobian royalty (queen aleena)"] .yt-poll-percent,
+body[data-theme="mobian royalty (queen aleena)"] .yt-poll-votes {
+  color: #f4e8ff;
+}
+
+body[data-theme="blue blur (sonic)"] .yt-post-card {
+  background: #0a3078;
+  color: #fff;
+  border-color: #165ad6;
+  box-shadow: 0 4px 14px #0004;
+}
+body[data-theme="blue blur (sonic)"] .yt-post-meta {
+  color: #c6dbff;
+}
+body[data-theme="blue blur (sonic)"] .yt-post-comments {
+  border-top-color: #165ad6;
+}
+body[data-theme="blue blur (sonic)"] .yt-post-comments-toggle {
+  color: #e33b32;
+}
+body[data-theme="blue blur (sonic)"] .yt-post-image,
+body[data-theme="blue blur (sonic)"] .yt-post-avatar,
+body[data-theme="blue blur (sonic)"] .yt-poll-option img {
+  border-color: #165ad6;
+  background: #0a3078;
+}
+body[data-theme="blue blur (sonic)"] .yt-poll-option {
+  background: #165ad6;
+  border-color: #e33b32;
+  color: #fff;
+}
+body[data-theme="blue blur (sonic)"] .yt-poll-bar {
+  background: #0a3078;
+}
+body[data-theme="blue blur (sonic)"] .yt-poll-bar-fill {
+  background: #e33b32;
+}
+body[data-theme="blue blur (sonic)"] .yt-poll-option-sub,
+body[data-theme="blue blur (sonic)"] .yt-poll-percent,
+body[data-theme="blue blur (sonic)"] .yt-poll-votes {
+  color: #e6efff;
+}
+
+body[data-theme="popstar pink (sonia)"] .yt-post-card {
+  background: #c92c73;
+  color: #fff1fa;
+  border-color: #ffe4f3;
+  box-shadow: 0 4px 14px #0003;
+}
+body[data-theme="popstar pink (sonia)"] .yt-post-meta {
+  color: #ffe4f3;
+}
+body[data-theme="popstar pink (sonia)"] .yt-post-comments {
+  border-top-color: #ff69b4;
+}
+body[data-theme="popstar pink (sonia)"] .yt-post-comments-toggle {
+  color: #ffe4f3;
+}
+body[data-theme="popstar pink (sonia)"] .yt-post-image,
+body[data-theme="popstar pink (sonia)"] .yt-post-avatar,
+body[data-theme="popstar pink (sonia)"] .yt-poll-option img {
+  border-color: #ff69b4;
+  background: #ffe4f3;
+}
+body[data-theme="popstar pink (sonia)"] .yt-poll-option {
+  background: #ffe4f3;
+  border-color: #ff69b4;
+  color: #c92c73;
+}
+body[data-theme="popstar pink (sonia)"] .yt-poll-bar {
+  background: #ffd1e6;
+}
+body[data-theme="popstar pink (sonia)"] .yt-poll-bar-fill {
+  background: #ff69b4;
+}
+body[data-theme="popstar pink (sonia)"] .yt-poll-option-sub,
+body[data-theme="popstar pink (sonia)"] .yt-poll-percent,
+body[data-theme="popstar pink (sonia)"] .yt-poll-votes {
+  color: #c92c73;
+}
+
+body[data-theme="green thief (manic)"] .yt-post-card {
+  background: #136934;
+  color: #ffffff;
+  border-color: #20d073;
+  box-shadow: 0 4px 14px #0004;
+}
+body[data-theme="green thief (manic)"] .yt-post-meta {
+  color: #c6ffd7;
+}
+body[data-theme="green thief (manic)"] .yt-post-comments {
+  border-top-color: #20d073;
+}
+body[data-theme="green thief (manic)"] .yt-post-comments-toggle {
+  color: #20d073;
+}
+body[data-theme="green thief (manic)"] .yt-post-image,
+body[data-theme="green thief (manic)"] .yt-post-avatar,
+body[data-theme="green thief (manic)"] .yt-poll-option img {
+  border-color: #20d073;
+  background: #0f5127;
+}
+body[data-theme="green thief (manic)"] .yt-poll-option {
+  background: #1d9652;
+  border-color: #20d073;
+  color: #ffffff;
+}
+body[data-theme="green thief (manic)"] .yt-poll-bar {
+  background: #0f5127;
+}
+body[data-theme="green thief (manic)"] .yt-poll-bar-fill {
+  background: #20d073;
+}
+body[data-theme="green thief (manic)"] .yt-poll-option-sub,
+body[data-theme="green thief (manic)"] .yt-poll-percent,
+body[data-theme="green thief (manic)"] .yt-poll-votes {
+  color: #c6ffd7;
+}
+
+body[data-theme="matrix"] .yt-post-card {
+  background: #050e06;
+  color: #8cff65;
+  border-color: #2f6f23;
+  box-shadow: 0 4px 14px #0006;
+}
+body[data-theme="matrix"] .yt-post-meta {
+  color: #8cff65;
+}
+body[data-theme="matrix"] .yt-post-comments {
+  border-top-color: #2f6f23;
+}
+body[data-theme="matrix"] .yt-post-comments-toggle {
+  color: #8cff65;
+}
+body[data-theme="matrix"] .yt-post-image,
+body[data-theme="matrix"] .yt-post-avatar,
+body[data-theme="matrix"] .yt-poll-option img {
+  border-color: #2f6f23;
+  background: #050e06;
+}
+body[data-theme="matrix"] .yt-poll-option {
+  background: #081a0b;
+  border-color: #2f6f23;
+  color: #8cff65;
+}
+body[data-theme="matrix"] .yt-poll-bar {
+  background: #050e06;
+}
+body[data-theme="matrix"] .yt-poll-bar-fill {
+  background: #8cff65;
+}
+body[data-theme="matrix"] .yt-poll-option-sub,
+body[data-theme="matrix"] .yt-poll-percent,
+body[data-theme="matrix"] .yt-poll-votes {
+  color: #8cff65;
 }
 
 

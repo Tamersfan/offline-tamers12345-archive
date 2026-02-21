@@ -6,6 +6,7 @@ const fs = require('fs');
 const https = require('https');
 const { spawn } = require('child_process');
 const { autoUpdater } = require('electron-updater');
+const { pathToFileURL } = require('url');
 
 function getFfmpegPath() {
   // Handles ASAR packaging too
@@ -347,6 +348,114 @@ ipcMain.handle('read-tumblr2-html', async () => {
     .filter(f => f.toLowerCase().endsWith('.html'))
     .sort()
     .map(f => path.join('tumblr2', f));
+});
+
+ipcMain.handle('read-posts-data', async () => {
+  try {
+    const base = path.join(__dirname, 'posts');
+    if (!fs.existsSync(base)) return [];
+
+    const channelDirs = fs.readdirSync(base, { withFileTypes: true })
+      .filter(d => d.isDirectory());
+
+    const items = [];
+    for (const channelDir of channelDirs) {
+      const channelId = channelDir.name;
+      let indexIds = [];
+      try {
+        const indexPath = path.join(base, channelId, '_index.json');
+        if (fs.existsSync(indexPath)) {
+          const indexJson = JSON.parse(fs.readFileSync(indexPath, 'utf-8'));
+          if (Array.isArray(indexJson.posts)) {
+            indexIds = indexJson.posts.map(p => p.id).filter(Boolean);
+          }
+        }
+      } catch (e) {
+        console.warn('Failed to read post index for channel:', channelId, e);
+      }
+
+      const postsDir = path.join(base, channelId, 'posts');
+      if (!fs.existsSync(postsDir)) continue;
+
+      const postFolders = fs.readdirSync(postsDir, { withFileTypes: true })
+        .filter(d => d.isDirectory());
+
+      const channelItems = [];
+      const missingJsonFolders = [];
+      const knownIds = new Set();
+
+      for (const folderDir of postFolders) {
+        const folderName = folderDir.name;
+        const folderPath = path.join(postsDir, folderName);
+
+        let json = null;
+        let jsonFilename = null;
+        const jsonFiles = fs.readdirSync(folderPath)
+          .filter(f => f.toLowerCase().endsWith('.json'));
+        if (jsonFiles.length) {
+          jsonFilename = jsonFiles[0];
+          const jsonPath = path.join(folderPath, jsonFilename);
+          try {
+            json = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
+          } catch (e) {
+            console.error('Failed to parse post JSON:', jsonPath, e);
+          }
+        }
+
+        const mediaDir = path.join(folderPath, 'media');
+        let mediaFiles = [];
+        if (fs.existsSync(mediaDir)) {
+          mediaFiles = fs.readdirSync(mediaDir)
+            .filter(f => /\.(png|jpe?g|gif|webp)$/i.test(f))
+            .map(f => ({
+              filename: f,
+              url: pathToFileURL(path.join(mediaDir, f)).toString()
+            }));
+        }
+
+        let postId = (json && json.post && json.post.id)
+          ? json.post.id
+          : (jsonFilename ? path.parse(jsonFilename).name : null);
+
+        if (!postId && indexIds.length) {
+          const bracket = folderName.match(/\[([A-Za-z0-9_-]{6,})\]/);
+          if (bracket) {
+            const prefix = bracket[1];
+            const matchId = indexIds.find(id => id.startsWith(prefix));
+            if (matchId) postId = matchId;
+          }
+        }
+        if (postId) knownIds.add(postId);
+
+        const entry = {
+          channelId,
+          folderName,
+          postId,
+          json,
+          mediaFiles
+        };
+        channelItems.push(entry);
+        if (!jsonFilename) missingJsonFolders.push(entry);
+      }
+
+      if (indexIds.length && missingJsonFolders.length) {
+        const missingIds = indexIds.filter(id => !knownIds.has(id));
+        if (missingIds.length === missingJsonFolders.length) {
+          missingJsonFolders.sort((a, b) => a.folderName.localeCompare(b.folderName, undefined, { sensitivity: 'base' }));
+          missingJsonFolders.forEach((entry, idx) => {
+            entry.postId = missingIds[idx] || entry.postId;
+          });
+        }
+      }
+
+      items.push(...channelItems);
+    }
+
+    return items;
+  } catch (e) {
+    console.error('read-posts-data failed:', e);
+    return [];
+  }
 });
 
 ipcMain.handle('set-setting', async (_event, key, value) => {

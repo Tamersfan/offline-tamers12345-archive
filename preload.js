@@ -8,6 +8,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   readImageFiles:      () => ipcRenderer.invoke('read-image-files'),
   readTumblrHTML:      () => ipcRenderer.invoke('read-tumblr-html'),
   readTumblr2HTML:     () => ipcRenderer.invoke('read-tumblr2-html'),
+  readPostsData:       () => ipcRenderer.invoke('read-posts-data'),
   checkMissingVideos:  () => ipcRenderer.invoke('check-missing-videos'),
   downloadVideos:      (filenames) => ipcRenderer.invoke('download-videos', filenames),
 

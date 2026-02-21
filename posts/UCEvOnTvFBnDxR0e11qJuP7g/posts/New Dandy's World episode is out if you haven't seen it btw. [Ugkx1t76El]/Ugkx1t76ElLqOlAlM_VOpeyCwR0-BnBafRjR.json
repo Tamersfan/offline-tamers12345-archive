@@ -1,0 +1,413 @@
+{
+  "schema_version": 4,
+  "archived_at": "2026-02-20T00:14:53.544Z",
+  "post": {
+    "id": "Ugkx1t76ElLqOlAlM_VOpeyCwR0-BnBafRjR",
+    "url": "https://www.youtube.com/post/Ugkx1t76ElLqOlAlM_VOpeyCwR0-BnBafRjR",
+    "type": "BackstagePost",
+    "channel_id": "UCEvOnTvFBnDxR0e11qJuP7g",
+    "author": {
+      "name": "Tamers Official",
+      "channel_id": null,
+      "thumbnails": [
+        {
+          "url": "//yt3.googleusercontent.com/DAkiBWAB7Xjs5WIbhqRPFtV8fd1babqiKJgEkPh7mijpheuOoJwg7xJvB0p-gcNUzLRr_ccuDxs=s76-c-k-c0x00ffffff-no-rj-mo",
+          "width": 76,
+          "height": 76
+        },
+        {
+          "url": "//yt3.googleusercontent.com/DAkiBWAB7Xjs5WIbhqRPFtV8fd1babqiKJgEkPh7mijpheuOoJwg7xJvB0p-gcNUzLRr_ccuDxs=s48-c-k-c0x00ffffff-no-rj-mo",
+          "width": 48,
+          "height": 48
+        },
+        {
+          "url": "//yt3.googleusercontent.com/DAkiBWAB7Xjs5WIbhqRPFtV8fd1babqiKJgEkPh7mijpheuOoJwg7xJvB0p-gcNUzLRr_ccuDxs=s32-c-k-c0x00ffffff-no-rj-mo",
+          "width": 32,
+          "height": 32
+        }
+      ]
+    },
+    "published": "3 months ago",
+    "content_text": "New Dandy's World episode is out if you haven't seen it btw.",
+    "folder_name": "New Dandy's World episode is out if you haven't seen it btw. [Ugkx1t76El]",
+    "title_compact": "New Dandy's World episode is out if you haven't seen it btw.",
+    "linked": {
+      "url": "https://www.youtube.com/watch?v=F-Q1W5LhYn0",
+      "video_id": "F-Q1W5LhYn0",
+      "title": "DANDYS WORLD: THE DEATH OF SPROUT SEEDLY",
+      "channel_name": null,
+      "channel_id": null
+    }
+  },
+  "attachment": {
+    "source": "BackstagePost",
+    "type": "Video",
+    "poll": null,
+    "linked": {
+      "url": "https://www.youtube.com/watch?v=F-Q1W5LhYn0",
+      "video_id": "F-Q1W5LhYn0",
+      "title": "DANDYS WORLD: THE DEATH OF SPROUT SEEDLY",
+      "channel_name": null,
+      "channel_id": null
+    }
+  },
+  "media": {
+    "folder": "posts\\New Dandy's World episode is out if you haven't seen it btw. [Ugkx1t76El]\\media",
+    "downloaded": [
+      {
+        "kind": "attachment_thumbnail",
+        "url": "https://i.ytimg.com/vi/F-Q1W5LhYn0/hqdefault.jpg?sqp=-oaymwEcCOADEI4CSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLACSvFrog_2oyc-qB4f51lQymaeKw",
+        "ok": true,
+        "path": "posts\\New Dandy's World episode is out if you haven't seen it btw. [Ugkx1t76El]\\media\\Attachment Thumbnail.webp",
+        "content_type": "image/webp",
+        "bytes": 28388,
+        "error": null
+      }
+    ]
+  },
+  "comments": {
+    "ok": true,
+    "error": null,
+    "thread_count": 8,
+    "threads": [
+      {
+        "top_level": {
+          "id": "UgzXVXfhRJUYJeYh8jJ4AaABAg",
+          "author": {
+            "name": "@Sheliny_rose",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/INL0ZPjD6W6QLNRv2_qPaDkWy8-E5FSnPAV5ylGycCwni6lezOffBCiiGz9FbwQw9Mrs1S4Mrw=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "💀🏳️‍🌈❌",
+          "published": "1 month ago",
+          "like_count": " ",
+          "is_hearted": false,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": false
+      },
+      {
+        "top_level": {
+          "id": "UgwDKt9fmteYO8dCkiR4AaABAg",
+          "author": {
+            "name": "@LalanieHockman",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/LXl82G7LeXoaKU3hcmeKzRld4R4x4XOf9QkcU9si8DpXPLRR0JdOmc4kQhDQIdrTIMgfvLyySw=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "Bro I just seen it",
+          "published": "1 month ago",
+          "like_count": " ",
+          "is_hearted": false,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": false
+      },
+      {
+        "top_level": {
+          "id": "Ugyj54ZhpJDAn8Vz_nR4AaABAg",
+          "author": {
+            "name": "@sarahkent498",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/ytc/AIdro_mAebz0R_AMEMLnleBCIOZefzwjjGXfPodKJKgssZw=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "When I first watches my first time I think it was so funny can you make another one please😊",
+          "published": "3 months ago",
+          "like_count": "1",
+          "is_hearted": false,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": false
+      },
+      {
+        "top_level": {
+          "id": "Ugx9fnfgcKNWnN68tNd4AaABAg",
+          "author": {
+            "name": "@potatoestPizza",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/Pk_ySTUmJ7hiUwUgg5k-s1p7J7_jXiuFhUXSmVFM0ABDiJ-3TecFB0aXEb1faDgWtuumgkCjHw=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "New video today?🥺👉👈",
+          "published": "3 months ago",
+          "like_count": "2",
+          "is_hearted": false,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": false
+      },
+      {
+        "top_level": {
+          "id": "UgzGqn9h2e2fKu1YxB94AaABAg",
+          "author": {
+            "name": "@raimondaataite6061",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/Wh0SMMOedLZ_XriSjblKDykuhXoxPMf35rZ_6nsdYu8Y2n8zYSXXSNuQxxgKWd9bkSblMmfd=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "...",
+          "published": "3 months ago",
+          "like_count": "3",
+          "is_hearted": false,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": false
+      },
+      {
+        "top_level": {
+          "id": "Ugy2vhUAHxX15aW0D_F4AaABAg",
+          "author": {
+            "name": "@Dino_Mitez",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/gQ6PJeI_nxt6_pSqNSlGfCs9pZFGF910sTqJeLzNxtWensSjgI5K5CSdGdzdjTQZewniiG3b=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "I have no idea what I just watched but it looks like cinema too me. I wonder why soulvester calls everyone that though?",
+          "published": "3 months ago",
+          "like_count": "2",
+          "is_hearted": false,
+          "is_pinned": false
+        },
+        "replies": [
+          {
+            "id": "Ugy2vhUAHxX15aW0D_F4AaABAg.AP5Jjr1LkaFAPA6Mi2Pu_U",
+            "author": {
+              "name": "@casperchulo",
+              "channel_id": null,
+              "thumbnails": [
+                {
+                  "url": "https://yt3.ggpht.com/nJCPEl4STqzOjE9Q0QqcoO1EDh-zkdDG2jDJdyDDIuYmYAD3pEzrr3pvBxp-shP0PBjmuL9cdw=s88-c-k-c0x00ffffff-no-rj",
+                  "width": 88,
+                  "height": 88
+                }
+              ]
+            },
+            "content": " @Dino_Mitez I think I needed bleach after I watched that..",
+            "published": "3 months ago",
+            "like_count": "2",
+            "is_hearted": false,
+            "is_pinned": false
+          },
+          {
+            "id": "Ugy2vhUAHxX15aW0D_F4AaABAg.AP5Jjr1LkaFAPA86F5qGsH",
+            "author": {
+              "name": "@Dino_Mitez",
+              "channel_id": null,
+              "thumbnails": [
+                {
+                  "url": "https://yt3.ggpht.com/gQ6PJeI_nxt6_pSqNSlGfCs9pZFGF910sTqJeLzNxtWensSjgI5K5CSdGdzdjTQZewniiG3b=s88-c-k-c0x00ffffff-no-rj",
+                  "width": 88,
+                  "height": 88
+                }
+              ]
+            },
+            "content": "​ @casperchulo Might be on the same boat not gonna lie.",
+            "published": "3 months ago",
+            "like_count": "1",
+            "is_hearted": false,
+            "is_pinned": false
+          },
+          {
+            "id": "Ugy2vhUAHxX15aW0D_F4AaABAg.AP5Jjr1LkaFAPA8qY3pD8p",
+            "author": {
+              "name": "@casperchulo",
+              "channel_id": null,
+              "thumbnails": [
+                {
+                  "url": "https://yt3.ggpht.com/nJCPEl4STqzOjE9Q0QqcoO1EDh-zkdDG2jDJdyDDIuYmYAD3pEzrr3pvBxp-shP0PBjmuL9cdw=s88-c-k-c0x00ffffff-no-rj",
+                  "width": 88,
+                  "height": 88
+                }
+              ]
+            },
+            "content": " @Dino_Mitez OMG FINALLY SOMEONE AGREES EVERYONE ELSE IS JUST WEIRD, it’s also pretty disturbing how he’s also a pro shipper and a groomer..",
+            "published": "3 months ago",
+            "like_count": "1",
+            "is_hearted": false,
+            "is_pinned": false
+          },
+          {
+            "id": "Ugy2vhUAHxX15aW0D_F4AaABAg.AP5Jjr1LkaFAPACE10MeLc",
+            "author": {
+              "name": "@Dino_Mitez",
+              "channel_id": null,
+              "thumbnails": [
+                {
+                  "url": "https://yt3.ggpht.com/gQ6PJeI_nxt6_pSqNSlGfCs9pZFGF910sTqJeLzNxtWensSjgI5K5CSdGdzdjTQZewniiG3b=s88-c-k-c0x00ffffff-no-rj",
+                  "width": 88,
+                  "height": 88
+                }
+              ]
+            },
+            "content": "​ @casperchulo IM SORRY WHAT HES A GROOMER AND A PRO SHIPPER??",
+            "published": "3 months ago",
+            "like_count": " ",
+            "is_hearted": false,
+            "is_pinned": false
+          },
+          {
+            "id": "Ugy2vhUAHxX15aW0D_F4AaABAg.AP5Jjr1LkaFAPjV-ZOpGT5",
+            "author": {
+              "name": "@Dino_Mitez",
+              "channel_id": null,
+              "thumbnails": [
+                {
+                  "url": "https://yt3.ggpht.com/gQ6PJeI_nxt6_pSqNSlGfCs9pZFGF910sTqJeLzNxtWensSjgI5K5CSdGdzdjTQZewniiG3b=s88-c-k-c0x00ffffff-no-rj",
+                  "width": 88,
+                  "height": 88
+                }
+              ]
+            },
+            "content": "ah so thats where my comment ended up",
+            "published": "2 months ago",
+            "like_count": " ",
+            "is_hearted": false,
+            "is_pinned": false
+          }
+        ],
+        "has_replies": true
+      },
+      {
+        "top_level": {
+          "id": "UgxEcCcGFGKOdOJrBjN4AaABAg",
+          "author": {
+            "name": "@RieeRayy",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/6xd7moT729BnJbJBt4aeCNnm3oDqrXt1u_ZKrXkYgPNvh0FqYwJPR3wf-JfYmP2mTRxWawD14w=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "I got so HARD at the cosmo x sprout scene\nAlso who's your fav toon papa tamers",
+          "published": "3 months ago",
+          "like_count": "12",
+          "is_hearted": false,
+          "is_pinned": false
+        },
+        "replies": [
+          {
+            "id": "UgxEcCcGFGKOdOJrBjN4AaABAg.AP35kYJJ_btAP7OKy2tzNU",
+            "author": {
+              "name": "@AlanaRagan",
+              "channel_id": null,
+              "thumbnails": [
+                {
+                  "url": "https://yt3.ggpht.com/LL55TaWCWGjquYfoQ9ahOdTjs5KlACppyy33nvkWOA6lc6Ivl4QHSUpTXGYaevD2N7VwNUOuXOA=s88-c-k-c0x00ffffff-no-rj",
+                  "width": 88,
+                  "height": 88
+                }
+              ]
+            },
+            "content": "DAWG WHAT 😭",
+            "published": "3 months ago",
+            "like_count": "7",
+            "is_hearted": false,
+            "is_pinned": false
+          },
+          {
+            "id": "UgxEcCcGFGKOdOJrBjN4AaABAg.AP35kYJJ_btAPA6W1TrATk",
+            "author": {
+              "name": "@casperchulo",
+              "channel_id": null,
+              "thumbnails": [
+                {
+                  "url": "https://yt3.ggpht.com/nJCPEl4STqzOjE9Q0QqcoO1EDh-zkdDG2jDJdyDDIuYmYAD3pEzrr3pvBxp-shP0PBjmuL9cdw=s88-c-k-c0x00ffffff-no-rj",
+                  "width": 88,
+                  "height": 88
+                }
+              ]
+            },
+            "content": "WHAT THE FRICKITY FRICKITY 🚢🚢🚢🚢🚢🚢🚢🚢🚢🚢🚢🚢🚢 (I’m actually disgusted what is wrong with u..)",
+            "published": "3 months ago",
+            "like_count": "2",
+            "is_hearted": false,
+            "is_pinned": false
+          },
+          {
+            "id": "UgxEcCcGFGKOdOJrBjN4AaABAg.AP35kYJJ_btAPaURkw7toM",
+            "author": {
+              "name": "@KatiePedroza-c1n9n",
+              "channel_id": null,
+              "thumbnails": [
+                {
+                  "url": "https://yt3.ggpht.com/IMkKL7OdMvakYKFRu4GAmMr6c1pCV2grOKxq0usFBjyR7RtFx2egQO4CJivObXjc9xwoEXKOSKU=s88-c-k-c0x00ffffff-no-rj",
+                  "width": 88,
+                  "height": 88
+                }
+              ]
+            },
+            "content": "Dandy :3 because he’s meh",
+            "published": "3 months ago",
+            "like_count": "2",
+            "is_hearted": false,
+            "is_pinned": false
+          }
+        ],
+        "has_replies": true
+      },
+      {
+        "top_level": {
+          "id": "UgwKVwUToMUUp3dqWxh4AaABAg",
+          "author": {
+            "name": "@sara17_animation",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/jARpi6cknjL6J8iSOVTCJ6EfujGpmhXtvi2KheQVMyF2Ql9Ysfg4RmX_i9SS9b-5tOhj2bbXDQ=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "Peak",
+          "published": "3 months ago",
+          "like_count": "9",
+          "is_hearted": true,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": false
+      }
+    ]
+  }
+}

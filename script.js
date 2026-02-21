@@ -33,6 +33,18 @@ let isQueueShuffled = false;
 let isQueueReversed = false;
 let currentVideoFilename = null;
 let currentAltVideo = null;
+let postsTabInitialized = false;
+let postsDataCache = [];
+let postOverrides = null;
+const POSTS_PROFILE_PICS = [...Array(34)].map((_, i) => `PFPs/pfp${i + 1}.png`);
+const POSTS_UPLOADER_PFP = 'PFPs/tamers.png';
+const POSTS_UPLOADER_NAMES = new Set([
+  'tamersdandysworld',
+  'tamers official',
+  'tamers12345mlp',
+  'tamers12345official',
+  'tamers12345'
+]);
 
 function syncTagFilterUIFromState() {
   const sel = document.getElementById('tagFilter');
@@ -2223,6 +2235,621 @@ try {
 
 
 
+// === YouTube Posts Tab ===
+async function initializePostsTab(force = false) {
+  if (postsTabInitialized && !force) return;
+  postsTabInitialized = true;
+
+  const feed = document.getElementById('youtube-posts-feed');
+  if (!feed) return;
+  feed.innerHTML = '<div class="yt-posts-loading">Loading posts...</div>';
+
+  if (!window.electronAPI || typeof window.electronAPI.readPostsData !== 'function') {
+    feed.innerHTML = '<div class="yt-posts-empty">Posts data source is unavailable.</div>';
+    return;
+  }
+
+  try {
+    await loadPostOverrides();
+    const items = await window.electronAPI.readPostsData();
+    postsDataCache = Array.isArray(items) ? items : [];
+    const ordered = await orderPostsByIndex(postsDataCache);
+    const sorted = sortPostsByDate(ordered);
+    renderPostsFeed(sorted);
+  } catch (e) {
+    console.error('Failed to load posts data:', e);
+    feed.innerHTML = '<div class="yt-posts-empty">Failed to load posts.</div>';
+  }
+}
+
+async function orderPostsByIndex(items) {
+  const byChannel = {};
+  (items || []).forEach(item => {
+    const channelId = item.channelId || 'unknown';
+    if (!byChannel[channelId]) byChannel[channelId] = [];
+    byChannel[channelId].push(item);
+  });
+
+  const ordered = [];
+  for (const channelId of Object.keys(byChannel)) {
+    const channelItems = byChannel[channelId];
+    let orderIds = null;
+    try {
+      const res = await fetch(`posts/${channelId}/_index.json`);
+      if (res.ok) {
+        const idx = await res.json();
+        if (Array.isArray(idx.posts)) {
+          orderIds = idx.posts.map(p => p.id).filter(Boolean);
+        }
+      }
+    } catch (e) {
+      orderIds = null;
+    }
+
+    if (orderIds && orderIds.length) {
+      const used = new Set();
+      const byId = new Map(channelItems.map(item => [item.postId, item]));
+      orderIds.forEach(id => {
+        const match = byId.get(id);
+        if (match) {
+          ordered.push(match);
+          used.add(match);
+        }
+      });
+      channelItems.forEach(item => {
+        if (!used.has(item)) ordered.push(item);
+      });
+    } else {
+      ordered.push(...channelItems);
+    }
+  }
+
+  return ordered;
+}
+
+function sortPostsByDate(items) {
+  const enriched = (items || []).map((item, idx) => {
+    const json = item && item.json ? item.json : null;
+    const post = json && json.post ? json.post : {};
+    const override = getPostOverride(item);
+    const date = resolvePostDateValue(item, post, override);
+    return { item, idx, date };
+  });
+
+  enriched.sort((a, b) => {
+    if (a.date && b.date) return b.date - a.date; // newest first
+    if (a.date) return -1;
+    if (b.date) return 1;
+    return a.idx - b.idx;
+  });
+
+  return enriched.map(entry => entry.item);
+}
+
+async function loadPostOverrides() {
+  if (postOverrides) return;
+  try {
+    const res = await fetch('data/post_overrides.json');
+    if (res.ok) {
+      postOverrides = await res.json();
+      await hydrateOverrideComments(postOverrides);
+    } else {
+      postOverrides = {};
+    }
+  } catch (e) {
+    postOverrides = {};
+  }
+}
+
+async function hydrateOverrideComments(overrides) {
+  if (!overrides) return;
+  const groups = [];
+  if (overrides.byId) groups.push(overrides.byId);
+  if (overrides.byFolder) groups.push(overrides.byFolder);
+
+  const fetches = [];
+  groups.forEach(group => {
+    Object.keys(group).forEach(key => {
+      const entry = group[key];
+      if (entry && entry.commentsPath && !entry.comments) {
+        fetches.push(
+          fetch(entry.commentsPath)
+            .then(res => res.ok ? res.json() : null)
+            .then(data => {
+              if (data) entry.comments = data;
+            })
+            .catch(() => {})
+        );
+      }
+    });
+  });
+
+  if (fetches.length) {
+    await Promise.all(fetches);
+  }
+}
+
+function getPostOverride(item) {
+  if (!postOverrides || !item) return null;
+  const byId = postOverrides.byId || {};
+  const byFolder = postOverrides.byFolder || {};
+
+  if (item.postId && byId[item.postId]) return byId[item.postId];
+
+  if (item.channelId && item.folderName) {
+    const combinedKey = `${item.channelId}::${item.folderName}`;
+    if (byFolder[combinedKey]) return byFolder[combinedKey];
+  }
+
+  if (item.folderName && byFolder[item.folderName]) return byFolder[item.folderName];
+
+  return null;
+}
+
+function formatAbsoluteDate(value) {
+  if (!value) return '';
+  const date = value instanceof Date ? value : new Date(value);
+  if (isNaN(date)) return String(value);
+  return date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+}
+
+function parseRelativeDate(relativeText, anchorDate) {
+  if (!relativeText || !anchorDate) return null;
+  const rel = String(relativeText).toLowerCase().trim();
+  const anchor = anchorDate instanceof Date ? new Date(anchorDate) : new Date(anchorDate);
+  if (isNaN(anchor)) return null;
+
+  if (rel === 'today') return anchor;
+  if (rel === 'yesterday') {
+    const d = new Date(anchor);
+    d.setDate(d.getDate() - 1);
+    return d;
+  }
+
+  const match = rel.match(/(\d+)\s+(second|minute|hour|day|week|month|year)s?\s+ago/);
+  if (!match) return null;
+
+  const amount = parseInt(match[1], 10);
+  const unit = match[2];
+  const d = new Date(anchor);
+
+  switch (unit) {
+    case 'second':
+      d.setSeconds(d.getSeconds() - amount);
+      break;
+    case 'minute':
+      d.setMinutes(d.getMinutes() - amount);
+      break;
+    case 'hour':
+      d.setHours(d.getHours() - amount);
+      break;
+    case 'day':
+      d.setDate(d.getDate() - amount);
+      break;
+    case 'week':
+      d.setDate(d.getDate() - amount * 7);
+      break;
+    case 'month':
+      d.setMonth(d.getMonth() - amount);
+      break;
+    case 'year':
+      d.setFullYear(d.getFullYear() - amount);
+      break;
+    default:
+      return null;
+  }
+
+  return d;
+}
+
+function resolvePostDate(item, post, override) {
+  const dateValue = resolvePostDateValue(item, post, override);
+  if (dateValue) return formatAbsoluteDate(dateValue);
+  if (post && post.published) return String(post.published);
+  return '';
+}
+
+function resolvePostDateValue(item, post, override) {
+  if (override) {
+    if (override.published_at) return new Date(override.published_at);
+    if (override.published) return new Date(override.published);
+  }
+
+  const archivedAt = item && item.json ? item.json.archived_at : null;
+  if (post && post.published && archivedAt) {
+    const relativeDate = parseRelativeDate(post.published, archivedAt);
+    if (relativeDate) return relativeDate;
+  }
+
+  if (archivedAt) return new Date(archivedAt);
+  return null;
+}
+
+function renderPostsFeed(items) {
+  const feed = document.getElementById('youtube-posts-feed');
+  if (!feed) return;
+
+  if (!items || !items.length) {
+    feed.innerHTML = '<div class="yt-posts-empty">No posts found.</div>';
+    return;
+  }
+
+  const channelAuthors = buildChannelAuthorMap(items);
+  feed.innerHTML = items.map((item, idx) => buildPostCardHtml(item, idx, channelAuthors, getPostOverride(item))).join('');
+}
+
+function buildChannelAuthorMap(items) {
+  const map = {};
+  (items || []).forEach(item => {
+    const name = item && item.json && item.json.post && item.json.post.author
+      ? item.json.post.author.name
+      : '';
+    if (name && item.channelId && !map[item.channelId]) {
+      map[item.channelId] = name;
+    }
+  });
+  return map;
+}
+
+function buildPostCardHtml(item, index, channelAuthors, override) {
+  const json = item && item.json ? item.json : null;
+  const post = json && json.post ? json.post : {};
+
+  const fallbackAuthor = channelAuthors && item && item.channelId && channelAuthors[item.channelId]
+    ? channelAuthors[item.channelId]
+    : 'Unknown';
+  const authorName = post.author && post.author.name ? post.author.name : fallbackAuthor;
+  const published = resolvePostDate(item, post, override);
+  const contentText = override && override.content_text
+    ? String(override.content_text)
+    : (post.content_text || item.folderName || '');
+
+  const authorDisplay = escapeHtml(authorName);
+  const metaText = published ? `<div class="yt-post-meta">${escapeHtml(published)}</div>` : '';
+  const contentHtml = formatPostText(contentText);
+
+  const mediaFiles = Array.isArray(item.mediaFiles) ? item.mediaFiles : [];
+  const split = splitMediaFiles(mediaFiles);
+  const mediaHtml = split.regularFiles.length
+    ? `<div class="yt-post-media">${split.regularFiles.map(file => {
+        const isPreview = isLinkPreviewFile(file.filename);
+        const className = isPreview ? 'yt-post-image yt-post-link-preview' : 'yt-post-image';
+        return `<img class="${className}" src="${file.url}" alt="${escapeHtml(file.filename)}">`;
+      }).join('')}</div>`
+    : '';
+
+  const pollData = json && json.attachment ? json.attachment.poll : null;
+  const pollVoteCountText = (override && override.poll && override.poll.voteCountText != null)
+    ? String(override.poll.voteCountText)
+    : (pollData && (pollData.total_votes_text || pollData.totalVotesText)) || post.vote_count_text;
+
+  const pollHtml = split.pollFiles.length
+    ? buildPollHtml(split.pollFiles, pollData, pollVoteCountText, override && override.poll ? override.poll : null)
+    : '';
+
+  const commentsSource = (override && override.comments)
+    ? override.comments
+    : (json && json.comments ? json.comments : null);
+  const commentsHtml = buildPostCommentsHtml(commentsSource, index);
+
+  const avatar = getUploaderAvatar(authorName);
+
+  return `
+    <div class="yt-post-card">
+      <div class="yt-post-header">
+        <img class="yt-post-avatar" src="${avatar}" alt="Channel avatar">
+        <div>
+          <div class="yt-post-author">${authorDisplay}</div>
+          ${metaText}
+        </div>
+      </div>
+      <div class="yt-post-text">${contentHtml}</div>
+      ${mediaHtml}
+      ${pollHtml}
+      ${commentsHtml}
+    </div>
+  `;
+}
+
+function splitMediaFiles(mediaFiles) {
+  const pollFiles = [];
+  const regularFiles = [];
+  const optionRegex = /option\s*(\d+)/i;
+
+  mediaFiles.forEach(file => {
+    const match = file && file.filename ? file.filename.match(optionRegex) : null;
+    if (match) {
+      pollFiles.push({ ...file, optionIndex: parseInt(match[1], 10) || 0 });
+    } else {
+      regularFiles.push(file);
+    }
+  });
+
+  pollFiles.sort((a, b) => (a.optionIndex || 0) - (b.optionIndex || 0));
+  return { pollFiles, regularFiles };
+}
+
+function isLinkPreviewFile(filename) {
+  if (!filename) return false;
+  return /link preview/i.test(filename) || /attachment thumbnail/i.test(filename);
+}
+
+function buildPollHtml(pollFiles, pollData, voteCountText, overridePoll) {
+  const optionCount = pollFiles.length;
+  const pollOptions = extractPollOptions(pollData);
+  const overridePercentages = overridePoll && Array.isArray(overridePoll.percentages)
+    ? overridePoll.percentages
+    : null;
+  const percentages = getPollPercentages(optionCount, pollOptions, overridePercentages);
+
+  const optionsHtml = pollFiles.map((file, idx) => {
+    const percent = percentages[idx] != null ? percentages[idx] : 0;
+    const optionLabel = `Option ${idx + 1}`;
+    const optionText = pollOptions && pollOptions[idx] ? getOptionText(pollOptions[idx]) : '';
+    const optionSub = optionText ? `<div class="yt-poll-option-sub">${formatPostText(optionText)}</div>` : '';
+    return `
+      <div class="yt-poll-option">
+        <img src="${file.url}" alt="${escapeHtml(file.filename)}">
+        <div class="yt-poll-option-body">
+          <div class="yt-poll-option-title">${escapeHtml(optionLabel)}</div>
+          ${optionSub}
+          <div class="yt-poll-bar">
+            <div class="yt-poll-bar-fill" style="width:${percent}%;"></div>
+          </div>
+          <div class="yt-poll-percent">${percent}%</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  const votesLine = formatVotesLine(voteCountText);
+
+  return `
+    <div class="yt-poll">
+      ${optionsHtml}
+      <div class="yt-poll-votes">${votesLine}</div>
+    </div>
+  `;
+}
+
+function extractPollOptions(pollData) {
+  if (!pollData || typeof pollData !== 'object') return null;
+  if (Array.isArray(pollData.choices)) return pollData.choices;
+  if (Array.isArray(pollData.options)) return pollData.options;
+  if (Array.isArray(pollData.answers)) return pollData.answers;
+  return null;
+}
+
+function getOptionText(option) {
+  if (!option) return '';
+  return option.text || option.label || option.title || option.name || '';
+}
+
+function getPollPercentages(optionCount, pollOptions, overridePercentages) {
+  if (overridePercentages && overridePercentages.length) {
+    const parsed = overridePercentages.map(val => parsePercentValue(val));
+    if (parsed.every(p => typeof p === 'number' && !isNaN(p))) {
+      return normalizePercentages(parsed, optionCount);
+    }
+  }
+
+  if (pollOptions && pollOptions.length) {
+    const percents = pollOptions.map(opt => parsePercentValue(
+      opt.vote_percentage_number ??
+      opt.vote_percentage_text ??
+      opt.vote_percentage ??
+      opt.votePercentage ??
+      opt.percentage ??
+      opt.percent ??
+      opt.vote_ratio ??
+      opt.voteRatio ??
+      (opt.raw && (opt.raw.vote_percentage_if_selected || opt.raw.vote_percentage_if_not_selected)) ??
+      (opt.raw && (opt.raw.vote_ratio_if_selected || opt.raw.vote_ratio_if_not_selected))
+    ));
+    if (percents.every(p => typeof p === 'number' && !isNaN(p))) {
+      return normalizePercentages(percents, optionCount);
+    }
+
+    const counts = pollOptions.map(opt => parseCountValue(
+      opt.vote_count || opt.voteCount || opt.votes || opt.vote
+    ));
+    if (counts.every(c => typeof c === 'number' && !isNaN(c))) {
+      const total = counts.reduce((sum, val) => sum + val, 0);
+      if (total > 0) {
+        return normalizePercentages(counts.map(c => (c / total) * 100), optionCount);
+      }
+    }
+  }
+
+  return buildEvenPercentages(optionCount);
+}
+
+function formatVotesLine(value) {
+  if (!value) return 'Votes unavailable';
+  const text = String(value).trim();
+  if (!text) return 'Votes unavailable';
+  return /vote/i.test(text) ? escapeHtml(text) : `${escapeHtml(text)} votes`;
+}
+
+function parsePercentValue(value) {
+  if (value == null) return null;
+  if (typeof value === 'number') {
+    return value <= 1 ? value * 100 : value;
+  }
+  const raw = String(value).trim();
+  if (!raw) return null;
+  const num = parseFloat(raw.replace('%', ''));
+  if (isNaN(num)) return null;
+  return raw.includes('%') ? num : (num <= 1 ? num * 100 : num);
+}
+
+function parseCountValue(value) {
+  if (value == null) return null;
+  const raw = String(value).trim().replace(/,/g, '');
+  const num = parseFloat(raw);
+  return isNaN(num) ? null : num;
+}
+
+function normalizePercentages(values, optionCount) {
+  const normalized = values.slice(0, optionCount).map(v => Math.max(0, v));
+  const total = normalized.reduce((sum, val) => sum + val, 0);
+  if (total === 0) return buildEvenPercentages(optionCount);
+  return normalized.map(v => Math.round((v / total) * 100));
+}
+
+function buildEvenPercentages(count) {
+  if (!count) return [];
+  const base = Math.floor(100 / count);
+  let remainder = 100 - base * count;
+  const percents = Array(count).fill(base);
+  for (let i = 0; i < percents.length && remainder > 0; i += 1) {
+    percents[i] += 1;
+    remainder -= 1;
+  }
+  return percents;
+}
+
+function buildPostCommentsHtml(commentsData, postIndex) {
+  const threads = commentsData && Array.isArray(commentsData.threads) ? commentsData.threads : [];
+  const commentBoxId = `post-comments-${postIndex}`;
+  const toggleId = `post-comments-toggle-${postIndex}`;
+
+  const header = `<h4>Comments</h4>`;
+  const body = threads.length
+    ? threads.map((thread, idx) => buildPostThreadHtml(thread, postIndex, idx)).join('')
+    : `<div class="yt-posts-empty">No comments available.</div>`;
+
+  return `
+    <div class="yt-post-comments">
+      ${header}
+      <button id="${toggleId}" class="yt-post-comments-toggle" onclick="
+        const box = document.getElementById('${commentBoxId}');
+        if (!box) return;
+        const isHidden = box.style.display === 'none';
+        box.style.display = isHidden ? 'block' : 'none';
+        this.textContent = isHidden ? 'Hide comments' : 'Show comments';
+      ">Show comments</button>
+      <div id="${commentBoxId}" style="display:none;">
+        ${body}
+      </div>
+    </div>
+  `;
+}
+
+function buildPostThreadHtml(thread, postIndex, threadIndex) {
+  const top = thread && thread.top_level ? thread.top_level : {};
+  const replies = thread && Array.isArray(thread.replies) ? thread.replies : [];
+
+  const commentId = `post-${postIndex}-comment-${threadIndex}`;
+  const avatar = getRandomCommentAvatar(top.author && top.author.name);
+  const authorName = top.author && top.author.name ? top.author.name : 'Anonymous';
+  const authorLabel = isUploaderName(authorName)
+    ? '<span class="yt-uploader-label" style="font-size:12px;margin-left:4px;">Uploader</span>'
+    : '';
+
+  const likeText = top.like_count != null && String(top.like_count).trim()
+    ? `<span class="comment-likes"><span class="like-emoji">&#128077;</span> ${escapeHtml(top.like_count)}</span>`
+    : '';
+
+  const pinned = top.is_pinned ? `<span class="yt-post-comment-pinned">Pinned</span>` : '';
+  const hearted = top.is_hearted ? buildHeartBadge() : '';
+  const published = top.published ? `<span class="comment-date">${escapeHtml(top.published)}</span>` : '';
+
+  const repliesHtml = replies.length
+    ? `
+      <div class="replies" id="${commentId}-replies" style="display:none; margin-left: 50px;">
+        ${replies.map(reply => buildReplyHtml(reply)).join('')}
+      </div>
+      <div class="reply-toggle" style="margin-left: 50px; margin-bottom: 10px;">
+        <button class="show-replies-btn" onclick="
+          document.getElementById('${commentId}-replies').style.display = 'block';
+          this.style.display = 'none';
+          document.getElementById('${commentId}-hide-btn').style.display = 'inline';
+        ">
+          Show ${replies.length} repl${replies.length === 1 ? 'y' : 'ies'}
+        </button>
+        <button id="${commentId}-hide-btn" class="hide-replies-btn" style="display: none;" onclick="
+          document.getElementById('${commentId}-replies').style.display = 'none';
+          this.style.display = 'none';
+          this.previousElementSibling.style.display = 'inline';
+        ">
+          Hide replies
+        </button>
+      </div>
+    `
+    : '';
+
+  return `
+    <div class="comment">
+      <img src="${avatar}" class="comment-avatar" alt="pfp">
+      <div class="comment-content">
+        <a href="#" onclick="return false;">
+          ${escapeHtml(authorName)}${authorLabel}
+        </a>
+        <div class="comment-meta-row">
+          ${published}
+          ${likeText}
+          ${pinned}
+          ${hearted}
+        </div>
+        <p>${formatPostText(top.content || '')}</p>
+      </div>
+    </div>
+    ${repliesHtml}
+  `;
+}
+
+function buildReplyHtml(reply) {
+  const avatar = getRandomCommentAvatar(reply && reply.author ? reply.author.name : '');
+  const authorName = reply && reply.author && reply.author.name ? reply.author.name : 'Anonymous';
+  const likeText = reply && reply.like_count != null && String(reply.like_count).trim()
+    ? `<span class="comment-likes"><span class="like-emoji">&#128077;</span> ${escapeHtml(reply.like_count)}</span>`
+    : '';
+  const published = reply && reply.published ? `<span class="comment-date">${escapeHtml(reply.published)}</span>` : '';
+
+  return `
+    <div class="comment">
+      <img src="${avatar}" class="comment-avatar" alt="pfp">
+      <div class="comment-content">
+        <a href="#" onclick="return false;">${escapeHtml(authorName)}</a>
+        <div class="comment-meta-row">
+          ${published}
+          ${likeText}
+        </div>
+        <p>${formatPostText(reply.content || '')}</p>
+      </div>
+    </div>
+  `;
+}
+
+function buildHeartBadge() {
+  return `
+    <span class="comment-favorited">
+      <img class="uploader-fav-pfp" src="${POSTS_UPLOADER_PFP}" alt="Uploader">
+      <span class="fav-heart">&#10084;&#65039;</span>
+    </span>
+  `;
+}
+
+function formatPostText(text) {
+  return escapeHtml(text || '').replace(/\n/g, '<br>');
+}
+
+function getUploaderAvatar(authorName) {
+  if (isUploaderName(authorName)) return POSTS_UPLOADER_PFP;
+  return POSTS_UPLOADER_PFP;
+}
+
+function getRandomCommentAvatar(authorName) {
+  if (isUploaderName(authorName)) return POSTS_UPLOADER_PFP;
+  return POSTS_PROFILE_PICS[Math.floor(Math.random() * POSTS_PROFILE_PICS.length)];
+}
+
+function isUploaderName(name) {
+  const normalized = String(name || '').trim().toLowerCase().replace(/^@/, '');
+  return POSTS_UPLOADER_NAMES.has(normalized);
+}
+
 // === Startup & tab-switching ===
 document.addEventListener('DOMContentLoaded', async () => {
   getDebugOverlay();
@@ -2306,6 +2933,7 @@ document.addEventListener('fullscreenchange', () => {
 
   // === Tab switching ===
   const ytBtn = document.getElementById('tab-youtube');
+  const postsBtn = document.getElementById('tab-youtube-posts');
   const daBtn = document.getElementById('tab-deviantart');
   const tu1Btn = document.getElementById('tab-tumblr');
   const tu2Btn = document.getElementById('tab-tumblr2');
@@ -2313,6 +2941,7 @@ document.addEventListener('fullscreenchange', () => {
   const settingsBtn = document.getElementById('tab-settings');
   const startup = document.getElementById('startup-screen');
   const ytSec = document.getElementById('app-content');
+  const postsSec = document.getElementById('youtube-posts-section');
   const daSec = document.getElementById('deviantart-section');
   const tu1Sec = document.getElementById('tumblr-section');
   const tu2Sec = document.getElementById('tumblr2-section');
@@ -2335,13 +2964,17 @@ document.addEventListener('fullscreenchange', () => {
 
   function showSection(name) {
     if (typeof stopMusic === 'function' && name !== 'deviantart') stopMusic();
-    [startup, ytSec, daSec, tu1Sec, tu2Sec, creditsSec, settingsSec].forEach(s => { if (s) s.style.display = 'none'; });
-    [ytBtn, daBtn, tu1Btn, tu2Btn, creditsBtn, settingsBtn].forEach(b => b && b.classList.remove('active'));
+    [startup, ytSec, postsSec, daSec, tu1Sec, tu2Sec, creditsSec, settingsSec].forEach(s => { if (s) s.style.display = 'none'; });
+    [ytBtn, postsBtn, daBtn, tu1Btn, tu2Btn, creditsBtn, settingsBtn].forEach(b => b && b.classList.remove('active'));
 
     if (name === 'youtube') {
       ytSec.style.display = 'block';
       ytBtn.classList.add('active');
       initializeYouTubeTab(true); // Ensure all controls and listeners are active
+    } else if (name === 'posts') {
+      postsSec.style.display = 'block';
+      postsBtn.classList.add('active');
+      initializePostsTab();
     } else if (name === 'deviantart') {
       daSec.style.display = 'block';
       daBtn.classList.add('active');
@@ -2365,6 +2998,7 @@ document.addEventListener('fullscreenchange', () => {
   }
 
   ytBtn.addEventListener('click', () => showSection('youtube'));
+  postsBtn.addEventListener('click', () => showSection('posts'));
   daBtn.addEventListener('click', () => showSection('deviantart'));
   tu1Btn.addEventListener('click', () => showSection('tumblr'));
   tu2Btn.addEventListener('click', () => showSection('tumblr2'));
