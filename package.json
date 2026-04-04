@@ -1,6 +1,6 @@
 {
   "name": "offline-tamers12345-archive",
-  "version": "8.0.0",
+  "version": "8.3.2",
   "description": "Offline YouTube + DeviantArt + Tumblr archive",
   "author": "TamersArchiver <TamersArchiver@proton.me>",
   "publisher": "TamersArchiver@proton.me",
@@ -26,32 +26,46 @@
     },
     "win": {
       "icon": "build-icon/archive.ico",
-      "target": ["nsis"],
+      "target": [
+        "nsis"
+      ],
       "extraFiles": [
         {
           "from": "ffmpeg-bin/win",
           "to": "ffmpeg-bin/win",
-          "filter": ["ffmpeg.exe"]
+          "filter": [
+            "ffmpeg.exe"
+          ]
         }
       ]
     },
     "mac": {
-      "target": ["dmg", "zip"],
+      "target": [
+        "dmg",
+        "zip"
+      ],
       "extraFiles": [
         {
           "from": "ffmpeg-bin/mac",
           "to": "ffmpeg-bin/mac",
-          "filter": ["ffmpeg"]
+          "filter": [
+            "ffmpeg"
+          ]
         }
       ]
     },
     "linux": {
-      "target": ["AppImage", "deb"],
+      "target": [
+        "AppImage",
+        "deb"
+      ],
       "extraFiles": [
         {
           "from": "ffmpeg-bin/linux",
           "to": "ffmpeg-bin/linux",
-          "filter": ["ffmpeg"]
+          "filter": [
+            "ffmpeg"
+          ]
         }
       ]
     },
@@ -78,7 +92,7 @@
     "uuid": "^11.1.0"
   },
   "devDependencies": {
-    "electron": "^28.0.0",
+    "electron": "^41.0.2",
     "electron-builder": "^26.0.12"
   }
 }

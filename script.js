@@ -118,7 +118,7 @@ function setupThumbnailPreviews() {
 
 
 
-// Helper for thumbnails: derive .mp4 from thumbnail image name
+// Helper for thumbnails: fallback if data-filename is missing
 function getFilenameFromThumb(thumb) {
   const img = thumb.querySelector('img');
   if (!img) return "";
@@ -825,7 +825,8 @@ async function loadChatFiles() {
 }
 
 async function loadComments(video, sortType = localStorage.getItem('commentSortType') || "newest") {
-  const safeFilename = video.filename.replace(/\.mp4$/, '.json');
+  // Map any video extension (.mp4/.webm/etc.) to the matching comments json file.
+  const safeFilename = video.filename.replace(/\.[^/.]+$/, '.json');
   const commentContainer = document.getElementById('comments-section');
   commentContainer.innerHTML = '';
   commentContainer.style.display = 'none';
@@ -924,7 +925,9 @@ async function loadComments(video, sortType = localStorage.getItem('commentSortT
      </div>` +
     (usedLegacy ? `
       <p style="color:#999;font-size:12px;margin-top:-10px;">
-        Unfortunately I was not able to archive all of the comments from Tamers' old channel. At the time, I did not have a consistent way to scrape the comments like I do now. What you see below are only <em>some</em> of the comments that were preserved in the video's metadata files, and they do not reflect the actual number or full range of comments these videos once had.
+        Unfortunately I was not able to archive all of the comments from Tamers' old channel. At the time, I did not have a consistent way to scrape the comments like I do now. What you see below are only some of the comments that were preserved in the video's metadata files, and they do not reflect the actual number or full range of comments these videos once had. On top of that some of the information such as the day the comment was posted might be wrong, not sure why that is but it is.
+
+
       </p>` : '') +
     sortedComments.map((comment, index) => {
       // Randomize comment PFP
@@ -1331,6 +1334,7 @@ function renderVideoGrid() {
 
     const div = document.createElement('div');
     div.className = 'video-thumbnail';
+    div.dataset.filename = video.filename;
     div.innerHTML = `
       <div class="thumbnail-container">
         <img src="${video.thumbnail}" alt="${video.title}">
