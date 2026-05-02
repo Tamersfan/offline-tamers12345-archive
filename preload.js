@@ -4,6 +4,8 @@ const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld('electronAPI', {
   getSettings:         () => ipcRenderer.invoke('get-settings'),
   setSetting:          (key, value) => ipcRenderer.invoke('set-setting', key, value),
+  getUserPlaylists:    () => ipcRenderer.invoke('get-user-playlists'),
+  saveUserPlaylists:   (playlists) => ipcRenderer.invoke('save-user-playlists', playlists),
   selectVideoFolder:   () => ipcRenderer.invoke('select-video-folder'),
   readImageFiles:      () => ipcRenderer.invoke('read-image-files'),
   readTumblrHTML:      () => ipcRenderer.invoke('read-tumblr-html'),
@@ -38,6 +40,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   },
 
   showSaveDialog:      (defaultPath) => ipcRenderer.invoke('show-save-dialog', defaultPath),
+  exportUserPlaylist:  (playlist, defaultName) => ipcRenderer.invoke('export-user-playlist', { playlist, defaultName }),
+  importUserPlaylist:  () => ipcRenderer.invoke('import-user-playlist'),
 
   // Export video clip
   exportClip:          (opts) => ipcRenderer.invoke('export-clip', opts)

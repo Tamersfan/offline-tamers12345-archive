@@ -5,11 +5,9 @@ const os = require('os');
 const fs = require('fs');
 const https = require('https');
 const { spawn } = require('child_process');
-const { autoUpdater } = require('electron-updater');
 const { pathToFileURL } = require('url');
 
 function getFfmpegPath() {
-  // Handles ASAR packaging too
   let binFolder = '';
   let exe = 'ffmpeg';
   switch (process.platform) {
@@ -24,19 +22,27 @@ function getFfmpegPath() {
       binFolder = 'linux';
       break;
   }
+  const candidates = [];
+  if (app.isPackaged) {
+    candidates.push(path.join(process.resourcesPath, 'ffmpeg-bin', binFolder, exe));
+  }
+
   let dir = __dirname;
-  // If using ASAR, get path outside asar for binaries
   if (dir.endsWith('.asar')) dir = dir.replace('.asar', '.asar.unpacked');
-  return path.join(dir, 'ffmpeg-bin', binFolder, exe);
+  candidates.push(path.join(dir, 'ffmpeg-bin', binFolder, exe));
+
+  return candidates.find(p => fs.existsSync(p)) || candidates[0];
 }
 
 const userData = app.getPath('userData');
 const settingsPath = path.join(userData, 'settings.json');
 const versionsPath = path.join(userData, 'versions.json');
+const userPlaylistsPath = path.join(userData, 'user-playlists.json');
 
 console.log('▶️  Starting Electron main process');
 
 let win = null;
+let updaterStarted = false;
 
 function createWindow() {
   console.log('   ↳ createWindow() called');
@@ -54,6 +60,90 @@ function createWindow() {
   win.loadFile('index.html')
      .then(() => console.log('   ↳ index.html loaded'))
      .catch(err => console.error('   ✖ failed to load index.html:', err));
+}
+
+function startAutoUpdater() {
+  if (updaterStarted) return;
+  updaterStarted = true;
+
+  if (!app.isPackaged) {
+    console.log('   -> Skipping update check in development');
+    return;
+  }
+
+  let autoUpdater;
+  try {
+    ({ autoUpdater } = require('electron-updater'));
+  } catch (err) {
+    console.error('   -> failed to load electron-updater:', err);
+    return;
+  }
+
+  autoUpdater.autoDownload = false;
+
+  autoUpdater.on('update-available', info => {
+    console.log('   -> Update available:', info);
+    dialog.showMessageBox({
+      type: 'info',
+      buttons: ['Download update', 'Later'],
+      defaultId: 0,
+      cancelId: 1,
+      title: 'Update Available',
+      message: `Version ${info.version} is available. Would you like to download it now?`,
+      detail: info.releaseName || ''
+    }).then(({ response }) => {
+      if (response === 0) {
+        console.log('   -> User chose to download update');
+        autoUpdater.downloadUpdate();
+      } else {
+        console.log('   -> User postponed the update');
+      }
+    });
+  });
+
+  autoUpdater.on('update-downloaded', info => {
+    console.log('   -> Update downloaded:', info);
+    const plainNotes = (info.releaseNotes || '')
+      .replace(/<[^>]+>/g, '')
+      .replace(/\s{2,}/g, ' ')
+      .trim();
+
+    dialog.showMessageBox({
+      type: 'question',
+      buttons: [
+        'Restart program now and install update.',
+        'Later, install the update when I close the program.'
+      ],
+      defaultId: 0,
+      cancelId: 1,
+      title: 'Install Updates',
+      message: 'The update has been downloaded and is ready.',
+      detail: plainNotes
+    }).then(({ response }) => {
+      if (response === 0) {
+        console.log('   -> Installing update now');
+        autoUpdater.quitAndInstall();
+      } else {
+        console.log('   -> Will install on exit');
+      }
+    });
+  });
+
+  autoUpdater.on('error', err => {
+    console.error('   -> Auto-updater error:', err);
+  });
+
+  autoUpdater.on('download-progress', progressObj => {
+    console.log(`   -> Download speed: ${progressObj.bytesPerSecond} - ${Math.round(progressObj.percent)}%`);
+    if (win && win.webContents) {
+      win.webContents.send('update-download-progress', progressObj);
+    }
+  });
+
+  console.log('   -> Checking for updates...');
+  autoUpdater.checkForUpdates().catch(err => {
+    console.error('   -> Auto-updater check failed:', err);
+  });
 }
 
 // === IPC for GIF creation ===
@@ -170,13 +260,10 @@ ipcMain.handle('make-gif-from-frames', async (event, { framePaths, outputPath, f
 });
 
 // === IPC for extracting GIF frames ===
-const { v4: uuidv4 } = require('uuid');
 ipcMain.handle('extract-gif-frames', async (event, { inputPath, start, duration, fps }) => {
   return new Promise((resolve, reject) => {
     const ffmpegPath = getFfmpegPath();
-    const tmpDir = os.tmpdir();
-    const outDir = path.join(tmpDir, 'gif-frames-' + uuidv4());
-    fs.mkdirSync(outDir, { recursive: true });
+    const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'gif-frames-'));
     const outputPattern = path.join(outDir, 'frame_%04d.png');
 
     // Extract frames with ffmpeg
@@ -236,33 +323,112 @@ ipcMain.handle('show-save-dialog', async (_event, defaultName, format) => {
   return canceled ? null : filePath;
 });
 
+ipcMain.handle('export-user-playlist', async (_event, { playlist, defaultName }) => {
+  const { canceled, filePath } = await dialog.showSaveDialog({
+    title: 'Export Playlist',
+    defaultPath: defaultName || 'playlist.playlist',
+    filters: [
+      { name: 'Tamers Playlist', extensions: ['playlist'] },
+      { name: 'JSON', extensions: ['json'] }
+    ]
+  });
+  if (canceled || !filePath) return null;
+
+  const finalPath = /\.(playlist|json)$/i.test(filePath) ? filePath : `${filePath}.playlist`;
+  fs.writeFileSync(finalPath, JSON.stringify(playlist, null, 2), 'utf-8');
+  return finalPath;
+});
+
+ipcMain.handle('import-user-playlist', async () => {
+  const { canceled, filePaths } = await dialog.showOpenDialog({
+    title: 'Import Playlist',
+    properties: ['openFile'],
+    filters: [
+      { name: 'Tamers Playlist', extensions: ['playlist'] },
+      { name: 'JSON', extensions: ['json'] }
+    ]
+  });
+  if (canceled || !filePaths.length) return null;
+
+  const filePath = filePaths[0];
+  const text = fs.readFileSync(filePath, 'utf-8');
+  return {
+    filePath,
+    playlist: JSON.parse(text)
+  };
+});
+
 // === Clip Export ===
 ipcMain.handle('export-clip', async (event, { file, start, duration, format, outputPath }) => {
   return new Promise((resolve, reject) => {
     const ffmpegPath = getFfmpegPath();
 
+    if (!file || !outputPath) {
+      return reject(new Error('Missing input or output path.'));
+    }
+    if (!Number.isFinite(start) || !Number.isFinite(duration) || duration <= 0) {
+      return reject(new Error('Invalid clip time range.'));
+    }
+
     let args = [
+      '-hide_banner',
+      '-nostdin',
+      '-y',
       '-ss', String(start),
       '-i', file,
-      '-t', String(duration)
+      '-t', String(duration),
+      '-map', '0:v:0',
+      '-sn',
+      '-dn',
+      '-map_metadata', '-1',
+      '-avoid_negative_ts', 'make_zero',
+      '-fflags', '+genpts',
+      '-max_muxing_queue_size', '4096'
     ];
     if (format === 'mp4') {
-      args.push('-c', 'copy', outputPath);
+      args.push(
+        '-map', '0:a:0?',
+        '-c:v', 'libx264',
+        '-preset', 'veryfast',
+        '-crf', '18',
+        '-pix_fmt', 'yuv420p',
+        '-profile:v', 'high',
+        '-c:a', 'aac',
+        '-b:a', '192k',
+        '-ar', '48000',
+        '-ac', '2',
+        '-movflags', '+faststart',
+        outputPath
+      );
     } else if (format === 'webm') {
-      // Use VP9, scale to 480p, no audio
-      args.push('-vf', 'scale=-2:480', '-an', '-c:v', 'libvpx-vp9', '-b:v', '1M', outputPath);
+      args.push(
+        '-vf', 'scale=-2:480',
+        '-an',
+        '-c:v', 'libvpx-vp9',
+        '-b:v', '1M',
+        '-deadline', 'good',
+        '-cpu-used', '4',
+        '-row-mt', '1',
+        '-pix_fmt', 'yuv420p',
+        outputPath
+      );
     } else {
       return reject(new Error('Unknown format: ' + format));
     }
 
     const proc = spawn(ffmpegPath, args);
+    let stderr = '';
     proc.on('error', reject);
+    proc.stderr?.on('data', chunk => {
+      stderr += chunk.toString();
+      if (stderr.length > 8000) stderr = stderr.slice(-8000);
+    });
 
     proc.on('close', (code) => {
       if (code === 0 && fs.existsSync(outputPath)) {
         resolve({ success: true, outputPath });
       } else {
-        reject(new Error('ffmpeg export failed, code: ' + code));
+        reject(new Error(`ffmpeg export failed, code: ${code}${stderr ? `\n${stderr.trim()}` : ''}`));
       }
     });
   });
@@ -289,15 +455,67 @@ function saveJSON(filePath, obj) {
   }
 }
 
+function readImageDimensions(filePath) {
+  let fd;
+  try {
+    fd = fs.openSync(filePath, 'r');
+    const header = Buffer.alloc(128 * 1024);
+    const bytesRead = fs.readSync(fd, header, 0, header.length, 0);
+    const buf = header.subarray(0, bytesRead);
+
+    if (buf.length >= 24 && buf.slice(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))) {
+      return { width: buf.readUInt32BE(16), height: buf.readUInt32BE(20) };
+    }
+
+    if (buf.length >= 10 && buf.toString('ascii', 0, 3) === 'GIF') {
+      return { width: buf.readUInt16LE(6), height: buf.readUInt16LE(8) };
+    }
+
+    if (buf.length >= 4 && buf[0] === 0xff && buf[1] === 0xd8) {
+      let offset = 2;
+      while (offset + 9 < buf.length) {
+        if (buf[offset] !== 0xff) {
+          offset += 1;
+          continue;
+        }
+
+        const marker = buf[offset + 1];
+        offset += 2;
+        if (marker === 0xd8 || marker === 0xd9) continue;
+        if (offset + 2 > buf.length) break;
+
+        const length = buf.readUInt16BE(offset);
+        if (length < 2 || offset + length > buf.length) break;
+
+        if (
+          (marker >= 0xc0 && marker <= 0xc3) ||
+          (marker >= 0xc5 && marker <= 0xc7) ||
+          (marker >= 0xc9 && marker <= 0xcb) ||
+          (marker >= 0xcd && marker <= 0xcf)
+        ) {
+          return {
+            height: buf.readUInt16BE(offset + 3),
+            width: buf.readUInt16BE(offset + 5)
+          };
+        }
+
+        offset += length;
+      }
+    }
+  } catch (e) {
+    return {};
+  } finally {
+    if (fd !== undefined) fs.closeSync(fd);
+  }
+
+  return {};
+}
+
 app.whenReady()
   .then(() => {
     console.log('   ↳ app.whenReady resolved');
     createWindow();
-
-    // ── Manual update flow ───────────────────────────────────────────────
-    autoUpdater.autoDownload = false;  // don’t download until user agrees
-    console.log('   ↳ Checking for updates…');
-    autoUpdater.checkForUpdates();
+    setTimeout(startAutoUpdater, 5000);
   })
   .catch(err => console.error('   ✖ app.whenReady error:', err));
 
@@ -316,6 +534,21 @@ ipcMain.handle('get-settings', async () => {
   return loadJSON(settingsPath, {});
 });
 
+ipcMain.handle('get-user-playlists', async () => {
+  return {
+    exists: fs.existsSync(userPlaylistsPath),
+    playlists: loadJSON(userPlaylistsPath, [])
+  };
+});
+
+ipcMain.handle('save-user-playlists', async (_event, playlists) => {
+  if (!Array.isArray(playlists)) {
+    throw new Error('Invalid playlist data.');
+  }
+  saveJSON(userPlaylistsPath, playlists);
+  return { success: true };
+});
+
 ipcMain.handle('select-video-folder', async () => {
   const result = await dialog.showOpenDialog({ properties: ['openDirectory'] });
   if (!result.canceled && result.filePaths.length) {
@@ -329,7 +562,16 @@ ipcMain.handle('select-video-folder', async () => {
 ipcMain.handle('read-image-files', async () => {
   const folder = path.join(__dirname, 'deviantart', 'deviantart art framed');
   const files = fs.readdirSync(folder).filter(f => /\.(png|jpe?g|gif)$/i.test(f));
-  return files.map(f => ({ filename: f, path: path.join(folder, f) }));
+  return files.map(f => {
+    const filePath = path.join(folder, f);
+    const stat = fs.statSync(filePath);
+    return {
+      filename: f,
+      path: filePath,
+      size: stat.size,
+      ...readImageDimensions(filePath)
+    };
+  });
 });
 
 ipcMain.handle('read-tumblr-html', async () => {
@@ -473,66 +715,6 @@ ipcMain.handle('set-setting', async (_event, key, value) => {
 // ── Open external link in user's default browser ─────────────
 ipcMain.handle('open-external', async (_event, url) => {
   await shell.openExternal(url);
-});
-
-// ── Auto‐Updater Events ──────────────────────────────────────────────────
-autoUpdater.on('update-available', info => {
-  console.log('   ↳ Update available:', info);
-  dialog.showMessageBox({
-    type: 'info',
-    buttons: ['Download update', 'Later'],
-    defaultId: 0,
-    cancelId: 1,
-    title: 'Update Available',
-    message: `Version ${info.version} is available. Would you like to download it now?`,
-    detail: info.releaseName || ''
-  }).then(({ response }) => {
-    if (response === 0) {
-      console.log('   ↳ User chose to download update');
-      autoUpdater.downloadUpdate();
-    } else {
-      console.log('   ↳ User postponed the update');
-    }
-  });
-});
-
-autoUpdater.on('update-downloaded', info => {
-  console.log('   ↳ Update downloaded:', info);
-  const plainNotes = (info.releaseNotes || '')
-    .replace(/<[^>]+>/g, '')
-    .replace(/\s{2,}/g, ' ')
-    .trim();
-
-  dialog.showMessageBox({
-    type: 'question',
-    buttons: [
-      'Restart program now and install update.',
-      'Later, install the update when I close the program.'
-    ],
-    defaultId: 0,
-    cancelId: 1,
-    title: 'Install Updates',
-    message: 'The update has been downloaded and is ready.',
-    detail: plainNotes
-  }).then(({ response }) => {
-    if (response === 0) {
-      console.log('   ↳ Installing update now');
-      autoUpdater.quitAndInstall();
-    } else {
-      console.log('   ↳ Will install on exit');
-    }
-  });
-});
-
-autoUpdater.on('error', err => {
-  console.error('   ↳ Auto‐updater error:', err);
-});
-
-autoUpdater.on('download-progress', progressObj => {
-  console.log(`   ↳ Download speed: ${progressObj.bytesPerSecond} — ${Math.round(progressObj.percent)}%`);
-  if (win && win.webContents) {
-    win.webContents.send('update-download-progress', progressObj);
-  }
 });
 
 // ── Check for updated or missing videos ───────────────────────────────────

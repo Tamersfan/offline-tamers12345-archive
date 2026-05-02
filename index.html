@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Offline Tamers12345 Archive</title>
   <link rel="stylesheet" href="style.css">
-  <script src="libs/libass/subtitles-octopus.js"></script>
   <script>
     window.SubtitlesOctopusWorkerUrl = 'libs/libass/subtitles-octopus-worker.js';
 
@@ -124,6 +123,10 @@
       <select id="playlistSelect">
         <option value="all">All</option>
       </select>
+      <button id="create-playlist-btn" type="button" style="margin-left: 6px;">New Playlist</button>
+      <button id="export-playlist-btn" type="button">Export</button>
+      <button id="import-playlist-btn" type="button">Import</button>
+      <button id="delete-playlist-btn" type="button">Delete</button>
       <button id="change-folder-btn" style="margin-left: 10px;">Change Video Folder</button>
     </div>
     <div style="padding: 10px 0 0 0;">
@@ -344,7 +347,7 @@ window.addEventListener('DOMContentLoaded', function() {
   // === MATRIX CODE RAIN EFFECT ===
   (function() {
     const canvas = document.getElementById('matrix-bg');
-    let ctx, cols, drops, animationId;
+    let ctx, cols, drops, timerId;
     const fontSize = 18;
     const chars = "アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズヅブプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
@@ -357,6 +360,10 @@ window.addEventListener('DOMContentLoaded', function() {
     }
 
     function draw() {
+      if (document.body.getAttribute('data-theme') !== 'matrix') {
+        timerId = null;
+        return;
+      }
       ctx.fillStyle = "rgba(5,14,6,0.28)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.font = fontSize + "px monospace";
@@ -367,7 +374,7 @@ window.addEventListener('DOMContentLoaded', function() {
         if (Math.random() > 0.96) drops[i] = 0;
         drops[i]++;
       }
-      setTimeout(draw, 50); // 50ms delay ≈ 20fps
+      timerId = setTimeout(draw, 50); // 50ms delay ≈ 20fps
     }
 
     function maybeStartMatrix() {
@@ -376,16 +383,12 @@ window.addEventListener('DOMContentLoaded', function() {
         canvas.style.display = 'block';
         ctx = canvas.getContext('2d');
         resize();
-        if (animationId) {
-          cancelAnimationFrame(animationId);
-          animationId = null;
-        }
-        draw();
+        if (!timerId) draw();
       } else {
         canvas.style.display = 'none';
-        if (animationId) {
-          cancelAnimationFrame(animationId);
-          animationId = null;
+        if (timerId) {
+          clearTimeout(timerId);
+          timerId = null;
         }
       }
     }

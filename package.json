@@ -1,6 +1,6 @@
 {
   "name": "offline-tamers12345-archive",
-  "version": "8.3.2",
+  "version": "9.0.0",
   "description": "Offline YouTube + DeviantArt + Tumblr archive",
   "author": "TamersArchiver <TamersArchiver@proton.me>",
   "publisher": "TamersArchiver@proton.me",
@@ -14,12 +14,12 @@
     "productName": "Offline Tamers12345 Archive",
     "icon": "build-icon/archive.ico",
     "files": [
-      "**/*"
-    ],
-    "asarUnpack": [
-      "ffmpeg-bin/win/**",
-      "ffmpeg-bin/mac/**",
-      "ffmpeg-bin/linux/**"
+      "**/*",
+      "!dist/**",
+      "!ffmpeg-bin/**",
+      "!package-lock.json",
+      "!renderer.js",
+      "!*.log"
     ],
     "directories": {
       "buildResources": "assets"
@@ -29,7 +29,7 @@
       "target": [
         "nsis"
       ],
-      "extraFiles": [
+      "extraResources": [
         {
           "from": "ffmpeg-bin/win",
           "to": "ffmpeg-bin/win",
@@ -44,7 +44,7 @@
         "dmg",
         "zip"
       ],
-      "extraFiles": [
+      "extraResources": [
         {
           "from": "ffmpeg-bin/mac",
           "to": "ffmpeg-bin/mac",
@@ -59,7 +59,7 @@
         "AppImage",
         "deb"
       ],
-      "extraFiles": [
+      "extraResources": [
         {
           "from": "ffmpeg-bin/linux",
           "to": "ffmpeg-bin/linux",
@@ -87,9 +87,7 @@
     ]
   },
   "dependencies": {
-    "electron-updater": "^6.6.2",
-    "ffmpeg-static": "^5.2.0",
-    "uuid": "^11.1.0"
+    "electron-updater": "^6.6.2"
   },
   "devDependencies": {
     "electron": "^41.0.2",

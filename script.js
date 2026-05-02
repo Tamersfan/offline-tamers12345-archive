@@ -1,6 +1,7 @@
 // === Storage Keys ===
 const STORAGE_KEYS = {
-  tagFilter: 'tagFilterValue'
+  tagFilter: 'tagFilterValue',
+  userPlaylists: 'userPlaylistsV1'
 };
 
 // === Global State ===
@@ -15,9 +16,16 @@ let favorites = new Set(JSON.parse(localStorage.getItem('favorites') || '[]'));
 let subtitlesData = {};
 let assRenderer = null;
 let currentBlobUrl = null;
+let subtitlesOctopusLoadPromise = null;
+let subtitleLoadToken = 0;
+let textSubtitleState = null;
 let watchedVideos = new Set(JSON.parse(localStorage.getItem('watched') || '[]'));
 let showWatched = true;
 let progressInterval = null;
+let lazyImageObserver = null;
+let commentsLoadToken = 0;
+let renderCurrentChatWindow = null;
+let userPlaylists = loadUserPlaylists();
 
 let altVideoURLs = {};
 
@@ -36,7 +44,7 @@ let currentAltVideo = null;
 let postsTabInitialized = false;
 let postsDataCache = [];
 let postOverrides = null;
-const POSTS_PROFILE_PICS = [...Array(34)].map((_, i) => `PFPs/pfp${i + 1}.png`);
+const POSTS_PROFILE_PICS = [...Array(35)].map((_, i) => `PFPs/pfp${i + 1}.png`);
 const POSTS_UPLOADER_PFP = 'PFPs/tamers.png';
 const POSTS_UPLOADER_NAMES = new Set([
   'tamersdandysworld',
@@ -45,6 +53,197 @@ const POSTS_UPLOADER_NAMES = new Set([
   'tamers12345official',
   'tamers12345'
 ]);
+const LAZY_IMAGE_PLACEHOLDER = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="16" height="9" viewBox="0 0 16 9"%3E%3Crect width="16" height="9" fill="%23222"/%3E%3C/svg%3E';
+const CHAT_SEEK_BACKFILL_MESSAGES = 160;
+const USER_PLAYLIST_PREFIX = 'user:';
+const USER_PLAYLIST_FILE_FORMAT = 'offline-tamers12345-archive-playlist';
+
+function createUserPlaylistId() {
+  if (window.crypto?.randomUUID) return window.crypto.randomUUID();
+  return `pl-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+}
+
+function normalizeUserPlaylist(playlist) {
+  const id = String(playlist?.id || createUserPlaylistId());
+  const name = String(playlist?.name || 'Untitled Playlist').trim() || 'Untitled Playlist';
+  const seen = new Set();
+  const videoFilenames = [];
+  const sourceVideos = Array.isArray(playlist?.videoFilenames)
+    ? playlist.videoFilenames
+    : Array.isArray(playlist?.videos)
+      ? playlist.videos.map(v => typeof v === 'string' ? v : v?.filename)
+      : [];
+
+  sourceVideos.forEach(filename => {
+    const clean = String(filename || '').trim();
+    if (clean && !seen.has(clean)) {
+      seen.add(clean);
+      videoFilenames.push(clean);
+    }
+  });
+
+  return {
+    id,
+    name,
+    videoFilenames,
+    createdAt: playlist?.createdAt || new Date().toISOString(),
+    updatedAt: playlist?.updatedAt || new Date().toISOString()
+  };
+}
+
+function loadUserPlaylists() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(STORAGE_KEYS.userPlaylists) || '[]');
+    return Array.isArray(parsed) ? parsed.map(normalizeUserPlaylist) : [];
+  } catch (e) {
+    console.warn('Could not load user playlists:', e);
+    return [];
+  }
+}
+
+function saveUserPlaylists() {
+  localStorage.setItem(STORAGE_KEYS.userPlaylists, JSON.stringify(userPlaylists));
+  const savePromise = window.electronAPI?.saveUserPlaylists?.(userPlaylists);
+  if (savePromise?.catch) {
+    savePromise.catch(e => console.warn('Could not save user playlists to app data:', e));
+  }
+}
+
+async function hydrateUserPlaylistsFromDisk() {
+  if (!window.electronAPI?.getUserPlaylists) return;
+
+  try {
+    const result = await window.electronAPI.getUserPlaylists();
+    const diskPlaylists = Array.isArray(result?.playlists)
+      ? result.playlists.map(normalizeUserPlaylist)
+      : [];
+
+    if (result?.exists) {
+      userPlaylists = diskPlaylists;
+      localStorage.setItem(STORAGE_KEYS.userPlaylists, JSON.stringify(userPlaylists));
+      return;
+    }
+
+    if (userPlaylists.length) {
+      await window.electronAPI.saveUserPlaylists(userPlaylists);
+    }
+  } catch (e) {
+    console.warn('Could not load user playlists from app data:', e);
+  }
+}
+
+function getUserPlaylistSelectValue(playlist) {
+  return `${USER_PLAYLIST_PREFIX}${playlist.id}`;
+}
+
+function isUserPlaylistValue(value) {
+  return String(value || '').startsWith(USER_PLAYLIST_PREFIX);
+}
+
+function getUserPlaylistFromValue(value) {
+  if (!isUserPlaylistValue(value)) return null;
+  const id = String(value).slice(USER_PLAYLIST_PREFIX.length);
+  return userPlaylists.find(playlist => playlist.id === id) || null;
+}
+
+function getVideoByFilename(filename) {
+  return rawVideoData.find(video => video.filename === filename) || null;
+}
+
+function getUserPlaylistVideos(playlist) {
+  if (!playlist) return [];
+  return playlist.videoFilenames
+    .map(getVideoByFilename)
+    .filter(Boolean);
+}
+
+function getVideosForPlaylistSelection(value) {
+  if (value === 'all') return rawVideoData.slice();
+  const userPlaylist = getUserPlaylistFromValue(value);
+  if (userPlaylist) return getUserPlaylistVideos(userPlaylist);
+  return rawVideoData.filter(v => Array.isArray(v.tags) && v.tags.includes(value));
+}
+
+function makeUniquePlaylistName(name) {
+  const base = String(name || 'Imported Playlist').trim() || 'Imported Playlist';
+  const existing = new Set(userPlaylists.map(p => p.name.toLowerCase()));
+  if (!existing.has(base.toLowerCase())) return base;
+
+  let suffix = 2;
+  while (existing.has(`${base} (${suffix})`.toLowerCase())) suffix += 1;
+  return `${base} (${suffix})`;
+}
+
+function getSafePlaylistFileName(name) {
+  const safe = String(name || 'playlist')
+    .replace(/[<>:"/\\|?*\x00-\x1F]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  return `${safe || 'playlist'}.playlist`;
+}
+
+function revealLazyImage(img) {
+  if (!img || !img.dataset.src) return;
+  img.src = img.dataset.src;
+  delete img.dataset.src;
+  img.classList.remove('lazy-media');
+  if (lazyImageObserver) lazyImageObserver.unobserve(img);
+}
+
+function getLazyImageObserver() {
+  if (lazyImageObserver || !('IntersectionObserver' in window)) return lazyImageObserver;
+  lazyImageObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) revealLazyImage(entry.target);
+    });
+  }, { rootMargin: '240px 0px' });
+  return lazyImageObserver;
+}
+
+function lazyLoadImage(img, src) {
+  if (!img || !src) return;
+  img.dataset.src = src;
+  img.src = LAZY_IMAGE_PLACEHOLDER;
+  img.loading = 'lazy';
+  img.decoding = 'async';
+  img.classList.add('lazy-media');
+
+  const observer = getLazyImageObserver();
+  if (observer) {
+    observer.observe(img);
+  } else {
+    revealLazyImage(img);
+  }
+}
+
+function unobserveLazyImages(container) {
+  if (!lazyImageObserver || !container) return;
+  container.querySelectorAll('img[data-src]').forEach(img => lazyImageObserver.unobserve(img));
+}
+
+function loadVisibleLazyImages(container = document) {
+  container.querySelectorAll('img[data-src]').forEach(img => {
+    if (isElementInViewport(img, 240)) revealLazyImage(img);
+  });
+}
+
+function ensureSubtitlesOctopusLoaded() {
+  if (window.SubtitlesOctopus) return Promise.resolve();
+  if (subtitlesOctopusLoadPromise) return subtitlesOctopusLoadPromise;
+
+  subtitlesOctopusLoadPromise = new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = 'libs/libass/subtitles-octopus.js';
+    script.onload = () => resolve();
+    script.onerror = () => {
+      subtitlesOctopusLoadPromise = null;
+      reject(new Error('Failed to load ASS subtitle renderer.'));
+    };
+    document.head.appendChild(script);
+  });
+
+  return subtitlesOctopusLoadPromise;
+}
 
 function syncTagFilterUIFromState() {
   const sel = document.getElementById('tagFilter');
@@ -64,27 +263,59 @@ function syncTagFilterUIFromState() {
 let youtubeTabInitialized = false;
 
 // === Mini Preview Functions ===
-function setupThumbnailPreviews() {
-  document.querySelectorAll('.video-thumbnail').forEach(thumb => {
+function isElementInViewport(el, margin = 80) {
+  const rect = el.getBoundingClientRect();
+  return rect.bottom >= -margin &&
+    rect.right >= -margin &&
+    rect.top <= window.innerHeight + margin &&
+    rect.left <= window.innerWidth + margin;
+}
+
+function stopThumbnailPreview(thumb) {
+  if (thumb._previewTimer) {
+    clearTimeout(thumb._previewTimer);
+    thumb._previewTimer = null;
+  }
+  if (thumb._previewVideo) {
+    thumb._previewVideo.pause();
+    thumb._previewVideo.remove();
+    thumb._previewVideo = null;
+  }
+
+  const img = thumb.querySelector('.thumbnail-container img');
+  if (img) img.style.opacity = 1;
+}
+
+function setupThumbnailPreviews(container = document) {
+  container.querySelectorAll('.video-thumbnail').forEach(thumb => {
+    if (thumb._previewBound) return;
+    thumb._previewBound = true;
+
     const container = thumb.querySelector('.thumbnail-container');
+    if (!container) return;
     const img = container.querySelector('img');
     const filename = (thumb.dataset.filename || "").trim() || getFilenameFromThumb(thumb);
-    if (!container || !img || !filename) return;
-
-    let previewVideo = null;
+    if (!img || !filename) return;
 
     thumb.addEventListener('mouseenter', () => {
-      if (previewVideo) return;
-      previewVideo = document.createElement('video');
-      previewVideo.className = 'thumbnail-preview-video';
-      previewVideo.muted = true;
-      previewVideo.playsInline = true;
-      previewVideo.loop = false;
-      previewVideo.preload = 'auto';
-      previewVideo.src = "file://" + videoPath + "/" + filename;
-      previewVideo.style.display = 'none';
+      if (thumb._previewVideo || thumb._previewTimer || !isElementInViewport(thumb)) return;
 
-      previewVideo.addEventListener('loadedmetadata', () => {
+      thumb._previewTimer = setTimeout(() => {
+        thumb._previewTimer = null;
+        if (!thumb.matches(':hover') || !isElementInViewport(thumb)) return;
+
+        const previewVideo = document.createElement('video');
+        thumb._previewVideo = previewVideo;
+        previewVideo.className = 'thumbnail-preview-video';
+        previewVideo.muted = true;
+        previewVideo.playsInline = true;
+        previewVideo.loop = false;
+        previewVideo.preload = 'metadata';
+        previewVideo.src = "file://" + videoPath + "/" + filename;
+        previewVideo.style.display = 'none';
+
+        previewVideo.addEventListener('loadedmetadata', () => {
+          if (thumb._previewVideo !== previewVideo) return;
         // If longer than 30s, start at 15; else start at 0
         const start = previewVideo.duration > 30 ? 15 : 0;
         // End the preview after 15s or at the end of the video
@@ -101,17 +332,15 @@ function setupThumbnailPreviews() {
             previewVideo.play();
           }
         };
-      });
-      container.appendChild(previewVideo);
+        });
+
+        previewVideo.addEventListener('error', () => stopThumbnailPreview(thumb), { once: true });
+        container.appendChild(previewVideo);
+      }, 150);
     });
 
     thumb.addEventListener('mouseleave', () => {
-      if (previewVideo) {
-        previewVideo.pause();
-        previewVideo.remove();
-        previewVideo = null;
-      }
-      img.style.opacity = 1;
+      stopThumbnailPreview(thumb);
     });
   });
 }
@@ -255,14 +484,15 @@ async function exportClip(format) {
     clipExportStatus.textContent = "❌ Export cancelled.";
     return;
   }
-  window.electronAPI.exportClip({
-    file, start: s, duration, format, outputPath
-  }).then(() => {
+  try {
+    await window.electronAPI.exportClip({
+      file, start: s, duration, format, outputPath
+    });
     clipExportStatus.textContent = 'Export complete!';
-  }).catch(err => {
+  } catch (err) {
     clipExportStatus.textContent = 'Error: ' + (err?.message || err);
     console.error(err);
-  });
+  }
 }
 
 // --- DOM ---
@@ -548,6 +778,7 @@ async function initializeYouTubeTab(force = false) {
 
   const res = await fetch('data/videos.json');
   rawVideoData = await res.json();
+  await hydrateUserPlaylistsFromDisk();
 
   try {
     const subs = await fetch('data/subtitles.json');
@@ -613,12 +844,18 @@ async function initializeYouTubeTab(force = false) {
     if (playlistSelect) {
       playlistSelect.addEventListener('change', e => {
         selectedPlaylist = e.target.value;
+        updatePlaylistActionButtons();
         renderVideoGrid();
         if (selectedPlaylist === 'all') {
           renderQueue();
         }
       });
     }
+
+    document.getElementById('create-playlist-btn')?.addEventListener('click', handleCreateUserPlaylist);
+    document.getElementById('export-playlist-btn')?.addEventListener('click', handleExportUserPlaylist);
+    document.getElementById('import-playlist-btn')?.addEventListener('click', handleImportUserPlaylist);
+    document.getElementById('delete-playlist-btn')?.addEventListener('click', handleDeleteUserPlaylist);
 
     // Shuffle/reverse buttons (sidebar)
     const shuffleBtn = document.getElementById('shuffle-playlist-btn');
@@ -723,6 +960,7 @@ function removeFromQueue(filename) {
 function renderQueue() {
   const queueDiv = document.getElementById('playlist-queue');
   const queue = loadQueue();
+  unobserveLazyImages(queueDiv);
   queueDiv.innerHTML = '';
   const currentFile = currentVideoFilename;
 
@@ -734,11 +972,20 @@ function renderQueue() {
     if (currentFile === filename) {
       item.classList.add('current');
     }
-    item.innerHTML = `
-      <img class="queue-thumb" src="${video.thumbnail}">
-      <span class="queue-title">${video.title}</span>
-      <button class="remove-queue-btn">✕</button>
-    `;
+    const img = document.createElement('img');
+    img.className = 'queue-thumb';
+    img.alt = video.title || 'Thumbnail';
+    lazyLoadImage(img, video.thumbnail);
+
+    const title = document.createElement('span');
+    title.className = 'queue-title';
+    title.textContent = video.title || '';
+
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'remove-queue-btn';
+    removeBtn.textContent = '✕';
+
+    item.append(img, title, removeBtn);
 
     item.onclick = (e) => {
       if (e.target.classList.contains('remove-queue-btn')) return;
@@ -748,7 +995,7 @@ function renderQueue() {
       showPlayer(video, videos, idx);
     };
 
-    item.querySelector('.remove-queue-btn').onclick = (ev) => {
+    removeBtn.onclick = (ev) => {
       ev.stopPropagation();
       removeFromQueue(video.filename);
     };
@@ -756,6 +1003,7 @@ function renderQueue() {
     queueDiv.appendChild(item);
   });
   document.getElementById('playlist-queue-container').style.display = queue.length ? 'block' : 'none';
+  loadVisibleLazyImages(queueDiv);
 }
 
 // === Watched Progress Bar ===
@@ -825,6 +1073,11 @@ async function loadChatFiles() {
 }
 
 async function loadComments(video, sortType = localStorage.getItem('commentSortType') || "newest") {
+  const loadToken = ++commentsLoadToken;
+  const isStale = () =>
+    loadToken !== commentsLoadToken ||
+    currentVideoFilename !== video.filename ||
+    document.getElementById('video-player')?.style.display === 'none';
   // Map any video extension (.mp4/.webm/etc.) to the matching comments json file.
   const safeFilename = video.filename.replace(/\.[^/.]+$/, '.json');
   const commentContainer = document.getElementById('comments-section');
@@ -832,7 +1085,7 @@ async function loadComments(video, sortType = localStorage.getItem('commentSortT
   commentContainer.style.display = 'none';
 
   // --- CONFIGURATION ---
-  const profilePics = [...Array(34)].map((_, i) => `PFPs/pfp${i + 1}.png`);
+  const profilePics = [...Array(35)].map((_, i) => `PFPs/pfp${i + 1}.png`);
   const TAMERS_AUTHORS = ["@Tamers12345Official", "Tamers12345Official", "@Tamers12345mlp", "Tamers12345mlp", "@Tamers12345MLP", "Tamers12345MLP", "@Tamers12345", "Tamers12345", "@tamers12345", "tamers12345", "@TamersDandysWorld", "TamersDandysWorld"];
   const TAMERS_PFP = "PFPs/tamers.png";
 
@@ -857,6 +1110,7 @@ async function loadComments(video, sortType = localStorage.getItem('commentSortT
     const res = await fetch(`comments/${safeFilename}`);
     if (!res.ok) throw new Error('No comments file');
     comments = await res.json();
+    if (isStale()) return;
   } catch (e) {
     const dateStr = (video.date || '').trim();
     const isOldVideo = /^\d{8}$/.test(dateStr) && parseInt(dateStr, 10) < 20250213;
@@ -876,6 +1130,7 @@ async function loadComments(video, sortType = localStorage.getItem('commentSortT
       }
     }
   }
+  if (isStale()) return;
   if (!comments || !comments.length) {
     commentContainer.style.display = 'block';
     commentContainer.innerHTML = `<h3>No comments available for this video.</h3>`;
@@ -1037,6 +1292,10 @@ async function loadComments(video, sortType = localStorage.getItem('commentSortT
       loadComments(video, e.target.value);
     });
   }
+  commentContainer.querySelectorAll('img.comment-avatar, img.uploader-fav-pfp').forEach(img => {
+    lazyLoadImage(img, img.getAttribute('src'));
+  });
+  loadVisibleLazyImages(commentContainer);
   const _c = document.getElementById('comments-section');
   if (_c) _c.scrollTop = 0;
 }
@@ -1185,7 +1444,201 @@ async function downloadAltVideosHandler() {
 function isAss(path) {
   return path.toLowerCase().endsWith('.ass');
 }
+
+function isSrt(path) {
+  return path.toLowerCase().endsWith('.srt');
+}
+
+function getSubtitlePathCandidates(subtitlePath) {
+  const cleanPath = String(subtitlePath || '').trim();
+  if (!cleanPath) return [];
+
+  const candidates = [cleanPath];
+  if (/^subtitles[\\/]/i.test(cleanPath) && cleanPath.includes(':')) {
+    candidates.push(cleanPath.replace(/:/g, '\uFF1A'));
+  }
+
+  return [...new Set(candidates)];
+}
+
+async function fetchSubtitleText(subtitlePath) {
+  const candidates = getSubtitlePathCandidates(subtitlePath);
+  let lastError = null;
+
+  for (const candidate of candidates) {
+    const url = new URL(candidate, window.location.href).href;
+    try {
+      const response = await fetch(url, { cache: 'no-store' });
+      if (response.ok) {
+        return {
+          path: candidate,
+          text: await response.text()
+        };
+      }
+      lastError = new Error(`Subtitle fetch failed with ${response.status}: ${candidate}`);
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  throw lastError || new Error(`Subtitle file could not be loaded: ${subtitlePath}`);
+}
+
+function convertSrtToWebVtt(text) {
+  const body = String(text || '')
+    .replace(/^\uFEFF/, '')
+    .replace(/\r/g, '')
+    .replace(/(\d{2}:\d{2}:\d{2}),(\d{3})/g, '$1.$2')
+    .replace(/^\d+\n(?=\d{2}:\d{2}:\d{2}\.\d{3} -->)/gm, '');
+
+  return body.startsWith('WEBVTT') ? body : `WEBVTT\n\n${body}`;
+}
+
+function parseSubtitleTime(timeText) {
+  const parts = String(timeText || '').replace(',', '.').split(':');
+  const seconds = Number(parts.pop());
+  const minutes = Number(parts.pop());
+  const hours = parts.length ? Number(parts.pop()) : 0;
+  if (![hours, minutes, seconds].every(Number.isFinite)) return NaN;
+  return (hours * 3600) + (minutes * 60) + seconds;
+}
+
+function decodeSubtitleEntities(text) {
+  const textarea = document.createElement('textarea');
+  textarea.innerHTML = text;
+  return textarea.value;
+}
+
+function cleanSubtitleCueText(text) {
+  return String(text || '')
+    .replace(/<\d{2}:\d{2}:\d{2}\.\d{3}>/g, '')
+    .replace(/<\d{2}:\d{2}\.\d{3}>/g, '')
+    .replace(/<\/?c(?:\.[^>]*)?>/g, '')
+    .replace(/<[^>]+>/g, '')
+    .split('\n')
+    .map(line => decodeSubtitleEntities(line).replace(/\s+/g, ' ').trim())
+    .filter(Boolean)
+    .join('\n')
+    .trim();
+}
+
+function parseWebVttCues(text) {
+  const normalized = String(text || '')
+    .replace(/^\uFEFF/, '')
+    .replace(/\r/g, '');
+
+  const cues = [];
+  const blocks = normalized.split(/\n\n+/);
+
+  for (const block of blocks) {
+    const lines = block.split('\n').filter(line => line.trim() !== '');
+    const timingIndex = lines.findIndex(line => line.includes('-->'));
+    if (timingIndex === -1) continue;
+
+    const timingMatch = lines[timingIndex].match(/(\d{1,2}:\d{2}(?::\d{2})?[\.,]\d{3})\s+-->\s+(\d{1,2}:\d{2}(?::\d{2})?[\.,]\d{3})/);
+    if (!timingMatch) continue;
+
+    const start = parseSubtitleTime(timingMatch[1]);
+    const end = parseSubtitleTime(timingMatch[2]);
+    const text = cleanSubtitleCueText(lines.slice(timingIndex + 1).join('\n'));
+    if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start || !text) continue;
+
+    cues.push({ start, end, text });
+  }
+
+  return cues.sort((a, b) => a.start - b.start || a.end - b.end);
+}
+
+function getTextSubtitleOverlay() {
+  let overlay = document.getElementById('text-subtitle-overlay');
+  if (overlay) return overlay;
+
+  overlay = document.createElement('div');
+  overlay.id = 'text-subtitle-overlay';
+  overlay.setAttribute('aria-hidden', 'true');
+  document.getElementById('video-fullscreen-container')?.appendChild(overlay);
+  return overlay;
+}
+
+function findActiveSubtitleCues(cues, currentTime) {
+  return cues.filter(cue => cue.start <= currentTime && cue.end >= currentTime);
+}
+
+function renderTextSubtitleOverlay(overlay, cues, currentTime) {
+  const active = findActiveSubtitleCues(cues, currentTime);
+  if (!active.length) {
+    overlay.textContent = '';
+    overlay.style.display = 'none';
+    return;
+  }
+
+  overlay.textContent = '';
+  const line = document.createElement('span');
+  line.className = 'text-subtitle-line';
+  line.textContent = active.map(cue => cue.text).join('\n');
+  overlay.appendChild(line);
+  overlay.style.display = 'block';
+}
+
+function clearTextSubtitleOverlay() {
+  if (textSubtitleState) {
+    const { video, update } = textSubtitleState;
+    video.removeEventListener('timeupdate', update);
+    video.removeEventListener('seeked', update);
+    video.removeEventListener('loadedmetadata', update);
+    video.removeEventListener('play', update);
+    textSubtitleState = null;
+  }
+
+  const overlay = document.getElementById('text-subtitle-overlay');
+  if (overlay) {
+    overlay.textContent = '';
+    overlay.style.display = 'none';
+  }
+}
+
+function setupTextSubtitleOverlay(video, cues) {
+  clearTextSubtitleOverlay();
+  const overlay = getTextSubtitleOverlay();
+  if (!overlay || !cues.length) return;
+
+  const update = () => renderTextSubtitleOverlay(overlay, cues, video.currentTime || 0);
+  textSubtitleState = { video, update };
+
+  video.addEventListener('timeupdate', update);
+  video.addEventListener('seeked', update);
+  video.addEventListener('loadedmetadata', update);
+  video.addEventListener('play', update);
+  update();
+}
+
+async function loadTextSubtitleTrack(track, subtitlePath, lang, loadToken) {
+  const { path, text } = await fetchSubtitleText(subtitlePath);
+  if (loadToken !== subtitleLoadToken) return;
+
+  const subtitleText = isSrt(path)
+    ? convertSrtToWebVtt(text)
+    : String(text || '').replace(/^\uFEFF/, '');
+  const cues = parseWebVttCues(subtitleText);
+
+  if (track.track) {
+    track.track.mode = 'disabled';
+    track.track.oncuechange = null;
+  }
+  track.removeAttribute('src');
+  track.label = lang;
+  track.srclang = 'en';
+
+  if (!cues.length) {
+    console.warn(`Subtitle file loaded but no cues were parsed: ${subtitlePath}`);
+    return;
+  }
+
+  setupTextSubtitleOverlay(window.player, cues);
+}
+
 function clearAssSubtitle() {
+  clearTextSubtitleOverlay();
   if (assRenderer) {
     assRenderer.dispose();
     assRenderer = null;
@@ -1199,11 +1652,12 @@ function clearAssSubtitle() {
 async function loadAssSubtitle(subtitlePath, videoElement) {
   clearAssSubtitle();
   try {
+    await ensureSubtitlesOctopusLoaded();
     const response = await fetch(subtitlePath);
     if (!response.ok) throw new Error(`Failed to fetch subtitle file: ${subtitlePath}`);
     const assText = await response.text();
     const parent = document.getElementById('video-fullscreen-container');
-    assRenderer = new SubtitlesOctopus({
+    assRenderer = new window.SubtitlesOctopus({
       video: videoElement,
       subContent: assText,
       workerUrl: window.SubtitlesOctopusWorkerUrl,
@@ -1217,10 +1671,365 @@ async function loadAssSubtitle(subtitlePath, videoElement) {
 
 // === Playlist UI / Filtering / Rendering ===
 
+function updatePlaylistActionButtons() {
+  const isUserPlaylist = !!getUserPlaylistFromValue(selectedPlaylist);
+  const exportBtn = document.getElementById('export-playlist-btn');
+  const deleteBtn = document.getElementById('delete-playlist-btn');
+  if (exportBtn) exportBtn.disabled = !isUserPlaylist;
+  if (deleteBtn) deleteBtn.disabled = !isUserPlaylist;
+}
+
+function closeUserPlaylistDialog(overlay, resolve, value) {
+  document.removeEventListener('keydown', overlay._keydownHandler);
+  overlay.remove();
+  resolve(value);
+}
+
+function showUserPlaylistNameDialog({ title = 'Playlist Name', message = '', defaultValue = '' } = {}) {
+  return new Promise(resolve => {
+    const overlay = document.createElement('div');
+    overlay.className = 'playlist-dialog-overlay';
+
+    const dialog = document.createElement('div');
+    dialog.className = 'playlist-dialog';
+
+    const heading = document.createElement('h3');
+    heading.textContent = title;
+    dialog.appendChild(heading);
+
+    if (message) {
+      const body = document.createElement('p');
+      body.textContent = message;
+      dialog.appendChild(body);
+    }
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'playlist-dialog-input';
+    input.value = defaultValue;
+    input.autocomplete = 'off';
+    dialog.appendChild(input);
+
+    const error = document.createElement('div');
+    error.className = 'playlist-dialog-error';
+    dialog.appendChild(error);
+
+    const actions = document.createElement('div');
+    actions.className = 'playlist-dialog-actions';
+
+    const cancelBtn = document.createElement('button');
+    cancelBtn.type = 'button';
+    cancelBtn.textContent = 'Cancel';
+
+    const okBtn = document.createElement('button');
+    okBtn.type = 'button';
+    okBtn.textContent = 'OK';
+
+    actions.append(cancelBtn, okBtn);
+    dialog.appendChild(actions);
+    overlay.appendChild(dialog);
+    document.body.appendChild(overlay);
+
+    const submit = () => {
+      const value = input.value.trim();
+      if (!value) {
+        error.textContent = 'Please enter a playlist name.';
+        input.focus();
+        return;
+      }
+      closeUserPlaylistDialog(overlay, resolve, value);
+    };
+
+    cancelBtn.addEventListener('click', () => closeUserPlaylistDialog(overlay, resolve, null));
+    okBtn.addEventListener('click', submit);
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') submit();
+    });
+    overlay._keydownHandler = e => {
+      if (e.key === 'Escape') closeUserPlaylistDialog(overlay, resolve, null);
+    };
+    document.addEventListener('keydown', overlay._keydownHandler);
+
+    requestAnimationFrame(() => {
+      input.focus();
+      input.select();
+    });
+  });
+}
+
+function showUserPlaylistConfirmDialog(message) {
+  return new Promise(resolve => {
+    const overlay = document.createElement('div');
+    overlay.className = 'playlist-dialog-overlay';
+
+    const dialog = document.createElement('div');
+    dialog.className = 'playlist-dialog';
+
+    const heading = document.createElement('h3');
+    heading.textContent = 'Confirm';
+    dialog.appendChild(heading);
+
+    const body = document.createElement('p');
+    body.textContent = message;
+    dialog.appendChild(body);
+
+    const actions = document.createElement('div');
+    actions.className = 'playlist-dialog-actions';
+
+    const cancelBtn = document.createElement('button');
+    cancelBtn.type = 'button';
+    cancelBtn.textContent = 'Cancel';
+
+    const okBtn = document.createElement('button');
+    okBtn.type = 'button';
+    okBtn.textContent = 'Delete';
+
+    actions.append(cancelBtn, okBtn);
+    dialog.appendChild(actions);
+    overlay.appendChild(dialog);
+    document.body.appendChild(overlay);
+
+    cancelBtn.addEventListener('click', () => closeUserPlaylistDialog(overlay, resolve, false));
+    okBtn.addEventListener('click', () => closeUserPlaylistDialog(overlay, resolve, true));
+    overlay._keydownHandler = e => {
+      if (e.key === 'Escape') closeUserPlaylistDialog(overlay, resolve, false);
+    };
+    document.addEventListener('keydown', overlay._keydownHandler);
+    requestAnimationFrame(() => cancelBtn.focus());
+  });
+}
+
+function showUserPlaylistPickerDialog(video) {
+  return new Promise(resolve => {
+    const overlay = document.createElement('div');
+    overlay.className = 'playlist-dialog-overlay';
+
+    const dialog = document.createElement('div');
+    dialog.className = 'playlist-dialog';
+
+    const heading = document.createElement('h3');
+    heading.textContent = 'Add to Playlist';
+    dialog.appendChild(heading);
+
+    const body = document.createElement('p');
+    body.textContent = `Choose a playlist for "${video.title || video.filename}".`;
+    dialog.appendChild(body);
+
+    const list = document.createElement('div');
+    list.className = 'playlist-dialog-list';
+    userPlaylists.forEach(playlist => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = playlist.name;
+      btn.addEventListener('click', () => closeUserPlaylistDialog(overlay, resolve, playlist));
+      list.appendChild(btn);
+    });
+    dialog.appendChild(list);
+
+    const actions = document.createElement('div');
+    actions.className = 'playlist-dialog-actions';
+
+    const cancelBtn = document.createElement('button');
+    cancelBtn.type = 'button';
+    cancelBtn.textContent = 'Cancel';
+    actions.appendChild(cancelBtn);
+    dialog.appendChild(actions);
+    overlay.appendChild(dialog);
+    document.body.appendChild(overlay);
+
+    cancelBtn.addEventListener('click', () => closeUserPlaylistDialog(overlay, resolve, null));
+    overlay._keydownHandler = e => {
+      if (e.key === 'Escape') closeUserPlaylistDialog(overlay, resolve, null);
+    };
+    document.addEventListener('keydown', overlay._keydownHandler);
+    requestAnimationFrame(() => list.querySelector('button')?.focus());
+  });
+}
+
+function createUserPlaylist(name) {
+  const cleanName = makeUniquePlaylistName(name);
+  const playlist = normalizeUserPlaylist({
+    id: createUserPlaylistId(),
+    name: cleanName,
+    videoFilenames: []
+  });
+  userPlaylists.push(playlist);
+  saveUserPlaylists();
+  selectedPlaylist = getUserPlaylistSelectValue(playlist);
+  populatePlaylistOptions();
+  renderVideoGrid();
+  return playlist;
+}
+
+async function handleCreateUserPlaylist() {
+  const name = await showUserPlaylistNameDialog({ title: 'New Playlist' });
+  if (!name) return;
+  createUserPlaylist(name);
+}
+
+function getSelectedUserPlaylistOrAlert(action) {
+  const playlist = getUserPlaylistFromValue(selectedPlaylist);
+  if (!playlist) {
+    alert(`Select one of your own playlists before you ${action}. Built-in playlists cannot be changed.`);
+    return null;
+  }
+  return playlist;
+}
+
+async function handleExportUserPlaylist() {
+  const playlist = getSelectedUserPlaylistOrAlert('export');
+  if (!playlist) return;
+
+  const payload = {
+    format: USER_PLAYLIST_FILE_FORMAT,
+    version: 1,
+    name: playlist.name,
+    exportedAt: new Date().toISOString(),
+    videos: playlist.videoFilenames.map(filename => {
+      const video = getVideoByFilename(filename);
+      return {
+        filename,
+        title: video?.title || '',
+        date: video?.date || ''
+      };
+    })
+  };
+
+  try {
+    const savedPath = await window.electronAPI.exportUserPlaylist(payload, getSafePlaylistFileName(playlist.name));
+    if (savedPath) alert(`Playlist exported:\n${savedPath}`);
+  } catch (e) {
+    alert(`Failed to export playlist: ${e.message || e}`);
+  }
+}
+
+function extractImportedPlaylistVideoFilenames(imported) {
+  const sourceVideos = Array.isArray(imported?.videos)
+    ? imported.videos
+    : Array.isArray(imported?.videoFilenames)
+      ? imported.videoFilenames
+      : [];
+  const seen = new Set();
+  const filenames = [];
+
+  sourceVideos.forEach(entry => {
+    const filename = typeof entry === 'string' ? entry : entry?.filename;
+    const clean = String(filename || '').trim();
+    if (clean && !seen.has(clean)) {
+      seen.add(clean);
+      filenames.push(clean);
+    }
+  });
+
+  return filenames;
+}
+
+async function handleImportUserPlaylist() {
+  try {
+    const result = await window.electronAPI.importUserPlaylist();
+    if (!result?.playlist) return;
+
+    const imported = result.playlist;
+    const filenames = extractImportedPlaylistVideoFilenames(imported);
+    if (!filenames.length) {
+      alert('That playlist file does not contain any videos.');
+      return;
+    }
+
+    const localFilenames = new Set(rawVideoData.map(video => video.filename));
+    const available = filenames.filter(filename => localFilenames.has(filename));
+    const missingCount = filenames.length - available.length;
+    if (!available.length) {
+      alert('None of the videos in that playlist were found in this archive.');
+      return;
+    }
+
+    const playlist = normalizeUserPlaylist({
+      id: createUserPlaylistId(),
+      name: makeUniquePlaylistName(imported.name || 'Imported Playlist'),
+      videoFilenames: available,
+      importedAt: new Date().toISOString()
+    });
+    userPlaylists.push(playlist);
+    saveUserPlaylists();
+    selectedPlaylist = getUserPlaylistSelectValue(playlist);
+    populatePlaylistOptions();
+    renderVideoGrid();
+    alert(`Imported "${playlist.name}" with ${available.length} video${available.length === 1 ? '' : 's'}.${missingCount ? `\n${missingCount} video${missingCount === 1 ? '' : 's'} were not found locally.` : ''}`);
+  } catch (e) {
+    alert(`Failed to import playlist: ${e.message || e}`);
+  }
+}
+
+async function handleDeleteUserPlaylist() {
+  const playlist = getSelectedUserPlaylistOrAlert('delete');
+  if (!playlist) return;
+  const confirmed = await showUserPlaylistConfirmDialog(`Delete your playlist "${playlist.name}"? This will not delete any videos.`);
+  if (!confirmed) return;
+
+  userPlaylists = userPlaylists.filter(p => p.id !== playlist.id);
+  saveUserPlaylists();
+  selectedPlaylist = 'all';
+  populatePlaylistOptions();
+  renderVideoGrid();
+}
+
+async function chooseUserPlaylistForVideo(video) {
+  if (!userPlaylists.length) {
+    const name = await showUserPlaylistNameDialog({
+      title: 'New Playlist',
+      message: 'You do not have any user playlists yet. Create one now to add this video.'
+    });
+    if (name) return createUserPlaylist(name);
+    return null;
+  }
+
+  if (userPlaylists.length === 1) return userPlaylists[0];
+
+  return showUserPlaylistPickerDialog(video);
+}
+
+function addVideoToUserPlaylist(video, playlist) {
+  if (!video || !playlist) return;
+  if (!playlist.videoFilenames.includes(video.filename)) {
+    playlist.videoFilenames.push(video.filename);
+    playlist.updatedAt = new Date().toISOString();
+    saveUserPlaylists();
+  }
+}
+
+function removeVideoFromUserPlaylist(video, playlist) {
+  if (!video || !playlist) return;
+  playlist.videoFilenames = playlist.videoFilenames.filter(filename => filename !== video.filename);
+  playlist.updatedAt = new Date().toISOString();
+  saveUserPlaylists();
+}
+
+async function handleVideoPlaylistButton(video) {
+  const selectedUserPlaylist = getUserPlaylistFromValue(selectedPlaylist);
+  if (selectedUserPlaylist) {
+    if (selectedUserPlaylist.videoFilenames.includes(video.filename)) {
+      removeVideoFromUserPlaylist(video, selectedUserPlaylist);
+    } else {
+      addVideoToUserPlaylist(video, selectedUserPlaylist);
+    }
+    populatePlaylistOptions();
+    renderVideoGrid();
+    return;
+  }
+
+  const target = await chooseUserPlaylistForVideo(video);
+  if (!target) return;
+  addVideoToUserPlaylist(video, target);
+  populatePlaylistOptions();
+  renderVideoGrid();
+}
+
 function populatePlaylistOptions() {
   const playlistSelect = document.getElementById('playlistSelect');
   if (!playlistSelect || !Array.isArray(rawVideoData)) return;
 
+  const previousValue = selectedPlaylist;
   playlistSelect.innerHTML = '<option value="all">All</option>';
 
   // Tags that should NOT appear as playlist options, these are for the filters
@@ -1256,12 +2065,35 @@ function populatePlaylistOptions() {
     return a.localeCompare(b, undefined, { sensitivity: 'base' });
   });
 
+  if (userPlaylists.length) {
+    const userGroup = document.createElement('optgroup');
+    userGroup.label = 'Your Playlists';
+    userPlaylists
+      .slice()
+      .sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }))
+      .forEach(playlist => {
+        const opt = document.createElement('option');
+        opt.value = getUserPlaylistSelectValue(playlist);
+        opt.textContent = `${playlist.name} (${playlist.videoFilenames.length})`;
+        userGroup.appendChild(opt);
+      });
+    playlistSelect.appendChild(userGroup);
+  }
+
+  const builtinGroup = document.createElement('optgroup');
+  builtinGroup.label = 'Built-in Playlists';
   tagArray.forEach(tag => {
     const opt = document.createElement('option');
     opt.value = tag;
     opt.textContent = tag;
-    playlistSelect.appendChild(opt);
+    builtinGroup.appendChild(opt);
   });
+  if (tagArray.length) playlistSelect.appendChild(builtinGroup);
+
+  const hasPreviousValue = Array.from(playlistSelect.options).some(option => option.value === previousValue);
+  selectedPlaylist = hasPreviousValue ? previousValue : 'all';
+  playlistSelect.value = selectedPlaylist;
+  updatePlaylistActionButtons();
 }
 
 function formatRuntime(seconds) {
@@ -1275,16 +2107,18 @@ function formatRuntime(seconds) {
     : `${m}:${s.toString().padStart(2, '0')}`;
 }
 
-function renderVideoGrid() {
-  const grid = document.getElementById('video-grid');
-  grid.innerHTML = '';
+const videoGridVirtualState = {
+  queueSet: new Set(),
+  watchedProgress: {}
+};
 
+function getFilteredVideoGridItems() {
   const query = (document.getElementById('searchInput')?.value || '').toLowerCase();
-  let videos = rawVideoData.filter(video =>
-    video.title.toLowerCase().includes(query)
+  let videos = getVideosForPlaylistSelection(selectedPlaylist).filter(video =>
+    String(video.title || '').toLowerCase().includes(query)
   );
 
-  if (document.getElementById('favoritesToggle').checked) {
+  if (document.getElementById('favoritesToggle')?.checked) {
     videos = videos.filter(video => {
       const id = video.filename.split('/').pop().replace(/\.[^/.]+$/, '');
       return favorites.has(id);
@@ -1298,152 +2132,187 @@ function renderVideoGrid() {
   );
 
   if (selectedPlaylist !== 'all') {
-    videos = videos.filter(v =>
-      Array.isArray(v.tags) && v.tags.includes(selectedPlaylist)
+    return videos.filter(v =>
+      isUserPlaylistValue(selectedPlaylist) || (Array.isArray(v.tags) && v.tags.includes(selectedPlaylist))
     );
-  } else {
+  }
+
   const normalizeTag = (t) => String(t || '').toLowerCase().replace(/[^a-z0-9]/g, '');
   const hasNormTag = (v, norm) => Array.isArray(v.tags) && v.tags.some(t => normalizeTag(t) === norm);
-
   const isMLP = (v) => hasNormTag(v, 'mlp');
-  const isDandysWorld = (v) => hasNormTag(v, 'dandysworld'); // matches: "dandysworld", "dandy's world", "dandys-world", etc.
+  const isDandysWorld = (v) => hasNormTag(v, 'dandysworld');
 
-  if (tagFilter === 'only-mlp') {
-    videos = videos.filter(isMLP);
+  if (tagFilter === 'only-mlp') return videos.filter(isMLP);
+  if (tagFilter === 'no-mlp') return videos.filter(v => !isMLP(v));
+  if (tagFilter === 'only-dandys-world') return videos.filter(isDandysWorld);
+  if (tagFilter === 'no-dandys-world') return videos.filter(v => !isDandysWorld(v));
+  if (tagFilter === 'no-mlp-no-dandys-world') return videos.filter(v => !isMLP(v) && !isDandysWorld(v));
+  if (tagFilter === 'only-mlp-dandys-world') return videos.filter(v => isMLP(v) || isDandysWorld(v));
 
-  } else if (tagFilter === 'no-mlp') {
-    videos = videos.filter(v => !isMLP(v));
-
-  } else if (tagFilter === 'only-dandys-world') {
-    videos = videos.filter(isDandysWorld);
-
-  } else if (tagFilter === 'no-dandys-world') {
-    videos = videos.filter(v => !isDandysWorld(v));
-
-  } else if (tagFilter === 'no-mlp-no-dandys-world') {
-    videos = videos.filter(v => !isMLP(v) && !isDandysWorld(v));
-
-  } else if (tagFilter === 'only-mlp-dandys-world') {
-    videos = videos.filter(v => isMLP(v) || isDandysWorld(v));
-  }
+  return videos;
 }
 
-  videos.forEach(video => {
-    const baseName = video.filename.split('/').pop().replace(/\.[^/.]+$/, '');
-    const hasChat = chatFiles.has(baseName);
+function buildVideoThumbnail(video) {
+  const baseName = video.filename.split('/').pop().replace(/\.[^/.]+$/, '');
+  const hasChat = chatFiles.has(baseName);
+  const div = document.createElement('div');
+  div.className = 'video-thumbnail';
+  div.dataset.filename = video.filename;
 
-    const div = document.createElement('div');
-    div.className = 'video-thumbnail';
-    div.dataset.filename = video.filename;
-    div.innerHTML = `
-      <div class="thumbnail-container">
-        <img src="${video.thumbnail}" alt="${video.title}">
-        ${hasChat && showBadges ? '<span class="chat-badge top-center">LIVE CHAT AVAILABLE</span>' : ''}
-      </div>
-      <h3>${video.title}</h3>
-      <p>${formatDate(video.date)}</p>
-    `;
+  const thumbnailContainer = document.createElement('div');
+  thumbnailContainer.className = 'thumbnail-container';
 
-    // ---- Favorite Star ----
-    const star = document.createElement('span');
-    star.className = 'favorite-star';
-    star.textContent = '★';
+  const img = document.createElement('img');
+  img.alt = video.title || '';
+  lazyLoadImage(img, video.thumbnail);
+  thumbnailContainer.appendChild(img);
+
+  if (hasChat && showBadges) {
+    const badge = document.createElement('span');
+    badge.className = 'chat-badge top-center';
+    badge.textContent = 'LIVE CHAT AVAILABLE';
+    thumbnailContainer.appendChild(badge);
+  }
+
+  const title = document.createElement('h3');
+  title.textContent = video.title || '';
+
+  const date = document.createElement('p');
+  date.textContent = formatDate(video.date || '');
+
+  div.append(thumbnailContainer, title, date);
+
+  const star = document.createElement('span');
+  star.className = 'favorite-star';
+  star.textContent = '\u2605';
+  if (favorites.has(baseName)) star.classList.add('favorited');
+  star.onclick = (e) => {
+    e.stopPropagation();
     if (favorites.has(baseName)) {
+      favorites.delete(baseName);
+      star.classList.remove('favorited');
+    } else {
+      favorites.add(baseName);
       star.classList.add('favorited');
     }
-    star.onclick = (e) => {
-      e.stopPropagation();
-      if (favorites.has(baseName)) {
-        favorites.delete(baseName);
-        star.classList.remove('favorited');
-      } else {
-        favorites.add(baseName);
-        star.classList.add('favorited');
-      }
-      localStorage.setItem('favorites', JSON.stringify([...favorites]));
-    };
-    div.appendChild(star);
+    localStorage.setItem('favorites', JSON.stringify([...favorites]));
+    if (document.getElementById('favoritesToggle')?.checked) renderVideoGrid();
+  };
+  div.appendChild(star);
 
-    // ---- Queue Button (bottom right, blue ⏭ when queued) ----
-    const queueBtn = document.createElement('span');
-    queueBtn.className = 'queue-btn';
-    if (loadQueue().includes(video.filename)) {
-      queueBtn.classList.add('queued');
-      queueBtn.textContent = '⏭';
-      queueBtn.title = 'Remove from queue';
-    } else {
-      queueBtn.textContent = '➕';
+  const queueBtn = document.createElement('span');
+  queueBtn.className = 'queue-btn';
+  if (videoGridVirtualState.queueSet.has(video.filename)) {
+    queueBtn.classList.add('queued');
+    queueBtn.textContent = '\u23ed';
+    queueBtn.title = 'Remove from queue';
+  } else {
+    queueBtn.textContent = '\u2795';
+    queueBtn.title = 'Add to queue';
+  }
+  queueBtn.onclick = (e) => {
+    e.stopPropagation();
+    const queue = loadQueue();
+    if (queue.includes(video.filename)) {
+      removeFromQueue(video.filename);
+      videoGridVirtualState.queueSet.delete(video.filename);
+      queueBtn.classList.remove('queued');
+      queueBtn.textContent = '\u2795';
       queueBtn.title = 'Add to queue';
+    } else {
+      addToQueue(video.filename);
+      videoGridVirtualState.queueSet.add(video.filename);
+      queueBtn.classList.add('queued');
+      queueBtn.textContent = '\u23ed';
+      queueBtn.title = 'Remove from queue';
     }
-    queueBtn.onclick = (e) => {
-      e.stopPropagation();
-      const queue = loadQueue();
-      if (queue.includes(video.filename)) {
-        removeFromQueue(video.filename);
-        queueBtn.classList.remove('queued');
-        queueBtn.textContent = '➕';
-        queueBtn.title = 'Add to queue';
-      } else {
-        addToQueue(video.filename);
-        queueBtn.classList.add('queued');
-        queueBtn.textContent = '⏭';
-        queueBtn.title = 'Remove from queue';
-      }
-      renderQueue();
-    };
-    div.appendChild(queueBtn);
+    renderQueue();
+  };
+  div.appendChild(queueBtn);
 
-    // ---- Watched Checkmark ----
-    if (watchedVideos.has(baseName) && showWatched) {
-      const check = document.createElement('span');
-      check.className = 'watched-checkmark';
-      check.textContent = '✔';
-      div.querySelector('.thumbnail-container').appendChild(check);
+  const userPlaylist = getUserPlaylistFromValue(selectedPlaylist);
+  const playlistBtn = document.createElement('span');
+  playlistBtn.className = 'user-playlist-btn';
+  if (userPlaylist?.videoFilenames.includes(video.filename)) {
+    playlistBtn.classList.add('in-playlist');
+    playlistBtn.textContent = 'P-';
+    playlistBtn.title = `Remove from ${userPlaylist.name}`;
+  } else {
+    playlistBtn.textContent = 'P+';
+    playlistBtn.title = userPlaylist ? `Add to ${userPlaylist.name}` : 'Add to one of your playlists';
+  }
+  playlistBtn.onclick = (e) => {
+    e.stopPropagation();
+    handleVideoPlaylistButton(video);
+  };
+  div.appendChild(playlistBtn);
+
+  if (watchedVideos.has(baseName) && showWatched) {
+    const check = document.createElement('span');
+    check.className = 'watched-checkmark';
+    check.textContent = '\u2714';
+    thumbnailContainer.appendChild(check);
+  }
+
+  if (video.runtime) {
+    const runtimeSpan = document.createElement('span');
+    runtimeSpan.className = 'runtime-overlay';
+    runtimeSpan.textContent = formatRuntime(video.runtime);
+    thumbnailContainer.appendChild(runtimeSpan);
+  }
+
+  const watchedProgress = videoGridVirtualState.watchedProgress;
+  if (watchedProgress[baseName] && watchedProgress[baseName].duration > 10) {
+    const percent = Math.min(100, Math.round(
+      100 * watchedProgress[baseName].current / watchedProgress[baseName].duration
+    ));
+    if (percent < 98) {
+      const progressBar = document.createElement('div');
+      progressBar.className = 'watched-progress-bar';
+      progressBar.style.position = 'absolute';
+      progressBar.style.left = 0;
+      progressBar.style.bottom = 0;
+      progressBar.style.height = '5px';
+      progressBar.style.background = '#f00';
+      progressBar.style.width = percent + '%';
+      progressBar.style.zIndex = 2;
+      progressBar.style.borderRadius = '0 0 8px 8px';
+      progressBar.style.pointerEvents = 'none';
+      thumbnailContainer.appendChild(progressBar);
     }
+  }
 
-    // ---- RUNTIME OVERLAY ----
-    if (video.runtime) {
-      const runtimeSpan = document.createElement('span');
-      runtimeSpan.className = 'runtime-overlay';
-      runtimeSpan.textContent = formatRuntime(video.runtime);
-      div.querySelector('.thumbnail-container').appendChild(runtimeSpan);
-    }
+  div.onclick = () => {
+    const playlist = selectedPlaylist !== 'all'
+      ? getVideosForPlaylistSelection(selectedPlaylist)
+      : rawVideoData;
+    const index = playlist.findIndex(v => v.filename === video.filename);
+    showPlayer(video, playlist, index);
+  };
 
-    // ---- Video click handler ----
-    div.onclick = () => {
-      const playlist = selectedPlaylist !== 'all'
-        ? rawVideoData.filter(v => Array.isArray(v.tags) && v.tags.includes(selectedPlaylist))
-        : rawVideoData;
-      const index = playlist.findIndex(v => v.filename === video.filename);
-      showPlayer(video, playlist, index);
-    };
+  return div;
+}
 
-    // --- Watch Video Progress ---
-    const watchedProgress = loadWatchedProgress();
-    if (watchedProgress[baseName] && watchedProgress[baseName].duration > 10) {
-      const percent = Math.min(100, Math.round(
-        100 * watchedProgress[baseName].current / watchedProgress[baseName].duration
-      ));
-      if (percent < 98) { // Hide if almost done or done
-        const progressBar = document.createElement('div');
-        progressBar.className = 'watched-progress-bar';
-        progressBar.style.position = 'absolute';
-        progressBar.style.left = 0;
-        progressBar.style.bottom = 0;
-        progressBar.style.height = '5px';
-        progressBar.style.background = '#f00';
-        progressBar.style.width = percent + '%';
-        progressBar.style.zIndex = 2;
-        progressBar.style.borderRadius = '0 0 8px 8px';
-        progressBar.style.pointerEvents = 'none';
-        div.querySelector('.thumbnail-container').appendChild(progressBar);
-      }
-    }
+function renderVideoGrid() {
+  const gridEl = document.getElementById('video-grid');
+  if (!gridEl) return;
 
-    grid.appendChild(div);
+  gridEl.querySelectorAll('.video-thumbnail').forEach(stopThumbnailPreview);
+  unobserveLazyImages(gridEl);
+  videoGridVirtualState.queueSet = new Set(loadQueue());
+  videoGridVirtualState.watchedProgress = loadWatchedProgress();
+
+  const fragment = document.createDocumentFragment();
+  getFilteredVideoGridItems().forEach(video => {
+    fragment.appendChild(buildVideoThumbnail(video));
   });
 
-  setupThumbnailPreviews();
+  gridEl.style.paddingTop = '';
+  gridEl.style.paddingBottom = '';
+  gridEl.style.overflowAnchor = '';
+  gridEl.replaceChildren(fragment);
+  setupThumbnailPreviews(gridEl);
+  loadVisibleLazyImages(gridEl);
   renderQueue();
 }
 
@@ -1471,6 +2340,29 @@ function hideClipExportUI() {
     clipExportStatus.textContent = "";
   }
 }
+
+function updateChatPaneMetrics() {
+  const layout = document.getElementById('player-layout');
+  const videoBox = document.getElementById('video-fullscreen-container');
+  if (!layout || !videoBox) return;
+
+  const layoutRect = layout.getBoundingClientRect();
+  const videoRect = videoBox.getBoundingClientRect();
+  if (!layoutRect.height || !videoRect.height) return;
+
+  layout.style.setProperty('--chat-offset-top', `${Math.max(0, videoRect.top - layoutRect.top)}px`);
+  layout.style.setProperty('--chat-video-height', `${Math.round(videoRect.height)}px`);
+  layout.style.setProperty('--player-video-width', `${Math.round(videoRect.width)}px`);
+}
+
+function scheduleChatPaneMetricsUpdate() {
+  requestAnimationFrame(() => {
+    updateChatPaneMetrics();
+    requestAnimationFrame(updateChatPaneMetrics);
+  });
+}
+
+window.addEventListener('resize', scheduleChatPaneMetricsUpdate, { passive: true });
 
 async function showPlayer(video, playlist = [], index = 0, autoplay = false) {
   const oldPlayer = document.getElementById('player-video');
@@ -1512,7 +2404,15 @@ async function showPlayer(video, playlist = [], index = 0, autoplay = false) {
   document.getElementById('player-title').innerText = video.title;
   document.getElementById('player-description').innerText = video.description;
     document.getElementById('player-date').innerText = formatDate(video.date);
-  loadComments(video);
+  currentVideoFilename = video.filename;
+  currentAltVideo = null;
+  commentsLoadToken++;
+  const commentContainer = document.getElementById('comments-section');
+  if (commentContainer) {
+    commentContainer.style.display = 'block';
+    commentContainer.innerHTML = '<h3>Comments</h3><p>Loading comments...</p>';
+  }
+  requestAnimationFrame(() => loadComments(video));
 
   history.scrollRestoration = 'manual';
   requestAnimationFrame(() => {
@@ -1552,6 +2452,7 @@ async function showPlayer(video, playlist = [], index = 0, autoplay = false) {
   player.className = savedSize;
   const sizeSelector = document.getElementById('sizeSelector');
   if (sizeSelector) sizeSelector.value = savedSize;
+  scheduleChatPaneMetricsUpdate();
   player.volume = document.getElementById('volumeSlider').value;
   player.playbackRate = parseFloat(document.getElementById('speedSelector').value);
 
@@ -1562,9 +2463,6 @@ async function showPlayer(video, playlist = [], index = 0, autoplay = false) {
       });
     }
   };
-
-  currentVideoFilename = video.filename;
-  currentAltVideo = null;
 
   if (progressInterval) clearInterval(progressInterval);
   progressInterval = setInterval(() => {
@@ -1651,6 +2549,9 @@ async function showPlayer(video, playlist = [], index = 0, autoplay = false) {
   chatPane.style.display = 'none';
   toggleBtn.style.display = 'none';
   chatData = [];
+  renderCurrentChatWindow = null;
+  let nextChatIndex = 0;
+  let lastRenderedChatTime = 0;
 
   const chatFile = `chat/${video.filename.split('/').pop().replace(/\.[^/.]+$/, '')}.csv`;
 
@@ -1658,10 +2559,7 @@ async function showPlayer(video, playlist = [], index = 0, autoplay = false) {
     const res = await fetch(chatFile);
     if (!res.ok) throw new Error();
     const txt = await res.text();
-    chatData = txt.trim().split('\n').slice(1).map(row => {
-      const [timestamp, author, message] = row.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/);
-      return { time: parseTimestamp(timestamp), author, message };
-    });
+    chatData = parseChatCsv(txt);
 
     const settings = await window.electronAPI.getSettings();
     const chatVisible = settings?.chatVisible !== false;
@@ -1675,15 +2573,76 @@ async function showPlayer(video, playlist = [], index = 0, autoplay = false) {
     queueContainer.style.marginTop = '0';
   }
 
-  player.ontimeupdate = () => {
-    if (!chatData.length) return;
-    const current = player.currentTime;
-    const msgs = chatData.filter(m => m.time <= current);
-    chatBox.innerHTML = msgs.map(m =>
-      `<div class='chat-message'><strong>${m.author}:</strong> ${m.message}</div>`
-    ).join('');
-    chatPane.scrollTop = chatPane.scrollHeight;
+  const pruneChatMessagesAboveViewport = () => {
+    if (chatPane.style.display === 'none' || !chatBox.firstElementChild) return;
+    const paneTop = chatPane.getBoundingClientRect().top;
+    let removed = false;
+
+    while (chatBox.firstElementChild) {
+      const firstRect = chatBox.firstElementChild.getBoundingClientRect();
+      if (firstRect.bottom >= paneTop) break;
+      chatBox.firstElementChild.remove();
+      removed = true;
+    }
+
+    if (removed) chatPane.scrollTop = chatPane.scrollHeight;
   };
+
+  const appendChatRange = (startIndex, endIndex) => {
+    if (endIndex <= startIndex) return false;
+    const fragment = document.createDocumentFragment();
+    for (let i = startIndex; i < endIndex; i++) {
+      fragment.appendChild(createChatMessageElement(chatData[i]));
+    }
+    chatBox.appendChild(fragment);
+    return true;
+  };
+
+  const resetChatToCurrentTime = () => {
+    if (!chatData.length) return;
+    const current = player.currentTime || 0;
+    const endIndex = upperBoundChatTime(chatData, current);
+    const startIndex = Math.max(0, endIndex - CHAT_SEEK_BACKFILL_MESSAGES);
+
+    chatBox.textContent = '';
+    appendChatRange(startIndex, endIndex);
+    nextChatIndex = endIndex;
+    lastRenderedChatTime = current;
+    chatPane.scrollTop = chatPane.scrollHeight;
+    pruneChatMessagesAboveViewport();
+  };
+
+  const renderChatWindow = (force = false) => {
+    if (!chatData.length) return;
+    const current = player.currentTime || 0;
+
+    if (chatPane.style.display === 'none') {
+      chatBox.textContent = '';
+      nextChatIndex = upperBoundChatTime(chatData, current);
+      lastRenderedChatTime = current;
+      return;
+    }
+
+    if (force || current + 0.25 < lastRenderedChatTime) {
+      resetChatToCurrentTime();
+      return;
+    }
+
+    const endIndex = upperBoundChatTime(chatData, current);
+    const appended = appendChatRange(nextChatIndex, endIndex);
+    nextChatIndex = Math.max(nextChatIndex, endIndex);
+    lastRenderedChatTime = current;
+
+    if (appended) {
+      chatPane.scrollTop = chatPane.scrollHeight;
+      pruneChatMessagesAboveViewport();
+    }
+  };
+
+  renderCurrentChatWindow = renderChatWindow;
+  renderChatWindow(true);
+  player.ontimeupdate = () => renderChatWindow();
+  player.addEventListener('seeked', () => renderChatWindow(true));
 
   player.onended = () => {
     if (progressInterval) clearInterval(progressInterval);
@@ -1738,6 +2697,7 @@ function renderPlaylistQueue() {
   }
 
   wrap.style.display = 'block';
+  unobserveLazyImages(queueContainer);
   queueContainer.innerHTML = '';
 
   currentPlaylistVideos.forEach((vid, idx) => {
@@ -1752,12 +2712,12 @@ function renderPlaylistQueue() {
     div.style.background = isCurrent ? '#444' : '#222';
 
     const img = document.createElement('img');
-    img.src = vid.thumbnail;
     img.className = 'queue-thumb';
-    img.alt = 'Thumbnail';
+    img.alt = vid.title || 'Thumbnail';
     img.style.width = '80px';
     img.style.marginRight = '8px';
     img.style.verticalAlign = 'middle';
+    lazyLoadImage(img, vid.thumbnail);
 
     const title = document.createElement('span');
     title.className = 'queue-title';
@@ -1771,6 +2731,7 @@ function renderPlaylistQueue() {
 
     queueContainer.appendChild(div);
   });
+  loadVisibleLazyImages(queueContainer);
 }
 
 
@@ -1866,20 +2827,25 @@ function handleReverse(isSidebar = true) {
   }
 }
 
-function changeSubtitle(lang) {
+async function changeSubtitle(lang) {
   const video = window.player;
   const track = document.getElementById('video-subtitle');
   const currentTime = video.currentTime;
+  const loadToken = ++subtitleLoadToken;
 
   clearAssSubtitle();
+  if (track?.track) track.track.mode = 'disabled';
 
   const currentVideoTitle = document.getElementById('player-title').innerText;
-  const videoEntry = rawVideoData.find(v => v.title === currentVideoTitle);
+  const videoEntry =
+    rawVideoData.find(v => v.filename === currentVideoFilename) ||
+    rawVideoData.find(v => v.title === currentVideoTitle);
   if (!videoEntry) return;
 
   const subInfo = subtitlesData[videoEntry.filename];
 
   if (!lang || !subInfo || !subInfo[lang]) {
+    const shouldRestoreOriginalVideo = currentAltVideo && currentVideoFilename;
     if (currentAltVideo && currentVideoFilename) {
       video.src = "file://" + videoPath + "/" + currentVideoFilename;
       video.load();
@@ -1889,7 +2855,8 @@ function changeSubtitle(lang) {
       };
     }
     track.removeAttribute('src');
-    video.load();
+    if (track?.track) track.track.mode = 'disabled';
+    if (!shouldRestoreOriginalVideo) return;
     return;
   }
 
@@ -1921,8 +2888,9 @@ function changeSubtitle(lang) {
           video.currentTime = currentTime;
         };
       });
-  } else {
+  } else if (currentAltVideo) {
     video.src = "file://" + videoPath + "/" + currentVideoFilename;
+    currentAltVideo = null;
     video.load();
     video.onloadedmetadata = () => {
       video.currentTime = currentTime;
@@ -1939,41 +2907,20 @@ function changeSubtitle(lang) {
         });
       }, 100);
     } else {
-      const centerHtmlTrackCues = () => {
-        const tt = track?.track;
-        if (!tt) return;
-        const apply = () => {
-          if (!tt.cues) return;
-          for (const cue of tt.cues) {
-            try {
-              cue.align = 'center';
-              cue.position = 50;
-              cue.positionAlign = 'center';
-              cue.size = 80;
-            } catch (e) {}
-          }
-        };
-        apply();
-        tt.oncuechange = apply;
-      };
-      track.addEventListener('load', centerHtmlTrackCues, { once: true });
-      track.src = subtitlePath;
-      track.label = lang;
-      track.srclang = "pl";
-      track.default = true;
-      video.load();
-      video.onloadedmetadata = () => {
-        video.currentTime = currentTime;
-        if (video.textTracks.length > 0) {
-          video.textTracks[0].mode = 'showing';
-        }
-        centerHtmlTrackCues();
-      };
+      try {
+        await loadTextSubtitleTrack(track, subtitlePath, lang, loadToken);
+      } catch (error) {
+        console.warn("Subtitle could not be loaded:", error);
+      }
     }
   }
 }
 
 function closePlayer() {
+  commentsLoadToken++;
+  renderCurrentChatWindow = null;
+  currentVideoFilename = null;
+  currentAltVideo = null;
   if (progressInterval) {
     clearInterval(progressInterval);
     progressInterval = null;
@@ -2001,6 +2948,7 @@ window.closePlayer = closePlayer;
 function resizePlayer(mode) {
   document.getElementById('player-video').className = mode;
   localStorage.setItem('videoSizeMode', mode);
+  scheduleChatPaneMetricsUpdate();
 }
 window.resizePlayer = resizePlayer;
 
@@ -2030,12 +2978,62 @@ async function toggleChat() {
       document.getElementById('chat-and-queue')?.appendChild(queueContainer);
     }
   }
+  if (!showing && typeof renderCurrentChatWindow === 'function') {
+    renderCurrentChatWindow(true);
+  }
+  scheduleChatPaneMetricsUpdate();
   await window.electronAPI.setSetting('chatVisible', newDisplay === 'block');
+}
+
+function parseChatCsvLine(row) {
+  return row
+    .split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/)
+    .map(value => value.trim().replace(/^"|"$/g, '').replace(/""/g, '"'));
+}
+
+function parseChatCsv(text) {
+  return text
+    .trim()
+    .split(/\r?\n/)
+    .slice(1)
+    .map(row => {
+      const [timestamp, author, ...messageParts] = parseChatCsvLine(row);
+      return {
+        time: parseTimestamp(timestamp || ''),
+        author,
+        message: messageParts.join(',')
+      };
+    })
+    .filter(m => Number.isFinite(m.time))
+    .sort((a, b) => a.time - b.time);
+}
+
+function upperBoundChatTime(messages, target) {
+  let lo = 0;
+  let hi = messages.length;
+  while (lo < hi) {
+    const mid = (lo + hi) >> 1;
+    if (messages[mid].time <= target) lo = mid + 1;
+    else hi = mid;
+  }
+  return lo;
 }
 
 function parseTimestamp(ts) {
   return ts.split(':').map(Number).reduce((a, b) => a * 60 + b, 0);
 }
+
+function createChatMessageElement(msg) {
+  const row = document.createElement('div');
+  row.className = 'chat-message';
+
+  const author = document.createElement('strong');
+  author.textContent = `${msg.author || ''}:`;
+  row.append(author, ` ${msg.message || ''}`);
+
+  return row;
+}
+
 function formatDate(d) {
   return d.length === 8
     ? `${d.slice(0, 4)}-${d.slice(4, 6)}-${d.slice(6)}`

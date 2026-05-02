@@ -1,4 +1,57 @@
 let daItems = [];
+let galleryRenderToken = 0;
+let daLazyImageObserver = null;
+const DA_LAZY_PLACEHOLDER = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="4" height="3" viewBox="0 0 4 3"%3E%3Crect width="4" height="3" fill="%231b1b1b"/%3E%3C/svg%3E';
+
+function revealDALazyImage(img) {
+  if (!img || !img.dataset.src) return;
+  img.src = img.dataset.src;
+  delete img.dataset.src;
+  img.classList.remove('lazy-media');
+  if (daLazyImageObserver) daLazyImageObserver.unobserve(img);
+}
+
+function getDALazyImageObserver() {
+  if (daLazyImageObserver || !('IntersectionObserver' in window)) return daLazyImageObserver;
+  daLazyImageObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) revealDALazyImage(entry.target);
+    });
+  }, { rootMargin: '320px 0px' });
+  return daLazyImageObserver;
+}
+
+function lazyLoadDAImage(img, src) {
+  if (!img || !src) return;
+  img.dataset.src = src;
+  img.src = DA_LAZY_PLACEHOLDER;
+  img.loading = 'lazy';
+  img.decoding = 'async';
+  img.classList.add('lazy-media');
+
+  const observer = getDALazyImageObserver();
+  if (observer) observer.observe(img);
+  else revealDALazyImage(img);
+}
+
+function unobserveDALazyImages(container) {
+  if (!daLazyImageObserver || !container) return;
+  container.querySelectorAll('img[data-src]').forEach(img => daLazyImageObserver.unobserve(img));
+}
+
+function isElementNearViewport(el, margin = 320) {
+  const rect = el.getBoundingClientRect();
+  return rect.bottom >= -margin &&
+    rect.right >= -margin &&
+    rect.top <= window.innerHeight + margin &&
+    rect.left <= window.innerWidth + margin;
+}
+
+function loadVisibleDAImages(container = document) {
+  container.querySelectorAll('img[data-src]').forEach(img => {
+    if (isElementNearViewport(img)) revealDALazyImage(img);
+  });
+}
 
 // ==== Music Player Setup ====
 const musicDir = 'deviantart/gallery music/';
@@ -92,8 +145,9 @@ function createMusicPlayerUI() {
 
 // ==== Gallery Code ====
 function updateGallery(mode) {
+  const token = ++galleryRenderToken;
   if (mode === 'size') {
-    sortBySize();
+    sortBySize(token);
   } else {
     const items = daItems.slice();
     if (mode === 'date-asc') items.sort((a, b) => (a.date || 0) - (b.date || 0));
@@ -102,32 +156,50 @@ function updateGallery(mode) {
   }
 }
 
-function sortBySize() {
+async function sortBySize(token) {
   const items = daItems.slice();
-  let loaded = 0;
-  items.forEach(item => {
-    const img = new Image(); img.src = item.path;
-    img.onload = () => {
-      item.width = img.naturalWidth; item.height = img.naturalHeight;
-      if (++loaded === items.length) {
-        items.sort((a, b) => {
-          const ap = a.height > a.width, bp = b.height > b.width;
-          if (ap !== bp) return ap - bp;
-          if (!ap) return b.width - a.width;
-          return (a.height / a.width) - (b.height / b.width);
-        });
-        renderGallery(items);
-      }
-    };
+  await Promise.all(items.map(item => {
+    if (Number.isFinite(item.width) && Number.isFinite(item.height)) {
+      return item;
+    }
+
+    return new Promise(resolve => {
+      const img = new Image();
+      img.onload = () => {
+        item.width = img.naturalWidth;
+        item.height = img.naturalHeight;
+        resolve(item);
+      };
+      img.onerror = () => resolve(item);
+      img.src = item.path;
+    });
+  }));
+
+  items.sort((a, b) => {
+    const aw = a.width || 0, ah = a.height || 0;
+    const bw = b.width || 0, bh = b.height || 0;
+    const ap = ah > aw, bp = bh > bw;
+    if (ap !== bp) return ap - bp;
+    if (!ap) return bw - aw;
+    return (ah / Math.max(aw, 1)) - (bh / Math.max(bw, 1));
   });
+  if (token !== galleryRenderToken) return;
+  renderGallery(items);
 }
 
 function renderGallery(items) {
   const container = document.getElementById('deviantart-gallery');
+  unobserveDALazyImages(container);
   container.innerHTML = '';
+  const fragment = document.createDocumentFragment();
   items.forEach(item => {
     const wrap = document.createElement('div'); wrap.classList.add('grid-item');
-    const img = document.createElement('img'); img.src = item.path; img.alt = item.filename;
+    const img = document.createElement('img');
+    img.alt = item.filename;
+    if (Number.isFinite(item.width) && Number.isFinite(item.height) && item.width > 0 && item.height > 0) {
+      img.style.aspectRatio = `${item.width} / ${item.height}`;
+    }
+    lazyLoadDAImage(img, item.path);
     wrap.appendChild(img);
     wrap.addEventListener('click', () => {
       const original = item.path
@@ -136,8 +208,10 @@ function renderGallery(items) {
       let descFile = item.filename.replace(/_framed(?=\.[^\.]+$)/, '').replace(/\.[^\.]+$/, '.txt');
       showModalWithDescription(original, descFile);
     });
-    container.appendChild(wrap);
+    fragment.appendChild(wrap);
   });
+  container.appendChild(fragment);
+  loadVisibleDAImages(container);
 }
 
 function bindGalleryClicks() {
@@ -247,6 +321,9 @@ window.initDeviantArt = () => {
       daItems = files.map(i => ({
         filename: i.filename,
         path: i.path,
+        width: i.width,
+        height: i.height,
+        fileSize: i.size,
         date: (i.filename.match(/^(\d{4}-\d{2}-\d{2})/) || [])[0]
           ? new Date(i.filename.match(/^(\d{4}-\d{2}-\d{2})/)[0])
           : null
@@ -275,5 +352,9 @@ document.addEventListener('DOMContentLoaded', () => {
   creditsTab?.addEventListener('click', () => { audio.pause(); updateMusicUI(); }); // <--- ADD THIS LINE
 
   // Resume if coming back
-  daTab?.addEventListener('click', () => { if (musicOn) audio.play(); updateMusicUI(); });
+  daTab?.addEventListener('click', () => {
+    if (musicOn) audio.play();
+    updateMusicUI();
+    requestAnimationFrame(() => loadVisibleDAImages(document.getElementById('deviantart-gallery')));
+  });
 });
