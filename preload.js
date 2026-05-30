@@ -4,9 +4,13 @@ const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld('electronAPI', {
   getSettings:         () => ipcRenderer.invoke('get-settings'),
   setSetting:          (key, value) => ipcRenderer.invoke('set-setting', key, value),
+  getDownloadsPath:    () => ipcRenderer.invoke('get-downloads-path'),
   getUserPlaylists:    () => ipcRenderer.invoke('get-user-playlists'),
   saveUserPlaylists:   (playlists) => ipcRenderer.invoke('save-user-playlists', playlists),
   selectVideoFolder:   () => ipcRenderer.invoke('select-video-folder'),
+  selectScreenshotFolder: (currentPath) => ipcRenderer.invoke('select-screenshot-folder', currentPath),
+  saveScreenshot:      (opts) => ipcRenderer.invoke('save-screenshot', opts),
+  readArchiveJson:     (folder, filename) => ipcRenderer.invoke('read-archive-json', folder, filename),
   readImageFiles:      () => ipcRenderer.invoke('read-image-files'),
   readTumblrHTML:      () => ipcRenderer.invoke('read-tumblr-html'),
   readTumblr2HTML:     () => ipcRenderer.invoke('read-tumblr2-html'),

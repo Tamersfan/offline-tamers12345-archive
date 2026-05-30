@@ -54,7 +54,6 @@ const POSTS_UPLOADER_NAMES = new Set([
   'tamers12345'
 ]);
 const LAZY_IMAGE_PLACEHOLDER = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="16" height="9" viewBox="0 0 16 9"%3E%3Crect width="16" height="9" fill="%23222"/%3E%3C/svg%3E';
-const CHAT_SEEK_BACKFILL_MESSAGES = 160;
 const USER_PLAYLIST_PREFIX = 'user:';
 const USER_PLAYLIST_FILE_FORMAT = 'offline-tamers12345-archive-playlist';
 
@@ -707,10 +706,6 @@ document.addEventListener('fullscreenchange', () => {
   }
 });
 
-document.getElementById('player-video').addEventListener('dblclick', e => {
-  e.preventDefault();
-});
-
 // --- Export Logic ---
 gifExportBtn.onclick = async function() {
   let inputPath = currentVideoFilename ? (videoPath + '/' + currentVideoFilename) : null;
@@ -1078,8 +1073,13 @@ async function loadComments(video, sortType = localStorage.getItem('commentSortT
     loadToken !== commentsLoadToken ||
     currentVideoFilename !== video.filename ||
     document.getElementById('video-player')?.style.display === 'none';
-  // Map any video extension (.mp4/.webm/etc.) to the matching comments json file.
+  // Map any video extension (.mp4/.webm/etc.) to matching comments json files.
   const safeFilename = video.filename.replace(/\.[^/.]+$/, '.json');
+  const commentFilenameCandidates = [safeFilename];
+  const sharedAudioVariantFilename = safeFilename.replace(/\s+\(Bad Audio\)(?=\.json$)/i, '');
+  if (sharedAudioVariantFilename !== safeFilename) {
+    commentFilenameCandidates.push(sharedAudioVariantFilename);
+  }
   const commentContainer = document.getElementById('comments-section');
   commentContainer.innerHTML = '';
   commentContainer.style.display = 'none';
@@ -1095,34 +1095,95 @@ async function loadComments(video, sortType = localStorage.getItem('commentSortT
     const d = new Date(ts * 1000);
     return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
   }
-  function getAvatar(author, fallbackPic) {
-    return TAMERS_AUTHORS.includes(author) ? TAMERS_PFP : fallbackPic;
+  function isUploaderComment(comment) {
+    const normalizedAuthor = String(comment?.author || '').trim().toLowerCase();
+    const matchesKnownTamersName = TAMERS_AUTHORS
+      .some(author => String(author).trim().toLowerCase() === normalizedAuthor);
+    return !!(comment?.author_is_uploader || matchesKnownTamersName);
+  }
+  function getAvatar(commentOrAuthor, fallbackPic) {
+    const comment = typeof commentOrAuthor === 'object'
+      ? commentOrAuthor
+      : { author: commentOrAuthor };
+    return isUploaderComment(comment) ? TAMERS_PFP : fallbackPic;
   }
   function hasTamersReply(comment) {
     return Array.isArray(comment.replies) &&
-      comment.replies.some(r => TAMERS_AUTHORS.includes(r.author));
+      comment.replies.some(reply => isUploaderComment(reply));
+  }
+  function getPinnedByName(sourceComments) {
+    const stack = [...sourceComments];
+    while (stack.length) {
+      const current = stack.shift();
+      if (isUploaderComment(current) && current.author) return current.author;
+      if (Array.isArray(current.replies)) stack.push(...current.replies);
+    }
+    return '';
+  }
+  async function getMetadataUploaderName() {
+    for (const candidate of commentFilenameCandidates) {
+      try {
+        const metadata = await fetchJsonFile('metadata', candidate);
+        if (metadata?.channel || metadata?.uploader) return metadata.channel || metadata.uploader;
+      } catch (err) {
+        // Keep pinned labels working even if metadata is missing.
+      }
+    }
+    return '';
+  }
+  function getUploaderOnlyComments(sourceComments) {
+    const uploaderComments = [];
+    sourceComments.forEach(comment => {
+      const uploaderReplies = Array.isArray(comment.replies)
+        ? comment.replies.filter(reply => isUploaderComment(reply))
+        : [];
+
+      if (isUploaderComment(comment)) {
+        uploaderComments.push({ ...comment, replies: uploaderReplies });
+      } else {
+        uploaderReplies.forEach(reply => {
+          uploaderComments.push({ ...reply, replies: [] });
+        });
+      }
+    });
+    return uploaderComments;
+  }
+  async function fetchJsonFile(folder, filename) {
+    if (window.electronAPI?.readArchiveJson) {
+      const data = await window.electronAPI.readArchiveJson(folder, filename);
+      if (data) return data;
+    }
+
+    const res = await fetch(`${folder}/${encodeURIComponent(filename)}`);
+    if (!res.ok) return null;
+    return await res.json();
   }
 
   // --- Fetch comments (modern or legacy) ---
   let comments = null;
   let usedLegacy = false;
   try {
-    const res = await fetch(`comments/${safeFilename}`);
-    if (!res.ok) throw new Error('No comments file');
-    comments = await res.json();
+    for (const candidate of commentFilenameCandidates) {
+      try {
+        comments = await fetchJsonFile('comments', candidate);
+        if (comments) break;
+      } catch (err) {
+        console.warn('Failed to load comments candidate:', candidate, err);
+      }
+    }
+    if (!comments) throw new Error('No comments file');
     if (isStale()) return;
   } catch (e) {
     const dateStr = (video.date || '').trim();
     const isOldVideo = /^\d{8}$/.test(dateStr) && parseInt(dateStr, 10) < 20250213;
     if (isOldVideo) {
       try {
-        const legacyMetaPath = `metadata/${safeFilename}`;
-        const metaRes = await fetch(legacyMetaPath);
-        if (metaRes.ok) {
-          const metadata = await metaRes.json();
-          if (Array.isArray(metadata.comments)) {
+        for (const candidate of commentFilenameCandidates) {
+          const metadata = await fetchJsonFile('metadata', candidate);
+          if (metadata && Array.isArray(metadata.comments)) {
             comments = metadata.comments;
             usedLegacy = true;
+            break;
           }
         }
       } catch (err) {
@@ -1139,7 +1200,9 @@ async function loadComments(video, sortType = localStorage.getItem('commentSortT
 
   // === Sorting logic ===
   function sortComments(comments, sortType) {
-    let sorted = [...comments];
+    let sorted = sortType === "tamers_comments"
+      ? getUploaderOnlyComments(comments)
+      : [...comments];
     if (sortType === "oldest") {
       sorted.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
     } else if (sortType === "newest") {
@@ -1160,10 +1223,22 @@ async function loadComments(video, sortType = localStorage.getItem('commentSortT
         if (bFav !== aFav) return bFav - aFav;
         return (b.timestamp || 0) - (a.timestamp || 0);
       });
+    } else if (sortType === "tamers_comments") {
+      sorted.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
     }
-    return sorted;
+    const pinned = sorted.filter(comment => comment.is_pinned);
+    const unpinned = sorted.filter(comment => !comment.is_pinned);
+    return [...pinned, ...unpinned];
   }
   const sortedComments = sortComments(comments, sortType);
+  const hasVisiblePinnedComment = sortedComments.some(comment =>
+    comment.is_pinned ||
+    (Array.isArray(comment.replies) && comment.replies.some(reply => reply.is_pinned))
+  );
+  const pinnedByName = hasVisiblePinnedComment
+    ? (await getMetadataUploaderName() || getPinnedByName(comments) || 'Tamers12345')
+    : '';
+  if (isStale()) return;
 
   commentContainer.style.display = 'block';
   commentContainer.innerHTML =
@@ -1175,6 +1250,7 @@ async function loadComments(video, sortType = localStorage.getItem('commentSortT
         <option value="oldest">Oldest</option>
         <option value="likes">Most Likes</option>
         <option value="tamers_reply">Tamers Replied</option>
+        <option value="tamers_comments">Tamers Comments</option>
         <option value="favorited">Favorited</option>
       </select>
      </div>` +
@@ -1184,15 +1260,18 @@ async function loadComments(video, sortType = localStorage.getItem('commentSortT
 
 
       </p>` : '') +
-    sortedComments.map((comment, index) => {
+    (sortedComments.length ? sortedComments.map((comment, index) => {
       // Randomize comment PFP
       const randomPic = profilePics[Math.floor(Math.random() * profilePics.length)];
-      const avatarPic = getAvatar(comment.author, randomPic);
-      const isTamers = TAMERS_AUTHORS.includes(comment.author);
+      const avatarPic = getAvatar(comment, randomPic);
+      const isTamers = isUploaderComment(comment);
       const commentId = `comment-${index}`;
       const likeCount = typeof comment.like_count !== "undefined"
         ? `<span class="comment-likes"><span class="like-emoji">👍</span> ${comment.like_count}</span>` : '';
       const postDate = comment.timestamp ? `<span class="comment-date">${formatDate(comment.timestamp)}</span>` : '';
+      const pinnedBadge = comment.is_pinned
+        ? `<div class="comment-pinned"><span class="comment-pinned-icon">📌</span> Pinned by ${escapeHtml(pinnedByName)}</div>`
+        : '';
       const favoritedBadge = comment.is_favorited
         ? `
           <span class="comment-favorited">
@@ -1205,7 +1284,7 @@ async function loadComments(video, sortType = localStorage.getItem('commentSortT
       let repliesHTML = '';
       if (Array.isArray(comment.replies) && comment.replies.length > 0) {
         // Detect if Tamers replied
-        const tamersReply = comment.replies.some(reply => TAMERS_AUTHORS.includes(reply.author));
+        const tamersReply = comment.replies.some(reply => isUploaderComment(reply));
         // PFP badge if Tamers replied
         const tamersBadge = tamersReply
           ? `<img src="${TAMERS_PFP}" title="Uploader replied" style="width:16px;height:16px;border-radius:50%;vertical-align:middle;margin-left:6px;box-shadow:0 0 2px #0005;">`
@@ -1215,10 +1294,13 @@ async function loadComments(video, sortType = localStorage.getItem('commentSortT
           <div class="replies" id="${commentId}-replies" style="display:none; margin-left: 50px;">
             ${comment.replies.map(reply => {
               const replyRandomPic = profilePics[Math.floor(Math.random() * profilePics.length)];
-              const replyAvatarPic = getAvatar(reply.author, replyRandomPic);
+              const replyAvatarPic = getAvatar(reply, replyRandomPic);
               const replyLikeCount = typeof reply.like_count !== "undefined"
                 ? `<span class="comment-likes"><span class="like-emoji">👍</span> ${reply.like_count}</span>` : '';
               const replyPostDate = reply.timestamp ? `<span class="comment-date">${formatDate(reply.timestamp)}</span>` : '';
+              const replyPinnedBadge = reply.is_pinned
+                ? `<div class="comment-pinned"><span class="comment-pinned-icon">📌</span> Pinned by ${escapeHtml(pinnedByName)}</div>`
+                : '';
               const replyFavoritedBadge = reply.is_favorited
                 ? `<span class="comment-favorited">
                     <img class="uploader-fav-pfp" src="${TAMERS_PFP}" alt="Uploader">
@@ -1228,8 +1310,10 @@ async function loadComments(video, sortType = localStorage.getItem('commentSortT
                 <div class="comment">
                   <img src="${replyAvatarPic}" class="comment-avatar" alt="pfp">
                   <div class="comment-content">
+                    ${replyPinnedBadge}
                     <a href="#" onclick="window.electronAPI.openExternal('${reply.author_url || '#'}'); return false;">
                       ${reply.author || 'Anonymous'}
+                      ${isUploaderComment(reply) ? '<span class="yt-uploader-label" style="font-size:12px;color:#e43c53;margin-left:4px;">Uploader</span>' : ''}
                     </a>
                     <div class="comment-meta-row">
                       ${replyPostDate}
@@ -1266,6 +1350,7 @@ async function loadComments(video, sortType = localStorage.getItem('commentSortT
         <div class="comment">
           <img src="${avatarPic}" class="comment-avatar" alt="pfp">
           <div class="comment-content">
+            ${pinnedBadge}
             <a href="#" onclick="window.electronAPI.openExternal('${comment.author_url || '#'}'); return false;">
               ${comment.author || 'Anonymous'}
               ${isTamers ? '<span class="yt-uploader-label" style="font-size:12px;color:#e43c53;margin-left:4px;">Uploader</span>' : ''}
@@ -1280,7 +1365,7 @@ async function loadComments(video, sortType = localStorage.getItem('commentSortT
         </div>
         ${repliesHTML}
       `;
-    }).join('');
+    }).join('') : `<p class="comments-empty">No Tamers comments found for this video.</p>`);
 
   // --- comment sort by dropdown event handling ---
   const sortSelect = document.getElementById('comment-sort-select');
@@ -2364,6 +2449,65 @@ function scheduleChatPaneMetricsUpdate() {
 
 window.addEventListener('resize', scheduleChatPaneMetricsUpdate, { passive: true });
 
+function placeQueueInPlayerSidebar() {
+  const sidebar = document.getElementById('chat-and-queue');
+  const queueContainer = document.getElementById('playlist-queue-container');
+  const chatPane = document.getElementById('chat-pane');
+  if (!sidebar || !queueContainer) return;
+
+  if (queueContainer.parentElement !== sidebar) {
+    sidebar.appendChild(queueContainer);
+  }
+  queueContainer.style.marginTop = chatPane?.style.display === 'block' ? '16px' : '0';
+}
+
+function placeQueueInMainLayout() {
+  const layout = document.getElementById('main-content-layout');
+  const queueContainer = document.getElementById('playlist-queue-container');
+  if (!layout || !queueContainer) return;
+
+  if (queueContainer.parentElement !== layout) {
+    layout.appendChild(queueContainer);
+  }
+  queueContainer.style.marginTop = '0';
+}
+
+function toggleVideoPlayback(player = window.player) {
+  if (!player || !player.src) return;
+  if (player.paused || player.ended) {
+    player.play().catch(err => console.warn('Video play failed:', err));
+  } else {
+    player.pause();
+  }
+}
+
+function isMiddleVideoClick(player, e) {
+  if (!player || e.button !== 0) return false;
+  const rect = player.getBoundingClientRect();
+  if (!rect.width || !rect.height) return false;
+
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  return (
+    x > rect.width * 0.2 &&
+    x < rect.width * 0.8 &&
+    y > rect.height * 0.2 &&
+    y < rect.height * 0.8
+  );
+}
+
+function setupPlayerClickHandlers(player) {
+  if (!player) return;
+  player.addEventListener('click', e => {
+    if (!isMiddleVideoClick(player, e)) return;
+    e.preventDefault();
+    toggleVideoPlayback(player);
+  });
+  player.addEventListener('dblclick', e => {
+    e.preventDefault();
+  });
+}
+
 async function showPlayer(video, playlist = [], index = 0, autoplay = false) {
   const oldPlayer = document.getElementById('player-video');
   if (oldPlayer) {
@@ -2376,6 +2520,8 @@ async function showPlayer(video, playlist = [], index = 0, autoplay = false) {
   }
 
   const player = window.player;
+  setupPlayerClickHandlers(player);
+  placeQueueInPlayerSidebar();
   hideGifExportUI();
   currentPlaylistVideos = playlist.slice();
   currentPlaylistIndex = index;
@@ -2543,7 +2689,6 @@ async function showPlayer(video, playlist = [], index = 0, autoplay = false) {
   const chatPane = document.getElementById('chat-pane');
   const chatBox = document.getElementById('chat-messages');
   const toggleBtn = document.querySelector('button[onclick="toggleChat()"]');
-  const queueContainer = document.getElementById('playlist-queue-container');
 
   chatBox.innerHTML = "";
   chatPane.style.display = 'none';
@@ -2566,26 +2711,15 @@ async function showPlayer(video, playlist = [], index = 0, autoplay = false) {
 
     chatPane.style.display = chatVisible ? 'block' : 'none';
     toggleBtn.style.display = 'inline-block';
-    queueContainer.style.marginTop = chatVisible ? '16px' : '0';
+    placeQueueInPlayerSidebar();
   } catch (e) {
     chatPane.style.display = 'none';
     toggleBtn.style.display = 'none';
-    queueContainer.style.marginTop = '0';
+    placeQueueInPlayerSidebar();
   }
 
-  const pruneChatMessagesAboveViewport = () => {
-    if (chatPane.style.display === 'none' || !chatBox.firstElementChild) return;
-    const paneTop = chatPane.getBoundingClientRect().top;
-    let removed = false;
-
-    while (chatBox.firstElementChild) {
-      const firstRect = chatBox.firstElementChild.getBoundingClientRect();
-      if (firstRect.bottom >= paneTop) break;
-      chatBox.firstElementChild.remove();
-      removed = true;
-    }
-
-    if (removed) chatPane.scrollTop = chatPane.scrollHeight;
+  const isChatScrolledToBottom = () => {
+    return chatPane.scrollHeight - chatPane.scrollTop - chatPane.clientHeight <= 8;
   };
 
   const appendChatRange = (startIndex, endIndex) => {
@@ -2602,14 +2736,12 @@ async function showPlayer(video, playlist = [], index = 0, autoplay = false) {
     if (!chatData.length) return;
     const current = player.currentTime || 0;
     const endIndex = upperBoundChatTime(chatData, current);
-    const startIndex = Math.max(0, endIndex - CHAT_SEEK_BACKFILL_MESSAGES);
 
     chatBox.textContent = '';
-    appendChatRange(startIndex, endIndex);
+    appendChatRange(0, endIndex);
     nextChatIndex = endIndex;
     lastRenderedChatTime = current;
     chatPane.scrollTop = chatPane.scrollHeight;
-    pruneChatMessagesAboveViewport();
   };
 
   const renderChatWindow = (force = false) => {
@@ -2629,13 +2761,13 @@ async function showPlayer(video, playlist = [], index = 0, autoplay = false) {
     }
 
     const endIndex = upperBoundChatTime(chatData, current);
+    const shouldFollowNewMessages = isChatScrolledToBottom();
     const appended = appendChatRange(nextChatIndex, endIndex);
     nextChatIndex = Math.max(nextChatIndex, endIndex);
     lastRenderedChatTime = current;
 
-    if (appended) {
+    if (appended && shouldFollowNewMessages) {
       chatPane.scrollTop = chatPane.scrollHeight;
-      pruneChatMessagesAboveViewport();
     }
   };
 
@@ -2937,6 +3069,7 @@ function closePlayer() {
   document.getElementById('chat-messages').innerHTML = "";
   document.getElementById('video-player').style.display = 'none';
   document.getElementById('video-grid').style.display = 'grid';
+  placeQueueInMainLayout();
   renderQueue();
   renderVideoGrid();
   hideGifExportUI(); 
@@ -2958,7 +3091,14 @@ function setVolume(v) {
 window.setVolume = setVolume;
 
 function setPlaybackSpeed(v) {
-  document.getElementById('player-video').playbackRate = parseFloat(v);
+  const rate = parseFloat(v);
+  if (!Number.isFinite(rate)) return;
+  const player = document.getElementById('player-video');
+  const selector = document.getElementById('speedSelector');
+  if (player) player.playbackRate = rate;
+  if (selector && Array.from(selector.options).some(option => Number(option.value) === rate)) {
+    selector.value = String(rate);
+  }
 }
 window.setPlaybackSpeed = setPlaybackSpeed;
 
@@ -2966,18 +3106,10 @@ window.toggleChat = toggleChat;
 
 async function toggleChat() {
   const chatPane = document.getElementById('chat-pane');
-  const queueContainer = document.getElementById('playlist-queue-container');
   const showing = chatPane.style.display === 'block';
   const newDisplay = showing ? 'none' : 'block';
   chatPane.style.display = newDisplay;
-  queueContainer.style.marginTop = newDisplay === 'none' ? '0' : '16px';
-  if (queueContainer) {
-    if (!showing) {
-      chatPane.after(queueContainer);
-    } else {
-      document.getElementById('chat-and-queue')?.appendChild(queueContainer);
-    }
-  }
+  placeQueueInPlayerSidebar();
   if (!showing && typeof renderCurrentChatWindow === 'function') {
     renderCurrentChatWindow(true);
   }
@@ -3040,37 +3172,75 @@ function formatDate(d) {
     : d;
 }
 
-
-// --- Frame-by-Frame Navigation for 29.97fps ---
-
 function seekFrame(video, direction) {
+  if (!video || !Number.isFinite(video.duration)) return;
   const fps = 29.97;
   const step = 1 / fps;
   let next = video.currentTime + direction * step;
-  // Clamp to video duration
   next = Math.max(0, Math.min(video.duration, next));
   video.currentTime = next;
 }
 
-document.addEventListener('keydown', function(e) {
-  // Only trigger when player is visible
+function isTypingInFormControl(e) {
+  const target = e.target || document.activeElement;
+  const tag = target?.tagName?.toLowerCase();
+  return !!(target?.isContentEditable || ['input', 'textarea', 'select'].includes(tag));
+}
+
+function isVideoPlayerOpen() {
   const player = window.player;
   const playerContainer = document.getElementById('video-player');
-  if (!player || !playerContainer || playerContainer.style.display === 'none') return;
+  return !!(player && playerContainer && playerContainer.style.display !== 'none');
+}
 
-  // Avoid interfering with form inputs
-  const tag = document.activeElement.tagName.toLowerCase();
-  if (['input','textarea','select'].includes(tag)) return;
+function getSpeedOptions() {
+  const selector = document.getElementById('speedSelector');
+  if (!selector) return [];
+  return Array.from(selector.options)
+    .map(option => Number(option.value))
+    .filter(value => Number.isFinite(value));
+}
 
-  // , or <  (go back 1 frame)
-  if (e.key === ',' || e.key === '<') {
-    e.preventDefault();
-    seekFrame(player, -1);
+function adjustPlaybackSpeedBySetting(direction) {
+  const player = window.player || document.getElementById('player-video');
+  const speeds = getSpeedOptions();
+  if (!player || !speeds.length) return;
+
+  const current = Number(player.playbackRate) || 1;
+  let nextSpeed = current;
+  if (direction > 0) {
+    nextSpeed = speeds.find(speed => speed > current + 0.001) ?? speeds[speeds.length - 1];
+  } else {
+    nextSpeed = [...speeds].reverse().find(speed => speed < current - 0.001) ?? speeds[0];
   }
-  // . or > (go forward 1 frame)
-  if (e.key === '.' || e.key === '>') {
+
+  setPlaybackSpeed(nextSpeed);
+}
+
+document.addEventListener('keydown', function(e) {
+  if (!isVideoPlayerOpen()) return;
+  if (isTypingInFormControl(e)) return;
+  if (e.ctrlKey || e.altKey || e.metaKey) return;
+
+  const key = getEventKeybindKey(e);
+  if (key === ' ') {
     e.preventDefault();
-    seekFrame(player, 1);
+    if (!e.repeat) toggleVideoPlayback(window.player);
+  } else if (key === ',' || key === '<') {
+    e.preventDefault();
+    seekFrame(window.player, -1);
+  } else if (key === '.' || key === '>') {
+    e.preventDefault();
+    seekFrame(window.player, 1);
+  } else if (key === currentKeybinds.screenshot) {
+    e.preventDefault();
+    if (!e.repeat) takeScreenshot();
+  } else if (key === currentKeybinds.speedUp) {
+    e.preventDefault();
+    adjustPlaybackSpeedBySetting(1);
+  } else if (key === currentKeybinds.speedDown) {
+    e.preventDefault();
+    adjustPlaybackSpeedBySetting(-1);
   }
 });
 
@@ -3852,6 +4022,292 @@ function isUploaderName(name) {
   return POSTS_UPLOADER_NAMES.has(normalized);
 }
 
+let settingsControlsInitialized = false;
+const DEFAULT_KEYBINDS = {
+  screenshot: 's',
+  speedUp: ']',
+  speedDown: '['
+};
+const KEYBIND_CONFIG = {
+  screenshot: {
+    displayId: 'keybind-screenshot-display',
+    rebindButtonId: 'rebind-screenshot-key-btn',
+    resetButtonId: 'reset-screenshot-key-btn'
+  },
+  speedUp: {
+    displayId: 'keybind-speed-up-display',
+    rebindButtonId: 'rebind-speed-up-key-btn',
+    resetButtonId: 'reset-speed-up-key-btn'
+  },
+  speedDown: {
+    displayId: 'keybind-speed-down-display',
+    rebindButtonId: 'rebind-speed-down-key-btn',
+    resetButtonId: 'reset-speed-down-key-btn'
+  }
+};
+let currentKeybinds = { ...DEFAULT_KEYBINDS };
+let activeKeybindCaptureCleanup = null;
+
+function padTimePart(value) {
+  return String(Math.max(0, Math.floor(value))).padStart(2, '0');
+}
+
+function normalizeKeybindKey(key) {
+  if (typeof key !== 'string') return '';
+  if (key === ' ') return ' ';
+  return key.length === 1 ? key.toLowerCase() : key;
+}
+
+function getEventKeybindKey(e) {
+  return normalizeKeybindKey(e.key);
+}
+
+function normalizeKeybinds(keybinds = {}) {
+  const speedUp = normalizeKeybindKey(keybinds.speedUp);
+  const speedDown = normalizeKeybindKey(keybinds.speedDown);
+  const hasPreviousSpeedDefaults = speedUp === '.' && speedDown === ',';
+
+  return {
+    screenshot: normalizeKeybindKey(keybinds.screenshot) || DEFAULT_KEYBINDS.screenshot,
+    speedUp: hasPreviousSpeedDefaults ? DEFAULT_KEYBINDS.speedUp : (speedUp || DEFAULT_KEYBINDS.speedUp),
+    speedDown: hasPreviousSpeedDefaults ? DEFAULT_KEYBINDS.speedDown : (speedDown || DEFAULT_KEYBINDS.speedDown)
+  };
+}
+
+function formatKeybindLabel(key) {
+  if (key === ' ') return 'Space';
+  if (key.length === 1) return key.toUpperCase();
+  return key;
+}
+
+function setKeybindButtonCaptureState(action, isCapturing) {
+  const button = document.getElementById(KEYBIND_CONFIG[action]?.rebindButtonId);
+  if (!button) return;
+  button.textContent = isCapturing ? 'Press a key...' : 'Change Key';
+}
+
+function renderKeybindDisplays() {
+  Object.entries(KEYBIND_CONFIG).forEach(([action, config]) => {
+    const display = document.getElementById(config.displayId);
+    if (display) display.textContent = formatKeybindLabel(currentKeybinds[action]);
+  });
+}
+
+async function saveCurrentKeybinds() {
+  currentKeybinds = normalizeKeybinds(currentKeybinds);
+  await window.electronAPI.setSetting('keybinds', currentKeybinds);
+  renderKeybindDisplays();
+}
+
+function stopActiveKeybindCapture() {
+  if (activeKeybindCaptureCleanup) {
+    activeKeybindCaptureCleanup();
+    activeKeybindCaptureCleanup = null;
+  }
+}
+
+function beginKeybindCapture(action) {
+  stopActiveKeybindCapture();
+  setKeybindButtonCaptureState(action, true);
+
+  const handler = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const key = getEventKeybindKey(e);
+    if (e.key === 'Escape') {
+      stopActiveKeybindCapture();
+      return;
+    }
+
+    if (!key || ['Shift', 'Control', 'Alt', 'Meta'].includes(key)) return;
+
+    currentKeybinds[action] = key;
+    stopActiveKeybindCapture();
+    await saveCurrentKeybinds();
+  };
+
+  document.addEventListener('keydown', handler, true);
+  activeKeybindCaptureCleanup = () => {
+    document.removeEventListener('keydown', handler, true);
+    setKeybindButtonCaptureState(action, false);
+  };
+}
+
+function formatVideoTimestamp(seconds) {
+  const totalSeconds = Math.max(0, Math.floor(Number(seconds) || 0));
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const secs = totalSeconds % 60;
+  return `${padTimePart(hours)}-${padTimePart(minutes)}-${padTimePart(secs)}`;
+}
+
+function formatSystemTimestamp(date = new Date()) {
+  return [
+    date.getFullYear(),
+    padTimePart(date.getMonth() + 1),
+    padTimePart(date.getDate())
+  ].join('-') + '_' + [
+    padTimePart(date.getHours()),
+    padTimePart(date.getMinutes()),
+    padTimePart(date.getSeconds())
+  ].join('-');
+}
+
+function sanitizeFilenamePart(value) {
+  return String(value || 'video')
+    .replace(/[<>:"/\\|?*\x00-\x1F]/g, '-')
+    .replace(/\s+/g, ' ')
+    .replace(/[. ]+$/g, '')
+    .trim()
+    .slice(0, 120) || 'video';
+}
+
+function getCurrentVideoNameForScreenshot() {
+  const title = document.getElementById('player-title')?.innerText;
+  if (title && title.trim()) return title.trim();
+  if (currentVideoFilename) {
+    return currentVideoFilename.split(/[\\/]/).pop().replace(/\.[^/.]+$/, '');
+  }
+  return 'video';
+}
+
+function getScreenshotFilename(player) {
+  return `${sanitizeFilenamePart(getCurrentVideoNameForScreenshot())}-${formatVideoTimestamp(player?.currentTime)}-${formatSystemTimestamp()}.png`;
+}
+
+async function renderSettingsControls(settingsOverride = null) {
+  const settings = settingsOverride || await window.electronAPI.getSettings();
+  const downloadsPath = await window.electronAPI.getDownloadsPath();
+  const currentVideoFolder = document.getElementById('current-video-folder');
+  const screenshotFolderDisplay = document.getElementById('screenshot-folder-display');
+  const screenshotPromptToggle = document.getElementById('screenshot-prompt-toggle');
+  currentKeybinds = normalizeKeybinds(settings?.keybinds);
+
+  if (currentVideoFolder) {
+    currentVideoFolder.textContent = videoPath || settings?.videoPath || 'Not selected';
+  }
+
+  if (screenshotFolderDisplay) {
+    screenshotFolderDisplay.textContent = settings?.screenshotFolder || `${downloadsPath} (default)`;
+  }
+
+  if (screenshotPromptToggle) {
+    screenshotPromptToggle.checked = !!settings?.screenshotPromptEachTime;
+  }
+
+  renderKeybindDisplays();
+}
+
+async function initializeSettingsControls(initialSettings) {
+  if (!settingsControlsInitialized) {
+    const changeFolderBtn = document.getElementById('change-folder-btn');
+    const changeScreenshotFolderBtn = document.getElementById('change-screenshot-folder-btn');
+    const resetScreenshotFolderBtn = document.getElementById('reset-screenshot-folder-btn');
+    const screenshotPromptToggle = document.getElementById('screenshot-prompt-toggle');
+
+    if (changeFolderBtn) {
+      changeFolderBtn.addEventListener('click', async () => {
+        const p = await window.electronAPI.selectVideoFolder();
+        if (p) {
+          videoPath = p.replace(/\\\\/g, '/');
+          localStorage.setItem('videoPath', videoPath);
+          await renderSettingsControls();
+          location.reload();
+        }
+      });
+    }
+
+    if (changeScreenshotFolderBtn) {
+      changeScreenshotFolderBtn.addEventListener('click', async () => {
+        const settings = await window.electronAPI.getSettings();
+        const downloadsPath = await window.electronAPI.getDownloadsPath();
+        const p = await window.electronAPI.selectScreenshotFolder(settings?.screenshotFolder || downloadsPath);
+        if (p) await renderSettingsControls();
+      });
+    }
+
+    if (resetScreenshotFolderBtn) {
+      resetScreenshotFolderBtn.addEventListener('click', async () => {
+        await window.electronAPI.setSetting('screenshotFolder', '');
+        await renderSettingsControls();
+      });
+    }
+
+    if (screenshotPromptToggle) {
+      screenshotPromptToggle.addEventListener('change', async () => {
+        await window.electronAPI.setSetting('screenshotPromptEachTime', screenshotPromptToggle.checked);
+      });
+    }
+
+    Object.entries(KEYBIND_CONFIG).forEach(([action, config]) => {
+      const rebindButton = document.getElementById(config.rebindButtonId);
+      const resetButton = document.getElementById(config.resetButtonId);
+
+      if (rebindButton) {
+        rebindButton.addEventListener('click', () => beginKeybindCapture(action));
+      }
+
+      if (resetButton) {
+        resetButton.addEventListener('click', async () => {
+          currentKeybinds[action] = DEFAULT_KEYBINDS[action];
+          await saveCurrentKeybinds();
+        });
+      }
+    });
+
+    settingsControlsInitialized = true;
+  }
+
+  await renderSettingsControls(initialSettings);
+}
+
+async function takeScreenshot() {
+  const player = window.player || document.getElementById('player-video');
+  if (!player || !player.videoWidth || !player.videoHeight) {
+    alert('No video frame is available to screenshot yet.');
+    return;
+  }
+
+  const screenshotBtn = document.getElementById('screenshot-btn');
+  const defaultButtonText = screenshotBtn?.dataset.defaultText || screenshotBtn?.textContent || 'Screenshot';
+  if (screenshotBtn) {
+    screenshotBtn.dataset.defaultText = defaultButtonText;
+    screenshotBtn.disabled = true;
+    screenshotBtn.textContent = 'Saving...';
+  }
+
+  try {
+    const canvas = document.createElement('canvas');
+    canvas.width = player.videoWidth;
+    canvas.height = player.videoHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(player, 0, 0, canvas.width, canvas.height);
+
+    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+    if (!blob) throw new Error('Could not create screenshot image.');
+
+    const pngData = await blob.arrayBuffer();
+    const result = await window.electronAPI.saveScreenshot({
+      filename: getScreenshotFilename(player),
+      pngData
+    });
+
+    if (screenshotBtn) {
+      screenshotBtn.textContent = result?.canceled ? 'Cancelled' : 'Saved';
+      setTimeout(() => {
+        screenshotBtn.textContent = defaultButtonText;
+      }, 1400);
+    }
+  } catch (e) {
+    console.error('Screenshot failed:', e);
+    alert('Failed to save screenshot: ' + (e?.message || e));
+    if (screenshotBtn) screenshotBtn.textContent = defaultButtonText;
+  } finally {
+    if (screenshotBtn) screenshotBtn.disabled = false;
+  }
+}
+
 // === Startup & tab-switching ===
 document.addEventListener('DOMContentLoaded', async () => {
   getDebugOverlay();
@@ -3861,6 +4317,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   const settings = await window.electronAPI.getSettings();
+  await initializeSettingsControls(settings);
   if (settings && settings.videoPath) {
     videoPath = settings.videoPath.replace(/\\\\/g, '/');
     document.getElementById('startup-screen').style.display = 'none';
@@ -3875,35 +4332,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         videoPath = p.replace(/\\\\/g, '/');
         document.getElementById('startup-screen').style.display = 'none';
         document.getElementById('app-content').style.display = 'block';
+        await renderSettingsControls();
         await initializeYouTubeTab();
       }
     };
   }
 
-  document.getElementById('change-folder-btn').addEventListener('click', async () => {
-    const p = await window.electronAPI.selectVideoFolder();
-    if (p) {
-      videoPath = p.replace(/\\\\/g, '/');
-      localStorage.setItem('videoPath', videoPath);
-      location.reload();
-    }
-  });
-
-    // Screenshot
-  document.getElementById('screenshot-btn').onclick = function() {
-  const player = window.player;
-  const canvas = document.createElement('canvas');
-  canvas.width = player.videoWidth;
-  canvas.height = player.videoHeight;
-  const ctx = canvas.getContext('2d');
-  ctx.drawImage(player, 0, 0, canvas.width, canvas.height);
-
-  // Download as PNG
-  const a = document.createElement('a');
-  a.href = canvas.toDataURL('image/png');
-  a.download = 'screenshot.png';
-  a.click();
-};
+  document.getElementById('screenshot-btn')?.addEventListener('click', takeScreenshot);
 
 // === Fullscreen button ===
 const fsBtn = document.getElementById('fullscreen-btn');
@@ -3996,6 +4431,7 @@ document.addEventListener('fullscreenchange', () => {
     } else if (name === 'settings') {
       settingsSec.style.display = 'block';
       settingsBtn.classList.add('active');
+      renderSettingsControls();
     }
   }
 

@@ -455,6 +455,41 @@ function saveJSON(filePath, obj) {
   }
 }
 
+function sanitizeScreenshotFilename(filename) {
+  const parsed = path.parse(String(filename || 'screenshot.png'));
+  const base = (parsed.name || 'screenshot')
+    .replace(/[<>:"/\\|?*\x00-\x1F]/g, '-')
+    .replace(/\s+/g, ' ')
+    .replace(/[. ]+$/g, '')
+    .trim()
+    .slice(0, 180) || 'screenshot';
+  return `${base}.png`;
+}
+
+function getUniqueFilePath(folder, filename) {
+  const parsed = path.parse(filename);
+  let candidate = path.join(folder, filename);
+  let counter = 2;
+  while (fs.existsSync(candidate)) {
+    candidate = path.join(folder, `${parsed.name} (${counter})${parsed.ext}`);
+    counter += 1;
+  }
+  return candidate;
+}
+
+function getPngBuffer(pngData) {
+  if (Buffer.isBuffer(pngData)) return pngData;
+  if (pngData instanceof ArrayBuffer) return Buffer.from(pngData);
+  if (ArrayBuffer.isView(pngData)) {
+    return Buffer.from(pngData.buffer, pngData.byteOffset, pngData.byteLength);
+  }
+  if (typeof pngData === 'string') {
+    const match = pngData.match(/^data:image\/png;base64,(.+)$/);
+    if (match) return Buffer.from(match[1], 'base64');
+  }
+  throw new Error('Invalid screenshot data.');
+}
+
 function readImageDimensions(filePath) {
   let fd;
   try {
@@ -534,6 +569,10 @@ ipcMain.handle('get-settings', async () => {
   return loadJSON(settingsPath, {});
 });
 
+ipcMain.handle('get-downloads-path', async () => {
+  return app.getPath('downloads');
+});
+
 ipcMain.handle('get-user-playlists', async () => {
   return {
     exists: fs.existsSync(userPlaylistsPath),
@@ -553,10 +592,66 @@ ipcMain.handle('select-video-folder', async () => {
   const result = await dialog.showOpenDialog({ properties: ['openDirectory'] });
   if (!result.canceled && result.filePaths.length) {
     const folderPath = result.filePaths[0];
-    saveJSON(settingsPath, { videoPath: folderPath });
+    const settings = loadJSON(settingsPath, {});
+    saveJSON(settingsPath, { ...settings, videoPath: folderPath });
     return folderPath;
   }
   return null;
+});
+
+ipcMain.handle('select-screenshot-folder', async (_event, currentPath) => {
+  const result = await dialog.showOpenDialog({
+    title: 'Choose Screenshot Folder',
+    defaultPath: currentPath || app.getPath('downloads'),
+    properties: ['openDirectory', 'createDirectory']
+  });
+  if (!result.canceled && result.filePaths.length) {
+    const folderPath = result.filePaths[0];
+    const settings = loadJSON(settingsPath, {});
+    saveJSON(settingsPath, { ...settings, screenshotFolder: folderPath });
+    return folderPath;
+  }
+  return null;
+});
+
+ipcMain.handle('save-screenshot', async (_event, { filename, pngData }) => {
+  const settings = loadJSON(settingsPath, {});
+  const safeFilename = sanitizeScreenshotFilename(filename);
+  const defaultFolder = app.getPath('downloads');
+  const screenshotFolder = settings.screenshotFolder || defaultFolder;
+  const buffer = getPngBuffer(pngData);
+
+  if (settings.screenshotPromptEachTime) {
+    const { canceled, filePath } = await dialog.showSaveDialog({
+      title: 'Save Screenshot',
+      defaultPath: path.join(screenshotFolder, safeFilename),
+      filters: [{ name: 'PNG Image', extensions: ['png'] }]
+    });
+    if (canceled || !filePath) return { success: false, canceled: true };
+
+    const finalPath = /\.png$/i.test(filePath) ? filePath : `${filePath}.png`;
+    fs.writeFileSync(finalPath, buffer);
+    return { success: true, filePath: finalPath };
+  }
+
+  fs.mkdirSync(screenshotFolder, { recursive: true });
+  const filePath = getUniqueFilePath(screenshotFolder, safeFilename);
+  fs.writeFileSync(filePath, buffer);
+  return { success: true, filePath };
+});
+
+ipcMain.handle('read-archive-json', async (_event, folder, filename) => {
+  const allowedFolders = new Set(['comments', 'metadata']);
+  if (!allowedFolders.has(folder)) return null;
+
+  const baseDir = path.join(__dirname, folder);
+  const filePath = path.resolve(baseDir, String(filename || ''));
+  if (!filePath.startsWith(baseDir + path.sep)) {
+    throw new Error('Invalid archive JSON path.');
+  }
+  if (!fs.existsSync(filePath)) return null;
+
+  return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 });
 
 ipcMain.handle('read-image-files', async () => {

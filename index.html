@@ -127,7 +127,6 @@
       <button id="export-playlist-btn" type="button">Export</button>
       <button id="import-playlist-btn" type="button">Import</button>
       <button id="delete-playlist-btn" type="button">Delete</button>
-      <button id="change-folder-btn" style="margin-left: 10px;">Change Video Folder</button>
     </div>
     <div style="padding: 10px 0 0 0;">
       <button id="randomVideoBtn" style="display: block; margin-right: 10px;">Random Video</button>
@@ -147,8 +146,10 @@
             <input type="range" id="volumeSlider" min="0" max="1" step="0.01" onchange="setVolume(this.value)">
             <label for="speedSelector">Speed:</label>
             <select id="speedSelector" onchange="setPlaybackSpeed(this.value)">
+              <option value="0.25">0.25x</option>
               <option value="0.5">0.5x</option>
               <option value="1" selected>1x</option>
+              <option value="1.25">1.25x</option>
               <option value="1.5">1.5x</option>
               <option value="2">2x</option>
             </select>
@@ -298,35 +299,99 @@
 </div>
 
 
-  <div id="settings-section" style="display:none; padding:24px; max-width:480px;">
+  <div id="settings-section" style="display:none; padding:24px; max-width:680px;">
     <h2>Settings</h2>
-    <label for="theme-selector" style="font-weight:bold; display:block; margin-bottom:8px;">
-      Theme:
-    </label>
-    <select id="theme-selector" style="font-size:1em; padding:6px 16px; border-radius:5px; margin-bottom: 18px;">
-      <option value="dark">Dark (Default)</option>
-      <option value="light">Light</option>
-      <option value="yotsuba">Yotsuba</option>
-      <option value="yotsubab">Yotsuba B</option>
-      <option value="futaba">Futaba</option>
-      <option value="discord">Discord</option>
-      <option value="pony">Pony Pastel</option>
-      <option value="retro">Retro CRT</option>
-      <option value="midnight">Midnight Blue</option>
-      <option value="strawberry">Strawberry Soda</option>
-      <option value="solarflair">Solar Flair</option>
-      <option value="goth">Gothic</option>
-      <option value="mobian royalty (queen aleena)">Mobian Royalty (Queen Aleena)</option>
-      <option value="popstar pink (sonia)">Popstar Pink (Sonia)</option>
-      <option value="blue blur (sonic)">Blue Blur (Sonic)</option>
-      <option value="green thief (manic)">Green Thief (Manic)</option>
-      <option value="matrix">Matrix</option>
-    </select>
-    <br>
-    <small>
-      Your theme will be remembered on this device.<br>
-      More customization coming soon!
-    </small>
+    <div class="settings-group">
+      <h3>Archive Storage</h3>
+      <div class="settings-row">
+        <div>
+          <label class="settings-label">Video Folder</label>
+          <div id="current-video-folder" class="settings-path">Not selected</div>
+        </div>
+        <button id="change-folder-btn" type="button">Change Video Folder</button>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <h3>Screenshots</h3>
+      <div class="settings-row">
+        <div>
+          <label class="settings-label">Save Folder</label>
+          <div id="screenshot-folder-display" class="settings-path">Downloads</div>
+        </div>
+        <div class="settings-button-row">
+          <button id="change-screenshot-folder-btn" type="button">Change Folder</button>
+          <button id="reset-screenshot-folder-btn" type="button">Reset to Default</button>
+        </div>
+      </div>
+      <label class="settings-checkbox">
+        <input type="checkbox" id="screenshot-prompt-toggle">
+        Ask where to save each screenshot
+      </label>
+    </div>
+
+    <div class="settings-group">
+      <h3>Keybinds</h3>
+      <div class="settings-row">
+        <div>
+          <label class="settings-label">Take Screenshot</label>
+          <div id="keybind-screenshot-display" class="settings-key-value">S</div>
+        </div>
+        <div class="settings-button-row">
+          <button id="rebind-screenshot-key-btn" type="button">Change Key</button>
+          <button id="reset-screenshot-key-btn" type="button">Reset to Default</button>
+        </div>
+      </div>
+      <div class="settings-row">
+        <div>
+          <label class="settings-label">Increase Video Speed</label>
+          <div id="keybind-speed-up-display" class="settings-key-value">]</div>
+        </div>
+        <div class="settings-button-row">
+          <button id="rebind-speed-up-key-btn" type="button">Change Key</button>
+          <button id="reset-speed-up-key-btn" type="button">Reset to Default</button>
+        </div>
+      </div>
+      <div class="settings-row">
+        <div>
+          <label class="settings-label">Decrease Video Speed</label>
+          <div id="keybind-speed-down-display" class="settings-key-value">[</div>
+        </div>
+        <div class="settings-button-row">
+          <button id="rebind-speed-down-key-btn" type="button">Change Key</button>
+          <button id="reset-speed-down-key-btn" type="button">Reset to Default</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <h3>Appearance</h3>
+      <label for="theme-selector" class="settings-label">
+        Theme
+      </label>
+      <select id="theme-selector" style="font-size:1em; padding:6px 16px; border-radius:5px;">
+        <option value="dark">Dark (Default)</option>
+        <option value="light">Light</option>
+        <option value="yotsuba">Yotsuba</option>
+        <option value="yotsubab">Yotsuba B</option>
+        <option value="futaba">Futaba</option>
+        <option value="discord">Discord</option>
+        <option value="pony">Pony Pastel</option>
+        <option value="retro">Retro CRT</option>
+        <option value="midnight">Midnight Blue</option>
+        <option value="strawberry">Strawberry Soda</option>
+        <option value="solarflair">Solar Flair</option>
+        <option value="goth">Gothic</option>
+        <option value="mobian royalty (queen aleena)">Mobian Royalty (Queen Aleena)</option>
+        <option value="popstar pink (sonia)">Popstar Pink (Sonia)</option>
+        <option value="blue blur (sonic)">Blue Blur (Sonic)</option>
+        <option value="green thief (manic)">Green Thief (Manic)</option>
+        <option value="matrix">Matrix</option>
+      </select>
+      <small class="settings-note">
+        Your theme will be remembered on this device.
+      </small>
+    </div>
   </div>
 
   <div id="main-download-progress" style="display:none;position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#222;padding:12px 24px;border-radius:8px;color:#fff;z-index:9999;min-width:320px;box-shadow:0 2px 16px #0008;">
