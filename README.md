@@ -35,8 +35,3 @@ An Electron‐based desktop app that lets you browse Tamers12345's YouTube chann
 4. On first run, **select** your chosen videos folder where you’ve downloaded (or will download) the archived videos.
 
 ---
-
-## Download the videos
-  - You can download the videos as a 7z (be sure to have either winrar or 7zip installed) from here: https://k00.fr/4tim2mp7  
-  - You can download the videos through torrent here: https://github.com/Tamersfan/offline-tamers12345-archive/tree/main/torrents
-  - You can download the videos as a .zip from the Internet Archive here: https://archive.org/compress/tamers-videos-6-9-25/formats=MPEG4&file=/tamers-videos-6-9-25.zip
