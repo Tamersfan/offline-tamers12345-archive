@@ -10,9 +10,14 @@ An Electron‐based desktop app that lets you browse Tamers12345's YouTube chann
   - Grid of video thumbnails, titles & dates  
   - Search, sort (newest/oldest), and “favorite” videos  
   - In-player: video controls (size/volume/speed), description, and synced live-chat playback
-  - Custom playlist dropdown (e.g. Holiday Special, SU Lore Arc 1, etc…) 
-  - “Everything”, “Everything but MLP”, “Only MLP” filters   
+  - Custom playlist dropdown (e.g. Holiday Special, SU Lore Arc 1, etc…)
+  - Easily create and export your own playlist to share with friends
+  - Filters for “Everything”, “Everything but MLP”, “Only MLP”, "Everything but Dandy's World", "Everything but MLP and Dandy's World", "Only Dandy's World" and "Only MLP and Dandy's World" 
   - View the YouTube comments section under every video
+  - Use the YouTube auto generated subtitles for every single video that has them
+  - Create video clips and gifs directly from the video, or take a screenshot of the current frame
+- ### YouTube Posts
+  - View every single YouTube post from Tamers' channel including polls, images, video announcements, etc. 
 - ### DeviantArt Gallery  
   - View all of Tamers12345's artworks  
   - Background music with full playlist controls  
