@@ -3,6 +3,7 @@ const { app, BrowserWindow, dialog, ipcMain, shell } = require('electron');
 const path = require('path');
 const os = require('os');
 const fs = require('fs');
+const http = require('http');
 const https = require('https');
 const { spawn } = require('child_process');
 const { pathToFileURL } = require('url');
@@ -455,6 +456,111 @@ function saveJSON(filePath, obj) {
   }
 }
 
+const DOWNLOADABLE_VIDEO_EXTENSIONS = ['.mp4', '.webm'];
+const WINDOWS_FILENAME_REPLACEMENTS = {
+  '<': '‹',
+  '>': '›',
+  ':': '：',
+  '"': '＂',
+  '/': '／',
+  '\\': '＼',
+  '|': '｜',
+  '?': '？',
+  '*': '＊'
+};
+
+function sanitizeVideoFilename(filename) {
+  const parsed = path.parse(path.basename(String(filename || 'video.mp4')));
+  const cleanPart = part => String(part || '')
+    .replace(/[<>:"/\\|?*\x00-\x1F]/g, ch => WINDOWS_FILENAME_REPLACEMENTS[ch] || '-');
+  const base = cleanPart(parsed.name) || 'video';
+  const ext = cleanPart(parsed.ext) || '.mp4';
+  const safe = `${base}${ext}`.replace(/[. ]+$/g, '').trim();
+  return safe || 'video.mp4';
+}
+
+function getVideoDownloadTempPath(videoDir, filename) {
+  const parsed = path.parse(sanitizeVideoFilename(filename));
+  const base = (parsed.name || 'video').slice(0, 120);
+  const token = `${process.pid}-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  const tempDir = path.join(videoDir, '.offline-tamers-downloads');
+  fs.mkdirSync(tempDir, { recursive: true });
+  return path.join(tempDir, `${base}-${token}${parsed.ext}.download`);
+}
+
+function moveDownloadedVideo(tempDest, dest) {
+  fs.mkdirSync(path.dirname(dest), { recursive: true });
+  if (fs.existsSync(dest)) fs.unlinkSync(dest);
+  try {
+    fs.renameSync(tempDest, dest);
+  } catch (err) {
+    if (!err || !['EXDEV', 'EPERM'].includes(err.code)) throw err;
+    fs.copyFileSync(tempDest, dest);
+    fs.unlinkSync(tempDest);
+  }
+}
+
+function getVideoDownloadFileError(err, dest) {
+  if (err && ['EPERM', 'EACCES', 'ENOENT'].includes(err.code)) {
+    return new Error(
+      `Windows could not write the downloaded video to "${dest}". ` +
+      'Make sure the video folder is writable and this app is allowed to write there. ' +
+      `Original error: ${err.code}`
+    );
+  }
+  return err;
+}
+
+function getVideoVersionKey(filename) {
+  return path.basename(String(filename || ''), path.extname(String(filename || '')));
+}
+
+function fileExistsAsFile(filePath) {
+  try {
+    return fs.existsSync(filePath) && fs.statSync(filePath).isFile();
+  } catch {
+    return false;
+  }
+}
+
+function getSupersededVideoFilenames(filename, previousFilenames = []) {
+  const safeFilename = sanitizeVideoFilename(filename);
+  const parsed = path.parse(safeFilename);
+  const currentName = path.basename(safeFilename);
+  const candidates = new Set(
+    Array.isArray(previousFilenames)
+      ? previousFilenames.map(f => sanitizeVideoFilename(f)).filter(Boolean)
+      : []
+  );
+
+  for (const ext of DOWNLOADABLE_VIDEO_EXTENSIONS) {
+    candidates.add(`${parsed.name}${ext}`);
+  }
+
+  candidates.delete(currentName);
+  return [...candidates];
+}
+
+function removeSupersededVideoFiles(videoDir, filename, previousFilenames = []) {
+  const removed = [];
+  for (const oldFilename of getSupersededVideoFilenames(filename, previousFilenames)) {
+    const oldPath = path.join(videoDir, oldFilename);
+    try {
+      if (fileExistsAsFile(oldPath)) {
+        fs.unlinkSync(oldPath);
+        removed.push(oldFilename);
+      }
+    } catch (e) {
+      console.warn(`Could not remove replaced video "${oldFilename}":`, e);
+    }
+  }
+  return removed;
+}
+
+function getHttpClient(url) {
+  return new URL(url).protocol === 'http:' ? http : https;
+}
+
 function sanitizeScreenshotFilename(filename) {
   const parsed = path.parse(String(filename || 'screenshot.png'));
   const base = (parsed.name || 'screenshot')
@@ -824,14 +930,43 @@ ipcMain.handle('check-missing-videos', async () => {
     const allVids = loadJSON(path.join(__dirname, 'data', 'videos.json'), []);
     const localVer = loadJSON(versionsPath, {});
 
-    // find files that either don't exist, or have bumped version
-    const toFetch = allVids.filter(v => {
-      const base = path.basename(v.filename, path.extname(v.filename));
+    // Find downloadable files that are truly missing. If the current file is
+    // already in the selected folder, trust it and bring the local version
+    // marker forward. Previous filenames still trigger a fresh download so
+    // users with old copies get the newer replacement.
+    const seen = new Set();
+    let versionsChanged = false;
+    const toFetch = [];
+    for (const v of allVids) {
+      if (!v.downloadUrl) continue;
+      const base = getVideoVersionKey(v.filename);
+      if (seen.has(base)) continue;
+      const safeFilename = sanitizeVideoFilename(v.filename);
       const remoteV = v.version || 1;
-      const haveFile = fs.existsSync(path.join(videoDir, v.filename));
-      const localV   = localVer[base] || 1;
-      return (!haveFile) || (remoteV > localV);
-    }).map(v => v.filename);
+      const currentPath = path.join(videoDir, safeFilename);
+      const haveFile = fileExistsAsFile(currentPath);
+      const hasLocalVersion = Object.prototype.hasOwnProperty.call(localVer, base);
+      const localV = hasLocalVersion ? localVer[base] : 1;
+
+      if (haveFile) {
+        if (remoteV > localV) {
+          seen.add(base);
+          toFetch.push(v.filename);
+          continue;
+        }
+        if (!hasLocalVersion || localVer[base] !== remoteV) {
+          localVer[base] = remoteV;
+          versionsChanged = true;
+        }
+        seen.add(base);
+        continue;
+      }
+
+      seen.add(base);
+      toFetch.push(v.filename);
+    }
+
+    if (versionsChanged) saveJSON(versionsPath, localVer);
 
     console.log('▶ toFetch:', toFetch);
     return toFetch;
@@ -841,7 +976,7 @@ ipcMain.handle('check-missing-videos', async () => {
   }
 });
 
-// ── Download videos from GitHub assets & update versions map ─────────────
+// ── Download videos from remote assets & update versions map ─────────────
 ipcMain.handle('download-videos', async (event, filenames) => {
   console.log('▶ download-videos:', filenames);
   const settings = loadJSON(settingsPath, {});
@@ -856,25 +991,52 @@ ipcMain.handle('download-videos', async (event, filenames) => {
   // build map of base→downloadUrl & version
   const map = {};
   allVids.forEach(v => {
-    const base = path.basename(v.filename, path.extname(v.filename));
-    if (v.downloadUrl) map[base] = { url: v.downloadUrl, version: v.version || 1, filename: v.filename };
+    const base = getVideoVersionKey(v.filename);
+    if (v.downloadUrl) {
+      const entry = {
+        url: v.downloadUrl,
+        version: v.version || 1,
+        filename: sanitizeVideoFilename(v.filename),
+        previousFilenames: v.previousFilenames || []
+      };
+      map[base] = entry;
+      map[getVideoVersionKey(entry.filename)] = entry;
+    }
   });
 
   // helper to handle HTTP redirects and send progress
   async function fetchWithRedirectAndProgress(url, dest, onProgress, redirects = 0) {
     if (redirects > 5) throw new Error('Too many redirects');
     return new Promise((resolve, reject) => {
-      const file = fs.createWriteStream(dest);
-      https.get(url, res => {
+      fs.mkdirSync(path.dirname(dest), { recursive: true });
+      let file;
+      let settled = false;
+      const fail = err => {
+        if (settled) return;
+        settled = true;
+        if (file) file.destroy();
+        fs.unlink(dest, () => reject(err));
+      };
+
+      try {
+        file = fs.createWriteStream(dest);
+        file.on('error', fail);
+      } catch (err) {
+        fail(err);
+        return;
+      }
+
+      const req = getHttpClient(url).get(url, res => {
         if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-          file.close();
-          fs.unlink(dest, () => {
+          res.resume();
+          file.close(() => {
+            fs.unlink(dest, () => {});
             const next = new URL(res.headers.location, url).toString();
             resolve(fetchWithRedirectAndProgress(next, dest, onProgress, redirects + 1));
           });
         } else if (res.statusCode !== 200) {
-          file.close(); fs.unlink(dest, ()=>{});
-          reject(new Error(`Failed to download ${path.basename(dest)}: ${res.statusCode}`));
+          res.resume();
+          fail(new Error(`Failed to download ${path.basename(dest)}: ${res.statusCode}`));
         } else {
           const total = parseInt(res.headers['content-length'] || '0', 10);
           let received = 0;
@@ -883,33 +1045,74 @@ ipcMain.handle('download-videos', async (event, filenames) => {
             if (onProgress) onProgress(received, total);
           });
           res.pipe(file);
-          file.on('finish', () => file.close(resolve));
+          res.on('error', fail);
+          file.on('finish', () => {
+            file.close(() => {
+              if (settled) return;
+              settled = true;
+              resolve();
+            });
+          });
         }
-      }).on('error', err => {
-        file.close(); fs.unlink(dest, ()=>{});
-        reject(err);
       });
+      req.on('error', fail);
     });
   }
 
   // download each and update localVer
-  for (const fname of filenames) {
-    const base = path.basename(fname, path.extname(fname));
+  const totalVideos = filenames.length;
+  for (let index = 0; index < filenames.length; index += 1) {
+    const fname = filenames[index];
+    const base = getVideoVersionKey(fname);
     const entry = map[base];
     if (!entry) throw new Error(`No downloadUrl for ${base}`);
     const dest = path.join(videoDir, entry.filename);
+    const tempDest = getVideoDownloadTempPath(videoDir, entry.filename);
+    const current = index + 1;
+    const completed = index;
 
-    await fetchWithRedirectAndProgress(entry.url, dest, (received, total) => {
+    try {
+      await fetchWithRedirectAndProgress(entry.url, tempDest, (received, total) => {
+        if (win && win.webContents) {
+          win.webContents.send('video-download-progress', {
+            filename: entry.filename,
+            received,
+            total,
+            percent: total ? (received / total) * 100 : 0,
+            current,
+            completed,
+            totalVideos
+          });
+        }
+      });
+
+      const downloaded = fs.statSync(tempDest);
+      if (!downloaded.size) {
+        throw new Error(`Downloaded file was empty: ${entry.filename}`);
+      }
+
+      moveDownloadedVideo(tempDest, dest);
+      const removed = removeSupersededVideoFiles(videoDir, entry.filename, entry.previousFilenames);
+      if (removed.length) {
+        console.log('   -> Removed replaced video files:', removed);
+      }
+      localVer[base] = entry.version;
+      saveJSON(versionsPath, localVer);
       if (win && win.webContents) {
         win.webContents.send('video-download-progress', {
           filename: entry.filename,
-          received,
-          total,
-          percent: total ? (received / total) * 100 : 0
+          received: downloaded.size,
+          total: downloaded.size,
+          percent: 100,
+          current,
+          completed: current,
+          totalVideos
         });
       }
-    });
-    localVer[base] = entry.version;
+    } catch (e) {
+      try { if (fs.existsSync(tempDest)) fs.unlinkSync(tempDest); } catch {}
+      throw getVideoDownloadFileError(e, dest);
+    }
   }
 
   // save updated versions map
@@ -917,7 +1120,12 @@ ipcMain.handle('download-videos', async (event, filenames) => {
 
   // Signal completion (final progress 100%)
   if (win && win.webContents) {
-    win.webContents.send('video-download-progress', { percent: 100 });
+    win.webContents.send('video-download-progress', {
+      percent: 100,
+      completed: totalVideos,
+      totalVideos,
+      done: true
+    });
   }
   return true;
 });

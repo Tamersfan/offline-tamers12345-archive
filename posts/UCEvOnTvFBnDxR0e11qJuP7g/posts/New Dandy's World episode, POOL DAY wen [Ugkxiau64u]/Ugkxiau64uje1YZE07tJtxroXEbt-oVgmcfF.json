@@ -1,0 +1,575 @@
+{
+  "schema_version": 4,
+  "archived_at": "2026-04-18T00:57:26.375Z",
+  "post": {
+    "id": "Ugkxiau64uje1YZE07tJtxroXEbt-oVgmcfF",
+    "url": "https://www.youtube.com/post/Ugkxiau64uje1YZE07tJtxroXEbt-oVgmcfF",
+    "type": "BackstagePost",
+    "channel_id": "UCEvOnTvFBnDxR0e11qJuP7g",
+    "author": {
+      "name": "Tamers Official",
+      "channel_id": null,
+      "thumbnails": [
+        {
+          "url": "//yt3.googleusercontent.com/DAkiBWAB7Xjs5WIbhqRPFtV8fd1babqiKJgEkPh7mijpheuOoJwg7xJvB0p-gcNUzLRr_ccuDxs=s76-c-k-c0x00ffffff-no-rj-mo",
+          "width": 76,
+          "height": 76
+        },
+        {
+          "url": "//yt3.googleusercontent.com/DAkiBWAB7Xjs5WIbhqRPFtV8fd1babqiKJgEkPh7mijpheuOoJwg7xJvB0p-gcNUzLRr_ccuDxs=s48-c-k-c0x00ffffff-no-rj-mo",
+          "width": 48,
+          "height": 48
+        },
+        {
+          "url": "//yt3.googleusercontent.com/DAkiBWAB7Xjs5WIbhqRPFtV8fd1babqiKJgEkPh7mijpheuOoJwg7xJvB0p-gcNUzLRr_ccuDxs=s32-c-k-c0x00ffffff-no-rj-mo",
+          "width": 32,
+          "height": 32
+        }
+      ]
+    },
+    "published": "11 days ago",
+    "content_text": "New Dandy's World episode, POOL DAY went up on Friday in case anyone missed it!!\nhttps://www.youtube.com/watch?v=hBDru...",
+    "folder_name": "New Dandy's World episode, POOL DAY wen [Ugkxiau64u]",
+    "title_compact": "New Dandy's World episode, POOL DAY went up on Friday in cas",
+    "linked": {
+      "url": "https://www.youtube.com/watch?v=hBDruUbeI-s",
+      "video_id": "hBDruUbeI-s",
+      "title": "DANDYS WORLD: POOL DAY",
+      "channel_name": null,
+      "channel_id": null
+    }
+  },
+  "attachment": {
+    "source": "BackstagePost",
+    "type": "Video",
+    "poll": null,
+    "linked": {
+      "url": "https://www.youtube.com/watch?v=hBDruUbeI-s",
+      "video_id": "hBDruUbeI-s",
+      "title": "DANDYS WORLD: POOL DAY",
+      "channel_name": null,
+      "channel_id": null
+    }
+  },
+  "media": {
+    "folder": "posts\\New Dandy's World episode, POOL DAY wen [Ugkxiau64u]\\media",
+    "downloaded": [
+      {
+        "kind": "attachment_thumbnail",
+        "url": "https://i.ytimg.com/vi/hBDruUbeI-s/hqdefault.jpg?sqp=-oaymwEcCOADEI4CSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLARqpLnqN9Q2OY_WXh_kK-T3L3Kqw",
+        "ok": true,
+        "path": "posts\\New Dandy's World episode, POOL DAY wen [Ugkxiau64u]\\media\\Attachment Thumbnail.webp",
+        "content_type": "image/webp",
+        "bytes": 46120,
+        "error": null
+      }
+    ]
+  },
+  "comments": {
+    "ok": true,
+    "error": null,
+    "thread_count": 20,
+    "threads": [
+      {
+        "top_level": {
+          "id": "UgyWGhEzCpRYM2uVML14AaABAg",
+          "author": {
+            "name": "@CurlyJoshi",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/A97QMn_fq-6dWs1Z7eOGJe8y4zcMufBLre5dR63H3H0c4mF6rm9lGnqtenzk3XUv0h9-ylkkUw=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "I hope if they are going to make another episode By the way!?. It’s so funny.. 😂 Please make another one",
+          "published": "5 days ago",
+          "like_count": "2",
+          "is_hearted": false,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": false
+      },
+      {
+        "top_level": {
+          "id": "UgzuyKt7o4iId-ThBct4AaABAg",
+          "author": {
+            "name": "@sprout-b6s",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/MMcbUimlLGCp3DFWLRjpfaUPzD1pBMBYsVSgTjf1TNRcpnl4zNmqO7gVVOloi0y0VwhIqZxtYw=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "Can I voice actor sprout I'm not that big in age my age is 11",
+          "published": "6 days ago",
+          "like_count": "3",
+          "is_hearted": false,
+          "is_pinned": false
+        },
+        "replies": [
+          {
+            "id": "UgzuyKt7o4iId-ThBct4AaABAg.AVUBC4K4fYDAVYqXtdZnn-",
+            "author": {
+              "name": "@irafa-o3s",
+              "channel_id": null,
+              "thumbnails": [
+                {
+                  "url": "https://yt3.ggpht.com/XBiQTe5UY73Fzj1pEtK2nGKNcfVHB4Ho96uQbj0Scjq1HUliJDA8xlBxBI3o02l4iDqwkUrg=s88-c-k-c0x00ffffff-no-rj",
+                  "width": 88,
+                  "height": 88
+                }
+              ]
+            },
+            "content": "Oil up",
+            "published": "4 days ago",
+            "like_count": " ",
+            "is_hearted": false,
+            "is_pinned": false
+          }
+        ],
+        "has_replies": true
+      },
+      {
+        "top_level": {
+          "id": "UgxNGEbHcD_56Y7e6xt4AaABAg",
+          "author": {
+            "name": "@CAPTAINCHONK-w9p",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/bFxUmY_wylFr3UgPGXWdVmUKZuUkJSzShm90Ob4Qfjk1IwxWqp3o4qgrMEjLuCUTB-vGMMcE4g=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "MAKE MORE TS IS SO GOOD🥺",
+          "published": "6 days ago",
+          "like_count": " ",
+          "is_hearted": false,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": false
+      },
+      {
+        "top_level": {
+          "id": "UgwHjuTodhFEnOX9cpZ4AaABAg",
+          "author": {
+            "name": "@CurlyJoshi",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/A97QMn_fq-6dWs1Z7eOGJe8y4zcMufBLre5dR63H3H0c4mF6rm9lGnqtenzk3XUv0h9-ylkkUw=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "I wanted to watch it right now!..",
+          "published": "7 days ago",
+          "like_count": " ",
+          "is_hearted": false,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": false
+      },
+      {
+        "top_level": {
+          "id": "Ugy_YyB_ecBPykciQr94AaABAg",
+          "author": {
+            "name": "@CurlyJoshi",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/A97QMn_fq-6dWs1Z7eOGJe8y4zcMufBLre5dR63H3H0c4mF6rm9lGnqtenzk3XUv0h9-ylkkUw=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "I’m sorry I missed it!.. 😭💔",
+          "published": "7 days ago",
+          "like_count": " ",
+          "is_hearted": false,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": false
+      },
+      {
+        "top_level": {
+          "id": "Ugx65WI7zj97NE0t2Hh4AaABAg",
+          "author": {
+            "name": "@Tiffany-kat09",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/76ClNkopQXB2HzVycx-lE-1Kg_EbV0mHnUpMK7AUumF1UXsFkVa4BQZRWwq3QSNjQHHsoQ5_dw=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "Tamers can u make Dolly’s factory content",
+          "published": "8 days ago",
+          "like_count": " ",
+          "is_hearted": false,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": false
+      },
+      {
+        "top_level": {
+          "id": "UgzSad39l3fc-L7hPPF4AaABAg",
+          "author": {
+            "name": "@indikagutierrez3099",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/ytc/AIdro_mSqVNo7ePx6axIjjza-jA3YVr7VdcWX21PG-x__wA=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "AND I LOVED THIS EP",
+          "published": "8 days ago",
+          "like_count": " ",
+          "is_hearted": false,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": false
+      },
+      {
+        "top_level": {
+          "id": "UgwKNFYRLFTNkvZ6S6F4AaABAg",
+          "author": {
+            "name": "@indikagutierrez3099",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/ytc/AIdro_mSqVNo7ePx6axIjjza-jA3YVr7VdcWX21PG-x__wA=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "Hey tamers i was wondering if you can make more moon flower and i have some ideas if you want to hear them🤩🙂",
+          "published": "8 days ago",
+          "like_count": " ",
+          "is_hearted": false,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": false
+      },
+      {
+        "top_level": {
+          "id": "UgxkiZlNu56EbXoRkEV4AaABAg",
+          "author": {
+            "name": "@Potatogalsunite",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/Uaby7UTyFVCBR9r_X9kDdVOMBORlFNu5QA9qj8yMS2gYnCnkkJKaVRy8eR9G3s7DUQtB1yaKaw=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "Dandy is gon beat their asses",
+          "published": "9 days ago",
+          "like_count": "2",
+          "is_hearted": false,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": false
+      },
+      {
+        "top_level": {
+          "id": "UgyhpzNtAV6oNjeOZ2V4AaABAg",
+          "author": {
+            "name": "@CroCroRainbow",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/zpBOh0HNepzLAMdkWtfyMw4tq5LbkLQbffbx35-ZNavdjvYCYNUosGa97ZZwpnLT-Mwh7m1qpA=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "How do you think week thinks about this",
+          "published": "9 days ago",
+          "like_count": "2",
+          "is_hearted": false,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": false
+      },
+      {
+        "top_level": {
+          "id": "UgytR7a3AFt8sI0ZMBp4AaABAg",
+          "author": {
+            "name": "@Omar.com00",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/Kv9O29xrtqwo8bAe3nXNi3IVclmouPxpDLdMaLMv68Cvw8ViaOt8w8TKrHzcv-PIt92yVyly=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "Could you add Spanish subtitles? I don't speak English and I use a translator.",
+          "published": "10 days ago",
+          "like_count": "4",
+          "is_hearted": false,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": false
+      },
+      {
+        "top_level": {
+          "id": "UgwNG3ixZtJ_Btzfw2l4AaABAg",
+          "author": {
+            "name": "@SaGe_On_PawS-n4l",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/fPEPvv7P1zSHdr7LL6_GNkeXPD5m5HgqYczUyhTGwnpEoPE_b5AKOR8I37q1qOzrxlVbDoPNKa0=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "Hey tamers I’m trying to find ur patreon but I can’t find it could u link it?",
+          "published": "10 days ago",
+          "like_count": " ",
+          "is_hearted": false,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": false
+      },
+      {
+        "top_level": {
+          "id": "UgxEM3bwcMo4KmzJ8zp4AaABAg",
+          "author": {
+            "name": "@wicksaz",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/vVmwW-xxXy13OaNXquV-BJMeb_QhM0iqxo9FR4pSGyQMBMj6MzzsmIrBhDKSyVQ_bCcU51z2=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "Hey tamers? Im a voice actor,and i would like to voice act for free for any character you want (female)",
+          "published": "10 days ago",
+          "like_count": "7",
+          "is_hearted": false,
+          "is_pinned": false
+        },
+        "replies": [
+          {
+            "id": "UgxEM3bwcMo4KmzJ8zp4AaABAg.AVHyAmi9qkiAVbZLO1zHL_",
+            "author": {
+              "name": "@Genie_Cookie2653",
+              "channel_id": null,
+              "thumbnails": [
+                {
+                  "url": "https://yt3.ggpht.com/xU11sLU9tUPRsYDTvbkG5ebpP2E2ACENNqEHP0rhdP29CX3OPfAXSWIXGn2jvPq-C9wDuEPb=s88-c-k-c0x00ffffff-no-rj",
+                  "width": 88,
+                  "height": 88
+                }
+              ]
+            },
+            "content": "He doesn’t respond to comments in his community post but he does on Stowe (Website)",
+            "published": "2 days ago",
+            "like_count": "1",
+            "is_hearted": false,
+            "is_pinned": false
+          }
+        ],
+        "has_replies": true
+      },
+      {
+        "top_level": {
+          "id": "UgzQLUgr54bQrjgjSfh4AaABAg",
+          "author": {
+            "name": "@boom-346-v5r",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/ipywy7IZOD-dl5htiNrhP9Am-P-6JiDSLjYD5yCWk94TYeKaO5gvOEUNQQW_tn38u1wCfgaTJg=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "probably the best episode yet, youve outdone yourself tamers im impressed",
+          "published": "10 days ago",
+          "like_count": "8",
+          "is_hearted": false,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": false
+      },
+      {
+        "top_level": {
+          "id": "Ugz3tGw4uyu73gnOO3V4AaABAg",
+          "author": {
+            "name": "@Shelly_the_fossil0",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/hXrCiwiXK8DDeB4ZzNkL-ctEsBmT090oH8XKDi9CNcNPQFT37dHuHkRV5180Niq5jXyoV92pWQ=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "My sister saw me watching you and asked me why 😭😭🙏🙏",
+          "published": "10 days ago",
+          "like_count": " ",
+          "is_hearted": false,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": false
+      },
+      {
+        "top_level": {
+          "id": "UgwLcXxQNcnKWgG4mQV4AaABAg",
+          "author": {
+            "name": "@ikersolorzanomartinez8829",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/kuevZCh881KbvxIR1Uk8A5N8vpQlY3HYYy5uopSV_ZXQ99bOaIAviPRFM_e3fenQVghLjKZa=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "I love you art😃",
+          "published": "10 days ago",
+          "like_count": "4",
+          "is_hearted": false,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": false
+      },
+      {
+        "top_level": {
+          "id": "Ugwc9nxFZ7wXixoBlvZ4AaABAg",
+          "author": {
+            "name": "@kimiahtinker4740",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/4QWXmTzrAMVIu9zWOZQpWJhQU_JEfS1CeWmpO2fLg0um_i4QMwKC1f5mM3zg2Lt7piI1xUougA=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "You should do more of Dandy’s World",
+          "published": "11 days ago",
+          "like_count": "2",
+          "is_hearted": false,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": false
+      },
+      {
+        "top_level": {
+          "id": "UgzAQt2q5f6i2hG0rsl4AaABAg",
+          "author": {
+            "name": "@NickelTheGreat22",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/xEjCUypgk-89HTtqZlTP81i909-RgHNofj-8bvU5_GhNJJhge98qfqSKQ2nZkltB429xhQLW4rI=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "This episode was a true work of art 🥹✌",
+          "published": "11 days ago",
+          "like_count": " ",
+          "is_hearted": false,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": false
+      },
+      {
+        "top_level": {
+          "id": "UgzkTDxzS8pottyWj3l4AaABAg",
+          "author": {
+            "name": "@TwinTyara",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/ytc/AIdro_lKjCgijtmu1RPAmnDz6OHdUA-sWp0W5r5lI6crO8ma4XsC=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "You're awesome",
+          "published": "11 days ago",
+          "like_count": " ",
+          "is_hearted": false,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": false
+      },
+      {
+        "top_level": {
+          "id": "UgzH-QdXin4xvUauOsR4AaABAg",
+          "author": {
+            "name": "@Battixz_ii",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/aI5TA5c8HmfyWHdY3ll2yrccDN3oAzVwddPR18Q30x5_YOpjQXNn2HX8txSj3iEISDBFw07L=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "MY FAVOURITE VIDEO SO FAR!!",
+          "published": "11 days ago",
+          "like_count": "2",
+          "is_hearted": false,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": false
+      }
+    ]
+  }
+}

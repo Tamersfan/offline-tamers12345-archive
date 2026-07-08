@@ -40,11 +40,12 @@ let originalQueueOrder = [];
 let isQueueShuffled = false;
 let isQueueReversed = false;
 let currentVideoFilename = null;
+let currentPlaybackFilename = null;
 let currentAltVideo = null;
 let postsTabInitialized = false;
 let postsDataCache = [];
 let postOverrides = null;
-const POSTS_PROFILE_PICS = [...Array(35)].map((_, i) => `PFPs/pfp${i + 1}.png`);
+const POSTS_PROFILE_PICS = [...Array(36)].map((_, i) => `PFPs/pfp${i + 1}.png`);
 const POSTS_UPLOADER_PFP = 'PFPs/tamers.png';
 const POSTS_UPLOADER_NAMES = new Set([
   'tamersdandysworld',
@@ -147,6 +148,93 @@ function getUserPlaylistFromValue(value) {
 
 function getVideoByFilename(filename) {
   return rawVideoData.find(video => video.filename === filename) || null;
+}
+
+function getVideoFilenameBase(filename) {
+  return String(filename || '').split(/[\\/]/).pop().replace(/\.[^/.]+$/, '');
+}
+
+function getVideoPlaybackCandidates(video) {
+  const filename = typeof video === 'string' ? video : video?.filename;
+  const base = getVideoFilenameBase(filename);
+  const candidates = [
+    filename,
+    ...(Array.isArray(video?.previousFilenames) ? video.previousFilenames : []),
+    base ? `${base}.mp4` : '',
+    base ? `${base}.webm` : ''
+  ];
+  const seen = new Set();
+  return candidates
+    .map(candidate => String(candidate || '').trim())
+    .filter(candidate => {
+      if (!candidate || seen.has(candidate)) return false;
+      seen.add(candidate);
+      return true;
+    });
+}
+
+async function resolveAvailableVideoFilename(video) {
+  const fallback = typeof video === 'string' ? video : video?.filename;
+  if (!videoPath) return fallback || '';
+
+  for (const candidate of getVideoPlaybackCandidates(video)) {
+    if (await fileExistsInVideoFolder(candidate)) return candidate;
+  }
+
+  return fallback || '';
+}
+
+function getCurrentPlaybackFilename() {
+  return currentPlaybackFilename || currentVideoFilename;
+}
+
+function buildCurrentVideoFilenameByBase() {
+  const byBase = new Map();
+  rawVideoData.forEach(video => {
+    const key = getVideoFilenameBase(video.filename).toLowerCase();
+    if (key && !byBase.has(key)) byBase.set(key, video.filename);
+  });
+  return byBase;
+}
+
+function remapVideoFilenameToCurrent(filename, byBase = buildCurrentVideoFilenameByBase()) {
+  const clean = String(filename || '').trim();
+  if (!clean) return '';
+  if (rawVideoData.some(video => video.filename === clean)) return clean;
+  return byBase.get(getVideoFilenameBase(clean).toLowerCase()) || clean;
+}
+
+function migrateStoredVideoFilenameReferences() {
+  if (!Array.isArray(rawVideoData) || !rawVideoData.length) return;
+
+  const byBase = buildCurrentVideoFilenameByBase();
+  const migrateList = list => {
+    const seen = new Set();
+    const migrated = [];
+    (Array.isArray(list) ? list : []).forEach(filename => {
+      const next = remapVideoFilenameToCurrent(filename, byBase);
+      if (next && !seen.has(next)) {
+        seen.add(next);
+        migrated.push(next);
+      }
+    });
+    return migrated;
+  };
+
+  const queue = loadQueue();
+  const migratedQueue = migrateList(queue);
+  if (JSON.stringify(queue) !== JSON.stringify(migratedQueue)) {
+    saveQueue(migratedQueue);
+  }
+
+  let playlistsChanged = false;
+  userPlaylists = userPlaylists.map(playlist => {
+    const migrated = migrateList(playlist.videoFilenames);
+    if (JSON.stringify(playlist.videoFilenames) === JSON.stringify(migrated)) return playlist;
+    playlistsChanged = true;
+    return { ...playlist, videoFilenames: migrated, updatedAt: new Date().toISOString() };
+  });
+  if (playlistsChanged) saveUserPlaylists();
 }
 
 function getUserPlaylistVideos(playlist) {
@@ -299,8 +387,11 @@ function setupThumbnailPreviews(container = document) {
     thumb.addEventListener('mouseenter', () => {
       if (thumb._previewVideo || thumb._previewTimer || !isElementInViewport(thumb)) return;
 
-      thumb._previewTimer = setTimeout(() => {
+      thumb._previewTimer = setTimeout(async () => {
         thumb._previewTimer = null;
+        if (!thumb.matches(':hover') || !isElementInViewport(thumb)) return;
+        const videoEntry = getVideoByFilename(filename) || rawVideoData.find(video => getVideoFilenameBase(video.filename) === getVideoFilenameBase(filename));
+        const previewFilename = await resolveAvailableVideoFilename(videoEntry || filename);
         if (!thumb.matches(':hover') || !isElementInViewport(thumb)) return;
 
         const previewVideo = document.createElement('video');
@@ -310,7 +401,7 @@ function setupThumbnailPreviews(container = document) {
         previewVideo.playsInline = true;
         previewVideo.loop = false;
         previewVideo.preload = 'metadata';
-        previewVideo.src = "file://" + videoPath + "/" + filename;
+        previewVideo.src = "file://" + videoPath + "/" + previewFilename;
         previewVideo.style.display = 'none';
 
         previewVideo.addEventListener('loadedmetadata', () => {
@@ -350,8 +441,12 @@ function setupThumbnailPreviews(container = document) {
 function getFilenameFromThumb(thumb) {
   const img = thumb.querySelector('img');
   if (!img) return "";
-  const src = img.src.split('/').pop();
-  return src.replace(/\.(png|jpg|jpeg|webp)$/i, ".mp4");
+  const rawSrc = img.src.split('/').pop();
+  let src = rawSrc;
+  try { src = decodeURIComponent(rawSrc); } catch {}
+  const base = src.replace(/\.(png|jpg|jpeg|webp)$/i, "");
+  const video = rawVideoData.find(item => getVideoFilenameBase(item.filename) === base);
+  return video?.filename || `${base}.mp4`;
 }
 
 
@@ -474,7 +569,12 @@ async function exportClip(format) {
   let s = parseHMS(clipStartTime.value);
   let e = parseHMS(clipEndTime.value);
   let duration = e - s;
-  let file = videoPath + '/' + currentVideoFilename;
+  const playbackFilename = getCurrentPlaybackFilename();
+  if (!playbackFilename) {
+    clipExportStatus.textContent = "No video loaded!";
+    return;
+  }
+  let file = videoPath + '/' + playbackFilename;
   let defaultExt = (format === 'mp4') ? 'mp4' : 'webm';
   let defaultBase = currentVideoFilename.replace(/\.\w+$/, '');
   let defaultFileName = `${defaultBase}_${clipStartTime.value.replace(/:/g,'-')}-${clipEndTime.value.replace(/:/g,'-')}.${defaultExt}`;
@@ -550,7 +650,8 @@ gifPreviewBtn.onclick = async function() {
   gifExportStatus.textContent = "Extracting frames for GIF preview...";
 
   // Ask main process to extract frames (returns array of base64 images)
-  const inputPath = currentVideoFilename ? (videoPath + '/' + currentVideoFilename) : null;
+  const playbackFilename = getCurrentPlaybackFilename();
+  const inputPath = playbackFilename ? (videoPath + '/' + playbackFilename) : null;
   if (!inputPath) {
     gifExportStatus.textContent = "No video loaded!";
     gifPreviewBtn.disabled = false;
@@ -708,7 +809,8 @@ document.addEventListener('fullscreenchange', () => {
 
 // --- Export Logic ---
 gifExportBtn.onclick = async function() {
-  let inputPath = currentVideoFilename ? (videoPath + '/' + currentVideoFilename) : null;
+  const playbackFilename = getCurrentPlaybackFilename();
+  let inputPath = playbackFilename ? (videoPath + '/' + playbackFilename) : null;
   if (!inputPath) {
     gifExportStatus.textContent = "No video loaded!";
     return;
@@ -774,6 +876,7 @@ async function initializeYouTubeTab(force = false) {
   const res = await fetch('data/videos.json');
   rawVideoData = await res.json();
   await hydrateUserPlaylistsFromDisk();
+  migrateStoredVideoFilenameReferences();
 
   try {
     const subs = await fetch('data/subtitles.json');
@@ -885,10 +988,10 @@ async function initializeYouTubeTab(force = false) {
     if (!initializeYouTubeTab._missingCheckDone) {
     const missing = await window.electronAPI.checkMissingVideos();
     if (missing.length) {
-      if (confirm(`You’re missing ${missing.length} videos. Download them now?`)) {
+      if (confirm(`You’re missing or have older versions of ${missing.length} videos. Download them now?`)) {
         try {
           await window.electronAPI.downloadVideos(missing);
-          alert('All missing videos have been downloaded!');
+          alert('All missing or updated videos have been downloaded!');
         } catch (e) {
           alert('Failed to download videos: ' + e.message);
         }
@@ -1019,17 +1122,21 @@ function formatBytes(bytes) {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
-function showMainDownloadProgress(status, percent, received, total) {
+function showMainDownloadProgress(status, percent, received, total, detail = '') {
   const bar = document.getElementById('main-download-bar');
   const wrap = document.getElementById('main-download-progress');
   const label = document.getElementById('main-download-label');
   const statusDiv = document.getElementById('main-download-status');
   if (!wrap || !bar || !label || !statusDiv) return;
   wrap.style.display = 'block';
-  bar.style.width = percent ? Math.round(percent) + '%' : '0%';
+  const safePercent = Number.isFinite(percent) ? Math.max(0, Math.min(100, percent)) : 0;
+  bar.style.width = Math.round(safePercent) + '%';
   statusDiv.textContent = status;
-  label.textContent = `${formatBytes(received || 0)} / ${formatBytes(total || 0)}` +
-    (percent ? ` (${Math.round(percent)}%)` : '');
+  const hasByteTotal = Number.isFinite(received) && Number.isFinite(total) && total > 0;
+  const byteText = hasByteTotal
+    ? `${formatBytes(received)} / ${formatBytes(total)} (${Math.round(safePercent)}%)`
+    : (safePercent ? `${Math.round(safePercent)}%` : '');
+  label.textContent = detail && byteText ? `${detail} - ${byteText}` : detail || byteText;
 }
 
 function hideMainDownloadProgress() {
@@ -1048,13 +1155,27 @@ window.electronAPI.onUpdateProgress?.(function (progress) {
 });
 
 window.electronAPI.onVideoDownloadProgress?.(function (data) {
+  const hasBatchCount = Number.isFinite(data.totalVideos) && data.totalVideos > 0;
+  const completed = hasBatchCount
+    ? Math.min(Number.isFinite(data.completed) ? data.completed : 0, data.totalVideos)
+    : 0;
+  const current = hasBatchCount
+    ? Math.min(Number.isFinite(data.current) ? data.current : completed || 1, data.totalVideos)
+    : 0;
+  const countText = hasBatchCount ? `${completed} / ${data.totalVideos} videos downloaded` : '';
+  const status = data.done
+    ? (hasBatchCount ? `Downloaded ${completed} / ${data.totalVideos} videos` : 'Downloaded videos')
+    : hasBatchCount
+      ? `Downloading video ${current} of ${data.totalVideos}: ${data.filename || ''}`
+      : `Downloading video: ${data.filename || ''}`;
   showMainDownloadProgress(
-    `Downloading video: ${data.filename || ''}`,
+    status,
     data.percent,
     data.received,
-    data.total
+    data.total,
+    countText
   );
-  if (data.percent >= 100) setTimeout(hideMainDownloadProgress, 2000);
+  if (data.done) setTimeout(hideMainDownloadProgress, 2000);
 });
 
 async function loadChatFiles() {
@@ -1085,7 +1206,7 @@ async function loadComments(video, sortType = localStorage.getItem('commentSortT
   commentContainer.style.display = 'none';
 
   // --- CONFIGURATION ---
-  const profilePics = [...Array(35)].map((_, i) => `PFPs/pfp${i + 1}.png`);
+  const profilePics = [...Array(36)].map((_, i) => `PFPs/pfp${i + 1}.png`);
   const TAMERS_AUTHORS = ["@Tamers12345Official", "Tamers12345Official", "@Tamers12345mlp", "Tamers12345mlp", "@Tamers12345MLP", "Tamers12345MLP", "@Tamers12345", "Tamers12345", "@tamers12345", "tamers12345", "@TamersDandysWorld", "TamersDandysWorld"];
   const TAMERS_PFP = "PFPs/tamers.png";
 
@@ -2022,7 +2143,9 @@ async function handleImportUserPlaylist() {
     }
 
     const localFilenames = new Set(rawVideoData.map(video => video.filename));
-    const available = filenames.filter(filename => localFilenames.has(filename));
+    const byBase = buildCurrentVideoFilenameByBase();
+    const remappedFilenames = filenames.map(filename => remapVideoFilenameToCurrent(filename, byBase));
+    const available = [...new Set(remappedFilenames.filter(filename => localFilenames.has(filename)))];
     const missingCount = filenames.length - available.length;
     if (!available.length) {
       alert('None of the videos in that playlist were found in this archive.');
@@ -2551,6 +2674,7 @@ async function showPlayer(video, playlist = [], index = 0, autoplay = false) {
   document.getElementById('player-description').innerText = video.description;
     document.getElementById('player-date').innerText = formatDate(video.date);
   currentVideoFilename = video.filename;
+  currentPlaybackFilename = await resolveAvailableVideoFilename(video);
   currentAltVideo = null;
   commentsLoadToken++;
   const commentContainer = document.getElementById('comments-section');
@@ -2577,7 +2701,7 @@ async function showPlayer(video, playlist = [], index = 0, autoplay = false) {
   const subtitleSelector = document.getElementById('subtitleSelector');
   const subtitleLabel = document.getElementById('subtitle-label');
 
-  player.src = "file://" + videoPath + "/" + video.filename;
+  player.src = "file://" + videoPath + "/" + currentPlaybackFilename;
   player.load();
 
   const baseName = video.filename.split('/').pop().replace(/\.[^/.]+$/, '');
@@ -2973,13 +3097,15 @@ async function changeSubtitle(lang) {
     rawVideoData.find(v => v.filename === currentVideoFilename) ||
     rawVideoData.find(v => v.title === currentVideoTitle);
   if (!videoEntry) return;
+  if (!currentPlaybackFilename) currentPlaybackFilename = await resolveAvailableVideoFilename(videoEntry);
 
   const subInfo = subtitlesData[videoEntry.filename];
 
   if (!lang || !subInfo || !subInfo[lang]) {
-    const shouldRestoreOriginalVideo = currentAltVideo && currentVideoFilename;
-    if (currentAltVideo && currentVideoFilename) {
-      video.src = "file://" + videoPath + "/" + currentVideoFilename;
+    const playbackFilename = getCurrentPlaybackFilename();
+    const shouldRestoreOriginalVideo = currentAltVideo && playbackFilename;
+    if (currentAltVideo && playbackFilename) {
+      video.src = "file://" + videoPath + "/" + playbackFilename;
       video.load();
       video.onloadedmetadata = () => {
         video.currentTime = currentTime;
@@ -2997,6 +3123,7 @@ async function changeSubtitle(lang) {
   const altVideo = typeof entry === 'object' ? entry.altVideo : null;
 
   if (!currentVideoFilename) currentVideoFilename = videoEntry.filename;
+  if (!currentPlaybackFilename) currentPlaybackFilename = await resolveAvailableVideoFilename(videoEntry);
 
   if (altVideo && altVideo !== currentAltVideo) {
     const altPath = `${videoPath}/${altVideo}`;
@@ -3006,12 +3133,12 @@ async function changeSubtitle(lang) {
           video.src = "file://" + altPath;
           currentAltVideo = altVideo;
         } else {
-          video.src = "file://" + videoPath + "/" + currentVideoFilename;
+          video.src = "file://" + videoPath + "/" + getCurrentPlaybackFilename();
           currentAltVideo = null;
         }
       })
       .catch(() => {
-        video.src = "file://" + videoPath + "/" + currentVideoFilename;
+        video.src = "file://" + videoPath + "/" + getCurrentPlaybackFilename();
         currentAltVideo = null;
       })
       .finally(() => {
@@ -3021,7 +3148,7 @@ async function changeSubtitle(lang) {
         };
       });
   } else if (currentAltVideo) {
-    video.src = "file://" + videoPath + "/" + currentVideoFilename;
+    video.src = "file://" + videoPath + "/" + getCurrentPlaybackFilename();
     currentAltVideo = null;
     video.load();
     video.onloadedmetadata = () => {
@@ -3052,6 +3179,7 @@ function closePlayer() {
   commentsLoadToken++;
   renderCurrentChatWindow = null;
   currentVideoFilename = null;
+  currentPlaybackFilename = null;
   currentAltVideo = null;
   if (progressInterval) {
     clearInterval(progressInterval);
@@ -3193,6 +3321,12 @@ function isVideoPlayerOpen() {
   return !!(player && playerContainer && playerContainer.style.display !== 'none');
 }
 
+function shouldHandleVideoShortcutEvent(e) {
+  if (!isVideoPlayerOpen()) return false;
+  if (isTypingInFormControl(e)) return false;
+  return !(e.ctrlKey || e.altKey || e.metaKey);
+}
+
 function getSpeedOptions() {
   const selector = document.getElementById('speedSelector');
   if (!selector) return [];
@@ -3218,13 +3352,12 @@ function adjustPlaybackSpeedBySetting(direction) {
 }
 
 document.addEventListener('keydown', function(e) {
-  if (!isVideoPlayerOpen()) return;
-  if (isTypingInFormControl(e)) return;
-  if (e.ctrlKey || e.altKey || e.metaKey) return;
+  if (!shouldHandleVideoShortcutEvent(e)) return;
 
   const key = getEventKeybindKey(e);
   if (key === ' ') {
     e.preventDefault();
+    e.stopPropagation();
     if (!e.repeat) toggleVideoPlayback(window.player);
   } else if (key === ',' || key === '<') {
     e.preventDefault();
@@ -3242,7 +3375,15 @@ document.addEventListener('keydown', function(e) {
     e.preventDefault();
     adjustPlaybackSpeedBySetting(-1);
   }
-});
+}, true);
+
+document.addEventListener('keyup', function(e) {
+  if (!shouldHandleVideoShortcutEvent(e)) return;
+  if (getEventKeybindKey(e) === ' ') {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+}, true);
 
 function escapeHtml(s) {
   return String(s)
@@ -4322,7 +4463,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     videoPath = settings.videoPath.replace(/\\\\/g, '/');
     document.getElementById('startup-screen').style.display = 'none';
     document.getElementById('app-content').style.display = 'block';
-    await initializeYouTubeTab();
+    initializeYouTubeTab().catch(e => console.error('Failed to initialize YouTube tab:', e));
   } else {
     document.getElementById('startup-screen').style.display = 'block';
     document.getElementById('app-content').style.display = 'none';
@@ -4333,7 +4474,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('startup-screen').style.display = 'none';
         document.getElementById('app-content').style.display = 'block';
         await renderSettingsControls();
-        await initializeYouTubeTab();
+        initializeYouTubeTab().catch(e => console.error('Failed to initialize YouTube tab:', e));
       }
     };
   }
@@ -4396,6 +4537,7 @@ document.addEventListener('fullscreenchange', () => {
     isQueueShuffled = false;
     isQueueReversed = false;
     currentVideoFilename = null;
+    currentPlaybackFilename = null;
     currentAltVideo = null;
   }
 
@@ -4407,11 +4549,11 @@ document.addEventListener('fullscreenchange', () => {
     if (name === 'youtube') {
       ytSec.style.display = 'block';
       ytBtn.classList.add('active');
-      initializeYouTubeTab(true); // Ensure all controls and listeners are active
+      initializeYouTubeTab().catch(e => console.error('Failed to initialize YouTube tab:', e));
     } else if (name === 'posts') {
       postsSec.style.display = 'block';
       postsBtn.classList.add('active');
-      initializePostsTab();
+      initializePostsTab().catch(e => console.error('Failed to initialize posts tab:', e));
     } else if (name === 'deviantart') {
       daSec.style.display = 'block';
       daBtn.classList.add('active');
@@ -4427,7 +4569,7 @@ document.addEventListener('fullscreenchange', () => {
     } else if (name === 'credits') {
       creditsSec.style.display = 'block';
       creditsBtn.classList.add('active');
-      renderCreditsPage();
+      renderCreditsPage().catch(e => console.error('Failed to render credits page:', e));
     } else if (name === 'settings') {
       settingsSec.style.display = 'block';
       settingsBtn.classList.add('active');
