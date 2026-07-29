@@ -496,7 +496,17 @@ function moveDownloadedVideo(tempDest, dest) {
   } catch (err) {
     if (!err || !['EXDEV', 'EPERM'].includes(err.code)) throw err;
     fs.copyFileSync(tempDest, dest);
-    fs.unlinkSync(tempDest);
+
+    const sourceSize = fs.statSync(tempDest).size;
+    const destinationSize = fs.statSync(dest).size;
+    if (sourceSize !== destinationSize) {
+      throw new Error(`Copied video size mismatch for "${path.basename(dest)}"`);
+    }
+    try {
+      fs.unlinkSync(tempDest);
+    } catch (cleanupError) {
+      console.warn(`Could not remove temporary download "${tempDest}":`, cleanupError);
+    }
   }
 }
 
@@ -1005,7 +1015,7 @@ ipcMain.handle('download-videos', async (event, filenames) => {
   });
 
   // helper to handle HTTP redirects and send progress
-  async function fetchWithRedirectAndProgress(url, dest, onProgress, redirects = 0) {
+  async function fetchWithRedirectAndProgress(url, dest, onProgress, redirects = 0, displayName = path.basename(dest)) {
     if (redirects > 5) throw new Error('Too many redirects');
     return new Promise((resolve, reject) => {
       fs.mkdirSync(path.dirname(dest), { recursive: true });
@@ -1032,11 +1042,11 @@ ipcMain.handle('download-videos', async (event, filenames) => {
           file.close(() => {
             fs.unlink(dest, () => {});
             const next = new URL(res.headers.location, url).toString();
-            resolve(fetchWithRedirectAndProgress(next, dest, onProgress, redirects + 1));
+            resolve(fetchWithRedirectAndProgress(next, dest, onProgress, redirects + 1, displayName));
           });
         } else if (res.statusCode !== 200) {
           res.resume();
-          fail(new Error(`Failed to download ${path.basename(dest)}: ${res.statusCode}`));
+          fail(new Error(`Failed to download ${displayName} from ${url}: ${res.statusCode}`));
         } else {
           const total = parseInt(res.headers['content-length'] || '0', 10);
           let received = 0;
@@ -1084,7 +1094,7 @@ ipcMain.handle('download-videos', async (event, filenames) => {
             totalVideos
           });
         }
-      });
+      }, 0, entry.filename);
 
       const downloaded = fs.statSync(tempDest);
       if (!downloaded.size) {
