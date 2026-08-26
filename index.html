@@ -244,7 +244,45 @@
   </div>
 
   <div id="youtube-posts-section" style="display:none;">
-    <div id="youtube-posts-feed" class="yt-posts-feed"></div>
+    <div class="yt-posts-channel-tabs" role="tablist" aria-label="YouTube post channels">
+      <button
+        id="youtube-posts-tamers12345mlp-tab"
+        class="yt-posts-channel-tab active"
+        type="button"
+        role="tab"
+        aria-selected="true"
+        aria-controls="youtube-posts-tamers12345mlp-panel"
+        data-posts-channel-id="UCEvOnTvFBnDxR0e11qJuP7g"
+      >Tamers12345mlp</button>
+      <button
+        id="youtube-posts-tamersdandysworld-tab"
+        class="yt-posts-channel-tab"
+        type="button"
+        role="tab"
+        aria-selected="false"
+        aria-controls="youtube-posts-tamersdandysworld-panel"
+        tabindex="-1"
+        data-posts-channel-id="UCaU7caX6HLTF3jUTHIY4Alw"
+      >TamersDandysWorld</button>
+    </div>
+
+    <div
+      id="youtube-posts-tamers12345mlp-panel"
+      class="yt-posts-channel-panel"
+      role="tabpanel"
+      aria-labelledby="youtube-posts-tamers12345mlp-tab"
+    >
+      <div id="youtube-posts-tamers12345mlp-feed" class="yt-posts-feed"></div>
+    </div>
+    <div
+      id="youtube-posts-tamersdandysworld-panel"
+      class="yt-posts-channel-panel"
+      role="tabpanel"
+      aria-labelledby="youtube-posts-tamersdandysworld-tab"
+      hidden
+    >
+      <div id="youtube-posts-tamersdandysworld-feed" class="yt-posts-feed"></div>
+    </div>
   </div>
 
   <div id="deviantart-section" style="display:none;">

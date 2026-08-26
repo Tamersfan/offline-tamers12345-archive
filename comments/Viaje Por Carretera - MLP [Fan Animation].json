@@ -25,7 +25,37 @@
     "is_favorited": false,
     "_time_text": "1 hour ago",
     "timestamp": 1776816000,
-    "is_pinned": false
+    "is_pinned": false,
+    "replies": [
+      {
+        "text": "Fixed",
+        "like_count": 2,
+        "author_id": "UCEvOnTvFBnDxR0e11qJuP7g",
+        "author": "@Tamers12345MLP",
+        "author_thumbnail": "https://yt3.ggpht.com/DAkiBWAB7Xjs5WIbhqRPFtV8fd1babqiKJgEkPh7mijpheuOoJwg7xJvB0p-gcNUzLRr_ccuDxs=s88-c-k-c0x00ffffff-no-rj",
+        "author_is_uploader": true,
+        "author_is_verified": false,
+        "author_url": "https://www.youtube.com/@Tamers12345MLP",
+        "is_favorited": false,
+        "_time_text": "3 months ago",
+        "timestamp": 1777593600,
+        "is_pinned": false
+      },
+      {
+        "text": " @Tamers12345MLP  A+ baby boo",
+        "like_count": 1,
+        "author_id": "UCRnCzJPYd-VD7ykSdfSLGyA",
+        "author": "@cal.icopen",
+        "author_thumbnail": "https://yt3.ggpht.com/5eNjJl7dLefw7aDhtbWB6GjUnzWs9xzh9KaNyYwNK6GzP8VHbtfXaWZ7Pbc6wSuvXerTgpgAjA=s88-c-k-c0x00ffffff-no-rj",
+        "author_is_uploader": false,
+        "author_is_verified": false,
+        "author_url": "https://www.youtube.com/@cal.icopen",
+        "is_favorited": false,
+        "_time_text": "2 months ago",
+        "timestamp": 1780185600,
+        "is_pinned": false
+      }
+    ]
   },
   {
     "text": "I’m now obsessed with this song thanks to you tamers",
@@ -193,7 +223,37 @@
     "is_favorited": false,
     "_time_text": "2 hours ago",
     "timestamp": 1776812400,
-    "is_pinned": false
+    "is_pinned": false,
+    "replies": [
+      {
+        "text": "Fractured",
+        "like_count": 1,
+        "author_id": "UCNhpWLPBxUMWyOwbWbP8PiA",
+        "author": "@jo3a548",
+        "author_thumbnail": "https://yt3.ggpht.com/ytc/AIdro_ntuy_SJveMavo-8sO2g5fhM3WmryHDC7RiBTeAlgRJEA=s88-c-k-c0x00ffffff-no-rj",
+        "author_is_uploader": false,
+        "author_is_verified": false,
+        "author_url": "https://www.youtube.com/@jo3a548",
+        "is_favorited": false,
+        "_time_text": "3 months ago",
+        "timestamp": 1777593600,
+        "is_pinned": false
+      },
+      {
+        "text": "@jo3a548thank you bro",
+        "like_count": 0,
+        "author_id": "UC-641tzrSeoz2kIE9DptBtw",
+        "author": "@CHLOMAKl",
+        "author_thumbnail": "https://yt3.ggpht.com/Y7Tzt2gq7mCK-QQrW7ylmdTs6Srjc2vHj1TWxf6lHihoY9mb4XkHXm7ClZ5qoBnxhJdp3BFdsls=s88-c-k-c0x00ffffff-no-rj",
+        "author_is_uploader": false,
+        "author_is_verified": false,
+        "author_url": "https://www.youtube.com/@CHLOMAKl",
+        "is_favorited": false,
+        "_time_text": "3 months ago",
+        "timestamp": 1777593600,
+        "is_pinned": false
+      }
+    ]
   },
   {
     "text": "Wow starcatcher you;re so sexy",
@@ -361,7 +421,37 @@
     "is_favorited": false,
     "_time_text": "3 hours ago",
     "timestamp": 1776808800,
-    "is_pinned": false
+    "is_pinned": false,
+    "replies": [
+      {
+        "text": "You just had an episode, you greedy guts",
+        "like_count": 2,
+        "author_id": "UCSIkLMXG3P4Z92eNeHiGE1w",
+        "author": "@Nick-yl4qp",
+        "author_thumbnail": "https://yt3.ggpht.com/ytc/AIdro_n4EABOy6Ijor53Y9vON11pv7lnVa4DCZbpGTyhfVHnh3Pxiux6cQbieChI2FN94xMBGA=s88-c-k-c0x00ffffff-no-rj",
+        "author_is_uploader": false,
+        "author_is_verified": false,
+        "author_url": "https://www.youtube.com/@Nick-yl4qp",
+        "is_favorited": false,
+        "_time_text": "3 months ago",
+        "timestamp": 1777593600,
+        "is_pinned": false
+      },
+      {
+        "text": "​ @Nick-yl4qp i need more tho",
+        "like_count": 0,
+        "author_id": "UCQTdFympiKLVZSMXE-f-k-A",
+        "author": "@hanemeln",
+        "author_thumbnail": "https://yt3.ggpht.com/saMPz0rKNobdtg-TOeIklgEjvb6gkAMtZKfVeZVrdup8WV26IyR08peE8RgBRnKCvGu8tLwyOpc=s88-c-k-c0x00ffffff-no-rj",
+        "author_is_uploader": false,
+        "author_is_verified": false,
+        "author_url": "https://www.youtube.com/@hanemeln",
+        "is_favorited": false,
+        "_time_text": "3 months ago",
+        "timestamp": 1777593600,
+        "is_pinned": false
+      }
+    ]
   },
   {
     "text": "I JUST finished watching a dw vid and ts popped up holy MLP peak 😭",
@@ -445,7 +535,23 @@
     "is_favorited": false,
     "_time_text": "3 hours ago",
     "timestamp": 1776808800,
-    "is_pinned": false
+    "is_pinned": false,
+    "replies": [
+      {
+        "text": "she just like me frfr",
+        "like_count": 1,
+        "author_id": "UCR79bVPXVbXf9xyJQ0oC_mw",
+        "author": "@PickMeSquirrel",
+        "author_thumbnail": "https://yt3.ggpht.com/E-0rA0jm5BR-fRukpXCFAeY-7tcji7NUOf0mG0PwUE5qHzO07jRLZ16_zxzrIxEexa0xB6VAodA=s88-c-k-c0x00ffffff-no-rj",
+        "author_is_uploader": false,
+        "author_is_verified": false,
+        "author_url": "https://www.youtube.com/@PickMeSquirrel",
+        "is_favorited": false,
+        "_time_text": "3 months ago",
+        "timestamp": 1777593600,
+        "is_pinned": false
+      }
+    ]
   },
   {
     "text": "So peak❤️🌸",
@@ -473,7 +579,65 @@
     "is_favorited": false,
     "_time_text": "3 hours ago",
     "timestamp": 1776808800,
-    "is_pinned": false
+    "is_pinned": false,
+    "replies": [
+      {
+        "text": "por favor taco",
+        "like_count": 1,
+        "author_id": "UChgUyL7mmOGwna5DzdjUH_w",
+        "author": "@lanescain",
+        "author_thumbnail": "https://yt3.ggpht.com/XLONi_2GAkVUQkZB6Rc5TUh8Zs0V8Df6i-EXCYylo7eI8Ux63mNXxh691GApAw5WHoQsdXfNkw=s88-c-k-c0x00ffffff-no-rj",
+        "author_is_uploader": false,
+        "author_is_verified": false,
+        "author_url": "https://www.youtube.com/@lanescain",
+        "is_favorited": false,
+        "_time_text": "3 months ago",
+        "timestamp": 1777593600,
+        "is_pinned": false
+      },
+      {
+        "text": " @lanescain why are you being racist",
+        "like_count": 2,
+        "author_id": "UCjDDsSJlm_FLBGevD5S1wVA",
+        "author": "@celophanes4",
+        "author_thumbnail": "https://yt3.ggpht.com/bb1OIYEgcDId9R-l2YFvIAfOZeSPabWEauidGCsDHBd5d8vcJse2NnqpBydvQ3D6p-T8JVwb6g=s88-c-k-c0x00ffffff-no-rj",
+        "author_is_uploader": false,
+        "author_is_verified": false,
+        "author_url": "https://www.youtube.com/@celophanes4",
+        "is_favorited": false,
+        "_time_text": "3 months ago",
+        "timestamp": 1777593600,
+        "is_pinned": false
+      },
+      {
+        "text": "​ @celophanes4  you didnt get it girl please",
+        "like_count": 0,
+        "author_id": "UChgUyL7mmOGwna5DzdjUH_w",
+        "author": "@lanescain",
+        "author_thumbnail": "https://yt3.ggpht.com/XLONi_2GAkVUQkZB6Rc5TUh8Zs0V8Df6i-EXCYylo7eI8Ux63mNXxh691GApAw5WHoQsdXfNkw=s88-c-k-c0x00ffffff-no-rj",
+        "author_is_uploader": false,
+        "author_is_verified": false,
+        "author_url": "https://www.youtube.com/@lanescain",
+        "is_favorited": false,
+        "_time_text": "3 months ago",
+        "timestamp": 1777593600,
+        "is_pinned": false
+      },
+      {
+        "text": " @lanescain I get it but it’s just racist 💔",
+        "like_count": 3,
+        "author_id": "UCjDDsSJlm_FLBGevD5S1wVA",
+        "author": "@celophanes4",
+        "author_thumbnail": "https://yt3.ggpht.com/bb1OIYEgcDId9R-l2YFvIAfOZeSPabWEauidGCsDHBd5d8vcJse2NnqpBydvQ3D6p-T8JVwb6g=s88-c-k-c0x00ffffff-no-rj",
+        "author_is_uploader": false,
+        "author_is_verified": false,
+        "author_url": "https://www.youtube.com/@celophanes4",
+        "is_favorited": false,
+        "_time_text": "3 months ago",
+        "timestamp": 1777593600,
+        "is_pinned": false
+      }
+    ]
   },
   {
     "text": "The Fractured in the Reflection when Flawless is there is perfect <3",
@@ -501,7 +665,23 @@
     "is_favorited": false,
     "_time_text": "3 hours ago",
     "timestamp": 1776808800,
-    "is_pinned": false
+    "is_pinned": false,
+    "replies": [
+      {
+        "text": "Spanish English and Italian I think? Idk",
+        "like_count": 2,
+        "author_id": "UCkYkMbY0aG6ODaPdniRomOQ",
+        "author": "@GatoSacro",
+        "author_thumbnail": "https://yt3.ggpht.com/ytc/AIdro_n73-TRa4MfyOfHh3JSml1hL14fYJ5GYP9qLMRV6D3Ojro=s88-c-k-c0x00ffffff-no-rj",
+        "author_is_uploader": false,
+        "author_is_verified": false,
+        "author_url": "https://www.youtube.com/@GatoSacro",
+        "is_favorited": false,
+        "_time_text": "3 months ago",
+        "timestamp": 1777593600,
+        "is_pinned": false
+      }
+    ]
   },
   {
     "text": "EARLY!",
@@ -669,7 +849,65 @@
     "is_favorited": false,
     "_time_text": "3 hours ago",
     "timestamp": 1776808800,
-    "is_pinned": false
+    "is_pinned": false,
+    "replies": [
+      {
+        "text": "Okay here my first second I commented faster than you Fool",
+        "like_count": 2,
+        "author_id": "UCybVvl4ZNSPDhU66-C9ZsFQ",
+        "author": "@GoldenCone69",
+        "author_thumbnail": "https://yt3.ggpht.com/0ux2EpJcv4pF9ZBaSS9UOFdVAwka675V3JiHuJtSCOqDvjhgYA6tkZUhlMD988gJoRADHRt7=s88-c-k-c0x00ffffff-no-rj",
+        "author_is_uploader": false,
+        "author_is_verified": false,
+        "author_url": "https://www.youtube.com/@GoldenCone69",
+        "is_favorited": false,
+        "_time_text": "3 months ago",
+        "timestamp": 1777593600,
+        "is_pinned": false
+      },
+      {
+        "text": "Sorry",
+        "like_count": 2,
+        "author_id": "UCybVvl4ZNSPDhU66-C9ZsFQ",
+        "author": "@GoldenCone69",
+        "author_thumbnail": "https://yt3.ggpht.com/0ux2EpJcv4pF9ZBaSS9UOFdVAwka675V3JiHuJtSCOqDvjhgYA6tkZUhlMD988gJoRADHRt7=s88-c-k-c0x00ffffff-no-rj",
+        "author_is_uploader": false,
+        "author_is_verified": false,
+        "author_url": "https://www.youtube.com/@GoldenCone69",
+        "is_favorited": false,
+        "_time_text": "3 months ago",
+        "timestamp": 1777593600,
+        "is_pinned": false
+      },
+      {
+        "text": "You weren’t the first",
+        "like_count": 3,
+        "author_id": "UC_jW_cWXZx-hJ38qI9FCe5Q",
+        "author": "@MariahCraig-w5y",
+        "author_thumbnail": "https://yt3.ggpht.com/Pnbo5Exz4xxGXcYCEDIJCWNEwoLEaewD3lIc2hnWMEXsycLuEiu4bAGKCPYHe9QSVN2RZtMe6sA=s88-c-k-c0x00ffffff-no-rj",
+        "author_is_uploader": false,
+        "author_is_verified": false,
+        "author_url": "https://www.youtube.com/@MariahCraig-w5y",
+        "is_favorited": false,
+        "_time_text": "3 months ago",
+        "timestamp": 1777593600,
+        "is_pinned": false
+      },
+      {
+        "text": " @MariahCraig-w5y Ok..?",
+        "like_count": 1,
+        "author_id": "UCmeTJoNbOj6Jy6OdXsurBxw",
+        "author": "@NovaB3AM",
+        "author_thumbnail": "https://yt3.ggpht.com/avSJYUJfm3YcOKxH5bBVdvNvYtr3ZX_mUeg80B-V0zzlB5baP-SaoDMMWR2beA99JIikymw8=s88-c-k-c0x00ffffff-no-rj",
+        "author_is_uploader": false,
+        "author_is_verified": false,
+        "author_url": "https://www.youtube.com/@NovaB3AM",
+        "is_favorited": false,
+        "_time_text": "3 months ago",
+        "timestamp": 1777593600,
+        "is_pinned": false
+      }
+    ]
   },
   {
     "text": "Wow",
@@ -725,7 +963,23 @@
     "is_favorited": false,
     "_time_text": "3 hours ago",
     "timestamp": 1776808800,
-    "is_pinned": false
+    "is_pinned": false,
+    "replies": [
+      {
+        "text": "Yaaaay!",
+        "like_count": 1,
+        "author_id": "UCEuY65MFMEFpJ2yuvPqBVug",
+        "author": "@jellyinkysplash8415",
+        "author_thumbnail": "https://yt3.ggpht.com/V1CnHeHCKrHQb9GBCsbakzikZkooQf5RzzIED0E56qqZ7j_wJL1EGMctHkLkkB_LrFxVXufC9w=s88-c-k-c0x00ffffff-no-rj",
+        "author_is_uploader": false,
+        "author_is_verified": false,
+        "author_url": "https://www.youtube.com/@jellyinkysplash8415",
+        "is_favorited": false,
+        "_time_text": "3 months ago",
+        "timestamp": 1777593600,
+        "is_pinned": false
+      }
+    ]
   },
   {
     "text": "I'm the first liker!",
@@ -921,7 +1175,23 @@
     "is_favorited": false,
     "_time_text": "1 day ago",
     "timestamp": 1777680000,
-    "is_pinned": false
+    "is_pinned": false,
+    "replies": [
+      {
+        "text": "I forgot to say When he walks, he slow.But when he runs he's fast",
+        "like_count": 0,
+        "author_id": "UCsl7f_kvdeWc9RerImcHuow",
+        "author": "@AnnieMattson-o1b",
+        "author_thumbnail": "https://yt3.ggpht.com/ax0jYHr-KHmwD_Ox3_TfQB1hj-sauTqHVqrV264SXnACfWrDuG4SoYE-vtan19ae84tPT4NXuQ=s88-c-k-c0x00ffffff-no-rj",
+        "author_is_uploader": false,
+        "author_is_verified": false,
+        "author_url": "https://www.youtube.com/@AnnieMattson-o1b",
+        "is_favorited": false,
+        "_time_text": "2 months ago",
+        "timestamp": 1780185600,
+        "is_pinned": false
+      }
+    ]
   },
   {
     "text": "tuff new banner btw",

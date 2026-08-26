@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "channel_id": "UCaU7caX6HLTF3jUTHIY4Alw",
+  "created_at": "2026-08-26T14:19:50.626Z",
+  "updated_at": "2026-08-26T14:19:55.728Z",
+  "saved_count": 1,
+  "posts": {
+    "UgkxpXCsjo7GGNkwTKt1ajAqjtO8H7oaXBLt": {
+      "id": "UgkxpXCsjo7GGNkwTKt1ajAqjtO8H7oaXBLt",
+      "url": "https://www.youtube.com/post/UgkxpXCsjo7GGNkwTKt1ajAqjtO8H7oaXBLt",
+      "folder": "posts\\Welcome to my 2nd channel! Be sure to s [UgkxpXCsjo]",
+      "json": "posts\\Welcome to my 2nd channel! Be sure to s [UgkxpXCsjo]\\UgkxpXCsjo7GGNkwTKt1ajAqjtO8H7oaXBLt.json",
+      "saved_at": "2026-08-26T14:19:55.728Z",
+      "archived_at": "2026-08-26T14:19:55.728Z",
+      "threads": 20,
+      "media_items": 4,
+      "source": "download",
+      "complete": true
+    }
+  }
+}

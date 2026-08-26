@@ -45,8 +45,28 @@ let currentAltVideo = null;
 let postsTabInitialized = false;
 let postsDataCache = [];
 let postOverrides = null;
+const POSTS_CHANNELS = Object.freeze([
+  Object.freeze({
+    id: 'UCEvOnTvFBnDxR0e11qJuP7g',
+    label: 'Tamers12345mlp',
+    domKey: 'tamers12345mlp',
+    tabId: 'youtube-posts-tamers12345mlp-tab',
+    panelId: 'youtube-posts-tamers12345mlp-panel',
+    feedId: 'youtube-posts-tamers12345mlp-feed'
+  }),
+  Object.freeze({
+    id: 'UCaU7caX6HLTF3jUTHIY4Alw',
+    label: 'TamersDandysWorld',
+    domKey: 'tamersdandysworld',
+    tabId: 'youtube-posts-tamersdandysworld-tab',
+    panelId: 'youtube-posts-tamersdandysworld-panel',
+    feedId: 'youtube-posts-tamersdandysworld-feed'
+  })
+]);
+let activePostsChannelId = POSTS_CHANNELS[0].id;
 const POSTS_PROFILE_PICS = [...Array(36)].map((_, i) => `PFPs/pfp${i + 1}.png`);
-const POSTS_UPLOADER_PFP = 'PFPs/tamers.png';
+const TAMERS_PRIMARY_PFP = 'PFPs/tamers.png';
+const TAMERS_DANDYS_WORLD_PFP = 'PFPs/tamers2.jpg';
 const POSTS_UPLOADER_NAMES = new Set([
   'tamersdandysworld',
   'tamers official',
@@ -1208,7 +1228,6 @@ async function loadComments(video, sortType = localStorage.getItem('commentSortT
   // --- CONFIGURATION ---
   const profilePics = [...Array(36)].map((_, i) => `PFPs/pfp${i + 1}.png`);
   const TAMERS_AUTHORS = ["@Tamers12345Official", "Tamers12345Official", "@Tamers12345mlp", "Tamers12345mlp", "@Tamers12345MLP", "Tamers12345MLP", "@Tamers12345", "Tamers12345", "@tamers12345", "tamers12345", "@TamersDandysWorld", "TamersDandysWorld"];
-  const TAMERS_PFP = "PFPs/tamers.png";
 
   // --- HELPERS ---
   function formatDate(ts) {
@@ -1226,7 +1245,7 @@ async function loadComments(video, sortType = localStorage.getItem('commentSortT
     const comment = typeof commentOrAuthor === 'object'
       ? commentOrAuthor
       : { author: commentOrAuthor };
-    return isUploaderComment(comment) ? TAMERS_PFP : fallbackPic;
+    return isUploaderComment(comment) ? getTamersProfilePicture(comment.author) : fallbackPic;
   }
   function hasTamersReply(comment) {
     return Array.isArray(comment.replies) &&
@@ -1356,9 +1375,9 @@ async function loadComments(video, sortType = localStorage.getItem('commentSortT
     comment.is_pinned ||
     (Array.isArray(comment.replies) && comment.replies.some(reply => reply.is_pinned))
   );
-  const pinnedByName = hasVisiblePinnedComment
-    ? (await getMetadataUploaderName() || getPinnedByName(comments) || 'Tamers12345')
-    : '';
+  const uploaderName = await getMetadataUploaderName() || getPinnedByName(comments) || 'Tamers12345';
+  const uploaderPfp = getTamersProfilePicture(uploaderName);
+  const pinnedByName = hasVisiblePinnedComment ? uploaderName : '';
   if (isStale()) return;
 
   commentContainer.style.display = 'block';
@@ -1396,7 +1415,7 @@ async function loadComments(video, sortType = localStorage.getItem('commentSortT
       const favoritedBadge = comment.is_favorited
         ? `
           <span class="comment-favorited">
-            <img class="uploader-fav-pfp" src="${TAMERS_PFP}" alt="Uploader">
+            <img class="uploader-fav-pfp" src="${uploaderPfp}" alt="Uploader">
             <span class="fav-heart">&#10084;&#65039;</span>
           </span>
         `
@@ -1405,10 +1424,10 @@ async function loadComments(video, sortType = localStorage.getItem('commentSortT
       let repliesHTML = '';
       if (Array.isArray(comment.replies) && comment.replies.length > 0) {
         // Detect if Tamers replied
-        const tamersReply = comment.replies.some(reply => isUploaderComment(reply));
+        const tamersReply = comment.replies.find(reply => isUploaderComment(reply));
         // PFP badge if Tamers replied
         const tamersBadge = tamersReply
-          ? `<img src="${TAMERS_PFP}" title="Uploader replied" style="width:16px;height:16px;border-radius:50%;vertical-align:middle;margin-left:6px;box-shadow:0 0 2px #0005;">`
+          ? `<img src="${getTamersProfilePicture(tamersReply.author)}" title="Uploader replied" style="width:16px;height:16px;border-radius:50%;vertical-align:middle;margin-left:6px;box-shadow:0 0 2px #0005;">`
           : '';
 
         repliesHTML = `
@@ -1424,7 +1443,7 @@ async function loadComments(video, sortType = localStorage.getItem('commentSortT
                 : '';
               const replyFavoritedBadge = reply.is_favorited
                 ? `<span class="comment-favorited">
-                    <img class="uploader-fav-pfp" src="${TAMERS_PFP}" alt="Uploader">
+                    <img class="uploader-fav-pfp" src="${uploaderPfp}" alt="Uploader">
                     <span class="fav-heart">&#10084;&#65039;</span>
                   </span>` : '';
               return `
@@ -3553,12 +3572,11 @@ async function initializePostsTab(force = false) {
   if (postsTabInitialized && !force) return;
   postsTabInitialized = true;
 
-  const feed = document.getElementById('youtube-posts-feed');
-  if (!feed) return;
-  feed.innerHTML = '<div class="yt-posts-loading">Loading posts...</div>';
+  initializePostsChannelTabs();
+  setPostsFeedsMessage('Loading posts...', 'yt-posts-loading');
 
   if (!window.electronAPI || typeof window.electronAPI.readPostsData !== 'function') {
-    feed.innerHTML = '<div class="yt-posts-empty">Posts data source is unavailable.</div>';
+    setPostsFeedsMessage('Posts data source is unavailable.');
     return;
   }
 
@@ -3567,12 +3585,79 @@ async function initializePostsTab(force = false) {
     const items = await window.electronAPI.readPostsData();
     postsDataCache = Array.isArray(items) ? items : [];
     const ordered = await orderPostsByIndex(postsDataCache);
-    const sorted = sortPostsByDate(ordered);
-    renderPostsFeed(sorted);
+    postsDataCache = sortPostsByDate(ordered);
+    renderPostsChannelFeeds();
   } catch (e) {
     console.error('Failed to load posts data:', e);
-    feed.innerHTML = '<div class="yt-posts-empty">Failed to load posts.</div>';
+    setPostsFeedsMessage('Failed to load posts.');
   }
+}
+
+function initializePostsChannelTabs() {
+  if (initializePostsChannelTabs._listenersAdded) {
+    selectPostsChannel(activePostsChannelId);
+    return;
+  }
+
+  POSTS_CHANNELS.forEach((channel, index) => {
+    const tab = document.getElementById(channel.tabId);
+    if (!tab) return;
+
+    tab.addEventListener('click', () => selectPostsChannel(channel.id));
+    tab.addEventListener('keydown', event => {
+      let nextIndex = null;
+      if (event.key === 'ArrowRight') nextIndex = (index + 1) % POSTS_CHANNELS.length;
+      if (event.key === 'ArrowLeft') nextIndex = (index - 1 + POSTS_CHANNELS.length) % POSTS_CHANNELS.length;
+      if (event.key === 'Home') nextIndex = 0;
+      if (event.key === 'End') nextIndex = POSTS_CHANNELS.length - 1;
+      if (nextIndex == null) return;
+
+      event.preventDefault();
+      const nextChannel = POSTS_CHANNELS[nextIndex];
+      selectPostsChannel(nextChannel.id, true);
+    });
+  });
+
+  initializePostsChannelTabs._listenersAdded = true;
+  selectPostsChannel(activePostsChannelId);
+}
+
+function selectPostsChannel(channelId, focusTab = false) {
+  const selectedChannel = POSTS_CHANNELS.find(channel => channel.id === channelId);
+  if (!selectedChannel) return;
+
+  activePostsChannelId = selectedChannel.id;
+  POSTS_CHANNELS.forEach(channel => {
+    const isActive = channel.id === activePostsChannelId;
+    const tab = document.getElementById(channel.tabId);
+    const panel = document.getElementById(channel.panelId);
+
+    if (tab) {
+      tab.classList.toggle('active', isActive);
+      tab.setAttribute('aria-selected', String(isActive));
+      tab.tabIndex = isActive ? 0 : -1;
+    }
+    if (panel) panel.hidden = !isActive;
+  });
+
+  if (focusTab) {
+    const tab = document.getElementById(selectedChannel.tabId);
+    if (tab) tab.focus();
+  }
+}
+
+function setPostsFeedsMessage(message, className = 'yt-posts-empty') {
+  POSTS_CHANNELS.forEach(channel => {
+    const feed = document.getElementById(channel.feedId);
+    if (feed) feed.innerHTML = `<div class="${className}">${escapeHtml(message)}</div>`;
+  });
+}
+
+function renderPostsChannelFeeds() {
+  POSTS_CHANNELS.forEach(channel => {
+    const channelItems = postsDataCache.filter(item => item && item.channelId === channel.id);
+    renderPostsFeed(channelItems, channel);
+  });
 }
 
 async function orderPostsByIndex(items) {
@@ -3778,17 +3863,21 @@ function resolvePostDateValue(item, post, override) {
   return null;
 }
 
-function renderPostsFeed(items) {
-  const feed = document.getElementById('youtube-posts-feed');
+function renderPostsFeed(items, channel) {
+  const feed = channel ? document.getElementById(channel.feedId) : null;
   if (!feed) return;
 
   if (!items || !items.length) {
-    feed.innerHTML = '<div class="yt-posts-empty">No posts found.</div>';
+    const channelLabel = channel && channel.label ? ` for ${channel.label}` : '';
+    feed.innerHTML = `<div class="yt-posts-empty">No posts found${escapeHtml(channelLabel)}.</div>`;
     return;
   }
 
   const channelAuthors = buildChannelAuthorMap(items);
-  feed.innerHTML = items.map((item, idx) => buildPostCardHtml(item, idx, channelAuthors, getPostOverride(item))).join('');
+  feed.innerHTML = items.map((item, idx) => {
+    const postDomKey = `${channel.domKey}-${idx}`;
+    return buildPostCardHtml(item, postDomKey, channelAuthors, getPostOverride(item));
+  }).join('');
 }
 
 function buildChannelAuthorMap(items) {
@@ -3843,7 +3932,7 @@ function buildPostCardHtml(item, index, channelAuthors, override) {
   const commentsSource = (override && override.comments)
     ? override.comments
     : (json && json.comments ? json.comments : null);
-  const commentsHtml = buildPostCommentsHtml(commentsSource, index);
+  const commentsHtml = buildPostCommentsHtml(commentsSource, index, authorName);
 
   const avatar = getUploaderAvatar(authorName);
 
@@ -4022,14 +4111,14 @@ function buildEvenPercentages(count) {
   return percents;
 }
 
-function buildPostCommentsHtml(commentsData, postIndex) {
+function buildPostCommentsHtml(commentsData, postIndex, uploaderAuthorName) {
   const threads = commentsData && Array.isArray(commentsData.threads) ? commentsData.threads : [];
   const commentBoxId = `post-comments-${postIndex}`;
   const toggleId = `post-comments-toggle-${postIndex}`;
 
   const header = `<h4>Comments</h4>`;
   const body = threads.length
-    ? threads.map((thread, idx) => buildPostThreadHtml(thread, postIndex, idx)).join('')
+    ? threads.map((thread, idx) => buildPostThreadHtml(thread, postIndex, idx, uploaderAuthorName)).join('')
     : `<div class="yt-posts-empty">No comments available.</div>`;
 
   return `
@@ -4049,7 +4138,7 @@ function buildPostCommentsHtml(commentsData, postIndex) {
   `;
 }
 
-function buildPostThreadHtml(thread, postIndex, threadIndex) {
+function buildPostThreadHtml(thread, postIndex, threadIndex, uploaderAuthorName) {
   const top = thread && thread.top_level ? thread.top_level : {};
   const replies = thread && Array.isArray(thread.replies) ? thread.replies : [];
 
@@ -4065,7 +4154,7 @@ function buildPostThreadHtml(thread, postIndex, threadIndex) {
     : '';
 
   const pinned = top.is_pinned ? `<span class="yt-post-comment-pinned">Pinned</span>` : '';
-  const hearted = top.is_hearted ? buildHeartBadge() : '';
+  const hearted = top.is_hearted ? buildHeartBadge(uploaderAuthorName) : '';
   const published = top.published ? `<span class="comment-date">${escapeHtml(top.published)}</span>` : '';
 
   const repliesHtml = replies.length
@@ -4135,10 +4224,10 @@ function buildReplyHtml(reply) {
   `;
 }
 
-function buildHeartBadge() {
+function buildHeartBadge(uploaderAuthorName) {
   return `
     <span class="comment-favorited">
-      <img class="uploader-fav-pfp" src="${POSTS_UPLOADER_PFP}" alt="Uploader">
+      <img class="uploader-fav-pfp" src="${getTamersProfilePicture(uploaderAuthorName)}" alt="Uploader">
       <span class="fav-heart">&#10084;&#65039;</span>
     </span>
   `;
@@ -4149,13 +4238,19 @@ function formatPostText(text) {
 }
 
 function getUploaderAvatar(authorName) {
-  if (isUploaderName(authorName)) return POSTS_UPLOADER_PFP;
-  return POSTS_UPLOADER_PFP;
+  return getTamersProfilePicture(authorName);
 }
 
 function getRandomCommentAvatar(authorName) {
-  if (isUploaderName(authorName)) return POSTS_UPLOADER_PFP;
+  if (isUploaderName(authorName)) return getTamersProfilePicture(authorName);
   return POSTS_PROFILE_PICS[Math.floor(Math.random() * POSTS_PROFILE_PICS.length)];
+}
+
+function getTamersProfilePicture(authorName) {
+  const normalized = String(authorName || '').trim().toLowerCase().replace(/^@/, '');
+  return normalized === 'tamersdandysworld'
+    ? TAMERS_DANDYS_WORLD_PFP
+    : TAMERS_PRIMARY_PFP;
 }
 
 function isUploaderName(name) {

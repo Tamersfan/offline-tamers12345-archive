@@ -1,0 +1,389 @@
+{
+  "schema_version": 4,
+  "archived_at": "2026-08-26T14:19:26.553Z",
+  "post": {
+    "id": "UgkxnCSvY5IF8yjAO2Sct2xEaVpIiVC8mfIa",
+    "url": "https://www.youtube.com/post/UgkxnCSvY5IF8yjAO2Sct2xEaVpIiVC8mfIa",
+    "type": "BackstagePost",
+    "channel_id": "UCEvOnTvFBnDxR0e11qJuP7g",
+    "author": {
+      "name": "Tamers Official",
+      "channel_id": null,
+      "thumbnails": [
+        {
+          "url": "//yt3.googleusercontent.com/DAkiBWAB7Xjs5WIbhqRPFtV8fd1babqiKJgEkPh7mijpheuOoJwg7xJvB0p-gcNUzLRr_ccuDxs=s76-c-k-c0x00ffffff-no-rj-mo",
+          "width": 76,
+          "height": 76
+        },
+        {
+          "url": "//yt3.googleusercontent.com/DAkiBWAB7Xjs5WIbhqRPFtV8fd1babqiKJgEkPh7mijpheuOoJwg7xJvB0p-gcNUzLRr_ccuDxs=s48-c-k-c0x00ffffff-no-rj-mo",
+          "width": 48,
+          "height": 48
+        },
+        {
+          "url": "//yt3.googleusercontent.com/DAkiBWAB7Xjs5WIbhqRPFtV8fd1babqiKJgEkPh7mijpheuOoJwg7xJvB0p-gcNUzLRr_ccuDxs=s32-c-k-c0x00ffffff-no-rj-mo",
+          "width": 32,
+          "height": 32
+        }
+      ]
+    },
+    "published": "11 days ago",
+    "content_text": "The premiere for Dandy's World: Halloween Special is now live on my backup channel!!\nhttps://www.youtube.com/watch?v=H9Xzd...\nMake sure to subscribe over there if you aren't already.",
+    "folder_name": "The premiere for Dandy's World Hallowee [UgkxnCSvY5]",
+    "title_compact": "The premiere for Dandy's World Hallowee",
+    "linked": null
+  },
+  "attachment": {
+    "source": "BackstagePost",
+    "type": "BackstageImage",
+    "poll": null,
+    "linked": null
+  },
+  "media": {
+    "folder": "posts\\The premiere for Dandy's World Hallowee [UgkxnCSvY5]\\media",
+    "downloaded": [
+      {
+        "kind": "post_image",
+        "url": "https://yt3.ggpht.com/M6SC_4Dij3YwLX_VxsBC8K3Y6U9e01vsbaCQCUd09vzghMpeB5ICr4GGHuCgPDw8WPY8xd64zg6sOQ=s640-nd-v1-rwa",
+        "ok": true,
+        "path": "posts\\The premiere for Dandy's World Hallowee [UgkxnCSvY5]\\media\\Image 1.webp",
+        "content_type": "image/webp",
+        "bytes": 44182,
+        "error": null
+      }
+    ]
+  },
+  "comments": {
+    "ok": true,
+    "error": null,
+    "thread_count": 14,
+    "threads": [
+      {
+        "top_level": {
+          "id": "UgxfZmXmLMQ_r6z5dwN4AaABAg",
+          "author": {
+            "name": "@spongebobsworld",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/Ov835WcaFCCPZhEI47pZMGkbtWncZedRjc-De1LuKDJwt7GWt4Z0NG6_hY1rNZvz2pXfk9vS=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "MAKE FUNDAMENTAL PAPER EDUCATION CONTENT",
+          "published": "9 days ago",
+          "like_count": " ",
+          "is_hearted": false,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": false
+      },
+      {
+        "top_level": {
+          "id": "UgxYfDVZhNU9z6dbpuV4AaABAg",
+          "author": {
+            "name": "@Tv_narwal",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/j1J-SGcOpieiTckYbmfGyXdBvS0OuXrWL0SfClVRe6No5B48eDrbRYVQhUh51IWrVbb8ETGTWSs=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "Holy shit this is gonna be GOOD! :D",
+          "published": "10 days ago",
+          "like_count": "3",
+          "is_hearted": true,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": false
+      },
+      {
+        "top_level": {
+          "id": "UgwI98GiomIM-74OSXV4AaABAg",
+          "author": {
+            "name": "@7M9production",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/oUNdUle5MZEXvk7ra7gfF3qgQZ_WTNJZJxbAZelQqydXD65JracD5iXkIGN8sGaSP3XFbNVo=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "I knew I wasn’t tripping. I saw a video that said upcoming Halloween special with sprout getting angry at something. And Cosmo holding his hand worried.",
+          "published": "10 days ago",
+          "like_count": "4",
+          "is_hearted": true,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": false
+      },
+      {
+        "top_level": {
+          "id": "UgzzD70cSKWVJSYeWxJ4AaABAg",
+          "author": {
+            "name": "@satbas9165",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/ytc/AIdro_k5hc85Uwz3374xdWIa7IU5tRdQ8Q8KhgHW60SV6gkWvQ=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "I can’t watch it :-c\nGOD DAMNIT :face-purple-crying:",
+          "published": "11 days ago",
+          "like_count": " ",
+          "is_hearted": false,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": true,
+        "replies_error": "Replies continuation item not found"
+      },
+      {
+        "top_level": {
+          "id": "Ugx9VRBiX0f6kaGu3B14AaABAg",
+          "author": {
+            "name": "@DanielaPadron-n2t",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/ytc/AIdro_kjND8U1TiPEw_nk7wHVRzjEfaU_vW2mZ6uU0PTBL6yiuvUWRvQQNsfIOn_RS_2JkLdcA=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "Yo ya ví todo el episodio 😭😭ESTA HERMOSO",
+          "published": "11 days ago",
+          "like_count": "4",
+          "is_hearted": true,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": false
+      },
+      {
+        "top_level": {
+          "id": "Ugyil6EhrtAhezV5z_Z4AaABAg",
+          "author": {
+            "name": "@miyahblues-v4o",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/EnLgTIKodOlSwzULjSz__Sj9wTH3pKUp1Sz0WmWggOIo34toXBRxIp4JnPDqV0fnzWtBiS7F=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "dang it i cant watch it \n:(",
+          "published": "11 days ago",
+          "like_count": "5",
+          "is_hearted": true,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": true,
+        "replies_error": "Replies continuation item not found"
+      },
+      {
+        "top_level": {
+          "id": "Ugwv5s8Yq5FKicofl7d4AaABAg",
+          "author": {
+            "name": "@imbecilesbronze",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/FAEDKQmGr_RULm-R_weCkjKVieX2ynvbD9XnxCV1EBfbf-MmRWmOt1AJRwd68e8prKd3oA7O8w=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "Sorry my job was in the way",
+          "published": "11 days ago",
+          "like_count": "1",
+          "is_hearted": true,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": false
+      },
+      {
+        "top_level": {
+          "id": "UgzEIRcNX2ugOjCAi-14AaABAg",
+          "author": {
+            "name": "@xxlossssstprincesssxX",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/W0Wltk2CguFdqhvQtp_uojgxNlZLIhr3d-_LjN85ihXuD-_UT7DmnLHRQZlU2cZ63m6MRdcSSw=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "My butt hurts",
+          "published": "11 days ago",
+          "like_count": "2",
+          "is_hearted": true,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": true,
+        "replies_error": "Replies continuation item not found"
+      },
+      {
+        "top_level": {
+          "id": "UgxT2npLKxxyHFk-82Z4AaABAg",
+          "author": {
+            "name": "@stemboatt",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/zJPN-ZoKlBOfYUwo6q9D-eghe3i0H0C0qgJeyeViHd7fR_iebWhU4BTvpuZ9Hsu3SUTDOBTy6A=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "Someone reupload it so I can watch it 🥹",
+          "published": "11 days ago",
+          "like_count": "2",
+          "is_hearted": true,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": true,
+        "replies_error": "Replies continuation item not found"
+      },
+      {
+        "top_level": {
+          "id": "UgwNDjk9e5lfglYGMJZ4AaABAg",
+          "author": {
+            "name": "@Curlyyyx26",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/ytc/AIdro_k4wwvNvUWb1do6t_F2UUXf09iDfO7r24zk0oulvTBdC48=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "This is amazing i wish i had those",
+          "published": "11 days ago",
+          "like_count": "1",
+          "is_hearted": true,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": false
+      },
+      {
+        "top_level": {
+          "id": "UgzUGQtRNM3-2LFd7Qt4AaABAg",
+          "author": {
+            "name": "@IzekNinos7",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/-o6D4EpzNQ8YtODk0q1WGOte6Wl4hk1qDofmM814sPFu5JXssdloIdffssmLzxJcA8ksTxCME7I=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "Noice",
+          "published": "11 days ago",
+          "like_count": "4",
+          "is_hearted": true,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": false
+      },
+      {
+        "top_level": {
+          "id": "UgxGxjX8pfv4rCfigEJ4AaABAg",
+          "author": {
+            "name": "@hollyfish",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/h1y6JE92ekL_gGfhjU6Uf9_r3ED75cwtrrii10p7wfJgTXUtnvxj1YmrsbGzhFWDkPU2IWR6DaY=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "summerween!!",
+          "published": "11 days ago",
+          "like_count": "3",
+          "is_hearted": true,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": false
+      },
+      {
+        "top_level": {
+          "id": "Ugxg4TK5_hwT8tt5Ie14AaABAg",
+          "author": {
+            "name": "@YoshaaDerpy",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/kXQvNtmphES8EklYJlanLRaFPVU5zkIFoJxQbvQXHD69LZosE0DcgxezotTprUfQkN7Tlme3=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "It’s Halloween in August!",
+          "published": "11 days ago",
+          "like_count": "2",
+          "is_hearted": true,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": false
+      },
+      {
+        "top_level": {
+          "id": "UgymEqJ3wch0GZJM4ex4AaABAg",
+          "author": {
+            "name": "@YourLocalNicePerson98",
+            "channel_id": null,
+            "thumbnails": [
+              {
+                "url": "https://yt3.ggpht.com/NAoUHtiHaEmKJlbMobYIKDgPjV1ph_wIpYimcCmy3UrMmTBba6ur7OyIDRnu4ZPzLuViuHExtFo=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+              }
+            ]
+          },
+          "content": "BET",
+          "published": "11 days ago",
+          "like_count": "1",
+          "is_hearted": true,
+          "is_pinned": false
+        },
+        "replies": [],
+        "has_replies": false
+      }
+    ]
+  }
+}

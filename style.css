@@ -1480,6 +1480,48 @@ video::-moz-media-controls-fullscreen-button {
   padding: 18px 0 40px;
 }
 
+.yt-posts-channel-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 900px;
+  box-sizing: border-box;
+  margin: 0 auto 18px;
+  padding: 0 16px 10px;
+  border-bottom: 1px solid rgba(127, 127, 127, 0.35);
+}
+
+.yt-posts-channel-tab {
+  flex: 1 1 220px;
+  padding: 10px 16px;
+  border: 1px solid rgba(127, 127, 127, 0.55);
+  border-radius: 8px;
+  background: rgba(127, 127, 127, 0.14);
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+}
+
+.yt-posts-channel-tab:hover {
+  background: rgba(127, 127, 127, 0.24);
+  opacity: 1;
+}
+
+.yt-posts-channel-tab.active {
+  background: #c91818;
+  border-color: #ff5a52;
+  color: #fff;
+  opacity: 1;
+}
+
+.yt-posts-channel-tab:focus-visible {
+  outline: 3px solid #69a7ff;
+  outline-offset: 2px;
+}
+
 .yt-posts-feed {
   display: flex;
   flex-direction: column;
