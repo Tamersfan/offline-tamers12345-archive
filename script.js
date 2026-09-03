@@ -1217,6 +1217,16 @@ async function loadComments(video, sortType = localStorage.getItem('commentSortT
   // Map any video extension (.mp4/.webm/etc.) to matching comments json files.
   const safeFilename = video.filename.replace(/\.[^/.]+$/, '.json');
   const commentFilenameCandidates = [safeFilename];
+  // Windows-safe archive exports have used both the big solidus (⧸) and
+  // fullwidth solidus (／) for slashes. Try both spellings when they differ.
+  const alternateSlashFilename = safeFilename.includes('⧸')
+    ? safeFilename.replaceAll('⧸', '／')
+    : safeFilename.includes('／')
+      ? safeFilename.replaceAll('／', '⧸')
+      : safeFilename;
+  if (alternateSlashFilename !== safeFilename) {
+    commentFilenameCandidates.push(alternateSlashFilename);
+  }
   const sharedAudioVariantFilename = safeFilename.replace(/\s+\(Bad Audio\)(?=\.json$)/i, '');
   if (sharedAudioVariantFilename !== safeFilename) {
     commentFilenameCandidates.push(sharedAudioVariantFilename);
