@@ -1,6 +1,7 @@
 // === Storage Keys ===
 const STORAGE_KEYS = {
   tagFilter: 'tagFilterValue',
+  youtubeContentType: 'youtubeContentType',
   userPlaylists: 'userPlaylistsV1'
 };
 
@@ -9,6 +10,9 @@ let chatFiles = new Set();
 let showBadges = true;
 let sortOrder = 'newest';
 let tagFilter = localStorage.getItem(STORAGE_KEYS.tagFilter) || 'all';
+let youtubeContentType = localStorage.getItem(STORAGE_KEYS.youtubeContentType) === 'live-streams'
+  ? 'live-streams'
+  : 'videos';
 let selectedPlaylist = 'all';
 let rawVideoData = [];
 let videoPath = "";
@@ -269,6 +273,49 @@ function getVideosForPlaylistSelection(value) {
   const userPlaylist = getUserPlaylistFromValue(value);
   if (userPlaylist) return getUserPlaylistVideos(userPlaylist);
   return rawVideoData.filter(v => Array.isArray(v.tags) && v.tags.includes(value));
+}
+
+function isLiveStream(video) {
+  if (video?.isLiveStream === true || video?.liveStream === true) return true;
+  const type = String(video?.type || video?.category || '').toLowerCase().replace(/[\s_-]+/g, '');
+  return type === 'livestream' || type === 'live';
+}
+
+function isActiveYouTubeContent(video) {
+  return youtubeContentType === 'live-streams' ? isLiveStream(video) : !isLiveStream(video);
+}
+
+function getActiveYouTubeContent(videos = rawVideoData) {
+  return videos.filter(isActiveYouTubeContent);
+}
+
+function syncYouTubeContentTabs() {
+  const showingStreams = youtubeContentType === 'live-streams';
+  const videosTab = document.getElementById('youtube-videos-tab');
+  const streamsTab = document.getElementById('youtube-live-streams-tab');
+  const searchInput = document.getElementById('searchInput');
+  const randomBtn = document.getElementById('randomVideoBtn');
+  const videoCount = rawVideoData.filter(video => !isLiveStream(video)).length;
+  const streamCount = rawVideoData.filter(isLiveStream).length;
+
+  videosTab?.classList.toggle('active', !showingStreams);
+  streamsTab?.classList.toggle('active', showingStreams);
+  videosTab?.setAttribute('aria-selected', String(!showingStreams));
+  streamsTab?.setAttribute('aria-selected', String(showingStreams));
+  if (videosTab) videosTab.textContent = `Videos (${videoCount})`;
+  if (streamsTab) streamsTab.textContent = `Live Streams (${streamCount})`;
+  if (searchInput) searchInput.placeholder = showingStreams
+    ? 'Search live streams by title...'
+    : 'Search videos by title...';
+  if (randomBtn) randomBtn.textContent = showingStreams ? 'Random Live Stream' : 'Random Video';
+}
+
+function selectYouTubeContentType(type) {
+  youtubeContentType = type === 'live-streams' ? 'live-streams' : 'videos';
+  localStorage.setItem(STORAGE_KEYS.youtubeContentType, youtubeContentType);
+  syncYouTubeContentTabs();
+  closePlayer();
+  renderVideoGrid();
 }
 
 function makeUniquePlaylistName(name) {
@@ -907,6 +954,7 @@ async function initializeYouTubeTab(force = false) {
 
   populatePlaylistOptions();
   syncTagFilterUIFromState()
+  syncYouTubeContentTabs();
   renderVideoGrid();
 
   // === Set up all YouTube grid/queue/filter controls ===
@@ -947,6 +995,13 @@ async function initializeYouTubeTab(force = false) {
     const searchInput = document.getElementById('searchInput');
     if (searchInput) searchInput.addEventListener('input', () => {
       renderVideoGrid();
+    });
+
+    document.getElementById('youtube-videos-tab')?.addEventListener('click', () => {
+      selectYouTubeContentType('videos');
+    });
+    document.getElementById('youtube-live-streams-tab')?.addEventListener('click', () => {
+      selectYouTubeContentType('live-streams');
     });
 
     const filterSelect = document.getElementById('tagFilter');
@@ -1027,8 +1082,9 @@ async function initializeYouTubeTab(force = false) {
   const randomBtn = document.getElementById('randomVideoBtn');
 if (randomBtn && !randomBtn._handlerAdded) {
   randomBtn.addEventListener('click', () => {
-    if (!rawVideoData.length) {
-      alert('Videos not loaded yet!');
+    const availableVideos = getActiveYouTubeContent();
+    if (!availableVideos.length) {
+      alert(youtubeContentType === 'live-streams' ? 'No live streams are available yet.' : 'No videos are available yet.');
       return;
     }
     selectedPlaylist = 'all';
@@ -1038,10 +1094,10 @@ if (randomBtn && !randomBtn._handlerAdded) {
     document.getElementById('tagFilter').value = 'all';
     renderVideoGrid();
 
-    const idx = Math.floor(Math.random() * rawVideoData.length);
-    const video = rawVideoData[idx];
+    const idx = Math.floor(Math.random() * availableVideos.length);
+    const video = availableVideos[idx];
     if (video) {
-      showPlayer(video, rawVideoData, idx);
+      showPlayer(video, availableVideos, idx);
     }
   });
   randomBtn._handlerAdded = true;
@@ -2351,9 +2407,9 @@ const videoGridVirtualState = {
 
 function getFilteredVideoGridItems() {
   const query = (document.getElementById('searchInput')?.value || '').toLowerCase();
-  let videos = getVideosForPlaylistSelection(selectedPlaylist).filter(video =>
-    String(video.title || '').toLowerCase().includes(query)
-  );
+  let videos = getVideosForPlaylistSelection(selectedPlaylist)
+    .filter(isActiveYouTubeContent)
+    .filter(video => String(video.title || '').toLowerCase().includes(query));
 
   if (document.getElementById('favoritesToggle')?.checked) {
     videos = videos.filter(video => {
@@ -2521,8 +2577,8 @@ function buildVideoThumbnail(video) {
 
   div.onclick = () => {
     const playlist = selectedPlaylist !== 'all'
-      ? getVideosForPlaylistSelection(selectedPlaylist)
-      : rawVideoData;
+      ? getActiveYouTubeContent(getVideosForPlaylistSelection(selectedPlaylist))
+      : getActiveYouTubeContent();
     const index = playlist.findIndex(v => v.filename === video.filename);
     showPlayer(video, playlist, index);
   };
@@ -2540,9 +2596,19 @@ function renderVideoGrid() {
   videoGridVirtualState.watchedProgress = loadWatchedProgress();
 
   const fragment = document.createDocumentFragment();
-  getFilteredVideoGridItems().forEach(video => {
+  const videos = getFilteredVideoGridItems();
+  videos.forEach(video => {
     fragment.appendChild(buildVideoThumbnail(video));
   });
+
+  if (!videos.length) {
+    const emptyState = document.createElement('div');
+    emptyState.className = 'youtube-content-empty';
+    emptyState.textContent = youtubeContentType === 'live-streams'
+      ? 'No live streams match the current filters.'
+      : 'No videos match the current filters.';
+    fragment.appendChild(emptyState);
+  }
 
   gridEl.style.paddingTop = '';
   gridEl.style.paddingBottom = '';

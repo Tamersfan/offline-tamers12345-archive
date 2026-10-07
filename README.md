@@ -8,6 +8,7 @@ An Electron‐based desktop app that lets you browse Tamers12345's YouTube chann
 
 - ### YouTube Archive  
   - Grid of video thumbnails, titles & dates  
+  - Separate Videos and Live Streams views (mark stream entries in `data/videos.json` with `"isLiveStream": true`)
   - Search, sort (newest/oldest), and “favorite” videos  
   - In-player: video controls (size/volume/speed), description, and synced live-chat playback
   - Custom playlist dropdown (e.g. Holiday Special, SU Lore Arc 1, etc…)
@@ -29,6 +30,14 @@ An Electron‐based desktop app that lets you browse Tamers12345's YouTube chann
 - ### Missing-Video Detection  
   - After each update, scans your chosen video folder for any newly added files in `videos.json`  
   - Offers to download just those missing videos from GitHub assets  
+
+---
+
+## Adding Live Streams
+
+Use `generate_videos_json_with_livestream_detection.py` as the replacement for the original videos.json generator. It scans the same shared metadata folder for every upload and recognizes completed streams from yt-dlp's `was_live` and `live_status` fields. Stream entries receive `"isLiveStream": true`; all other entries remain normal videos. The generator creates a `videos.json.bak` backup before replacing an existing manifest.
+
+Live-stream thumbnails, metadata, comments, chat, and subtitles use the same `thumbnails`, `metadata`, `comments`, `chat`, and `subtitles` folders as ordinary videos.
 
 ---
 

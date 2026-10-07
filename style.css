@@ -42,11 +42,51 @@ body {
   margin: 0 auto;
 }
 
+.youtube-content-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  padding: 7px 10px 0;
+}
+
+.youtube-content-tab {
+  min-width: 105px;
+  padding: 5px 12px;
+  border: 1px solid currentColor;
+  border-radius: 5px 5px 0 0;
+  background: color-mix(in srgb, currentColor 10%, transparent);
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  opacity: 0.78;
+}
+
+.youtube-content-tab:hover {
+  background: color-mix(in srgb, currentColor 18%, transparent);
+  opacity: 1;
+}
+
+.youtube-content-tab.active {
+  border-bottom-width: 3px;
+  background: color-mix(in srgb, currentColor 24%, transparent);
+  opacity: 1;
+}
+
 #video-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 10px;
   padding: 10px;
+}
+
+.youtube-content-empty {
+  grid-column: 1 / -1;
+  padding: 48px 20px;
+  color: #aaa;
+  text-align: center;
+  font-size: 1.05rem;
 }
 
 .video-thumbnail {
@@ -84,7 +124,7 @@ img.lazy-media {
 .settings-group {
   margin: 0 0 24px;
   padding-bottom: 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+  border-bottom: 1px solid color-mix(in srgb, currentColor 24%, transparent);
 }
 
 .settings-group h3 {
@@ -110,8 +150,9 @@ img.lazy-media {
   max-width: 430px;
   padding: 8px 10px;
   border-radius: 5px;
-  background: rgba(255, 255, 255, 0.08);
-  color: #ddd;
+  background: color-mix(in srgb, currentColor 10%, transparent);
+  color: inherit;
+  border: 1px solid color-mix(in srgb, currentColor 28%, transparent);
   font-family: Consolas, "Courier New", monospace;
   font-size: 0.9rem;
   overflow-wrap: anywhere;
@@ -125,8 +166,9 @@ img.lazy-media {
   min-height: 32px;
   padding: 4px 10px;
   border-radius: 5px;
-  background: rgba(255, 255, 255, 0.08);
-  color: #eee;
+  background: color-mix(in srgb, currentColor 10%, transparent);
+  color: inherit;
+  border: 1px solid color-mix(in srgb, currentColor 28%, transparent);
   font-family: Consolas, "Courier New", monospace;
   font-size: 1rem;
 }
@@ -148,7 +190,8 @@ img.lazy-media {
 .settings-note {
   display: block;
   margin-top: 10px;
-  color: #aaa;
+  color: inherit;
+  opacity: 0.75;
 }
 
 @media (max-width: 700px) {
@@ -1102,13 +1145,13 @@ body[data-theme="futaba"] #main-download-bar {
   background: #f5deb3;
 }
 
-body[data-theme="aleenian-royalty"] {
+body[data-theme="mobian royalty (queen aleena)"] {
   background: #5936a8;      /* royal purple */
   color: #f4e8ff;           /* pale lavender/white */
 }
 
-body[data-theme="aleenian-royalty"] #channel-header,
-body[data-theme="aleenian-royalty"] .comment-content {
+body[data-theme="mobian royalty (queen aleena)"] #channel-header,
+body[data-theme="mobian royalty (queen aleena)"] .comment-content {
   background: #37205a;      /* deep eggplant */
   color: #f4e8ff;
   border-bottom: 2px solid #e5c2ff; /* lavender accent */

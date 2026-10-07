@@ -2,9 +2,22 @@
   "schema_version": 1,
   "channel_id": "UCEvOnTvFBnDxR0e11qJuP7g",
   "created_at": "2026-07-07T22:06:13.587Z",
-  "updated_at": "2026-08-26T14:19:46.833Z",
-  "saved_count": 35,
+  "updated_at": "2026-10-07T12:47:17.041Z",
+  "saved_count": 41,
   "posts": {
+    "UgkxnCSvY5IF8yjAO2Sct2xEaVpIiVC8mfIa": {
+      "id": "UgkxnCSvY5IF8yjAO2Sct2xEaVpIiVC8mfIa",
+      "url": "https://www.youtube.com/post/UgkxnCSvY5IF8yjAO2Sct2xEaVpIiVC8mfIa",
+      "folder": "posts\\The premiere for Dandy's World Hallowee [UgkxnCSvY5]",
+      "json": "posts\\The premiere for Dandy's World Hallowee [UgkxnCSvY5]\\UgkxnCSvY5IF8yjAO2Sct2xEaVpIiVC8mfIa.json",
+      "saved_at": "2026-08-26T14:19:29.127Z",
+      "archived_at": "2026-08-26T14:19:26.553Z",
+      "threads": 14,
+      "media_items": 1,
+      "source": "download",
+      "complete": true,
+      "discovered_at": "2026-10-07T12:42:35.686Z"
+    },
     "UgkxjdIeuwVVmZpB89qbWCkUkEfzKcuqzE4h": {
       "id": "UgkxjdIeuwVVmZpB89qbWCkUkEfzKcuqzE4h",
       "url": "https://www.youtube.com/post/UgkxjdIeuwVVmZpB89qbWCkUkEfzKcuqzE4h",
@@ -15,6 +28,19 @@
       "saved_at": "2026-05-23T14:04:57.052Z",
       "source": "archive_scan",
       "complete": true
+    },
+    "Ugkx2YmeWTI8yRbrl0o-uEouXiOup3Kj7ieN": {
+      "id": "Ugkx2YmeWTI8yRbrl0o-uEouXiOup3Kj7ieN",
+      "url": "https://www.youtube.com/post/Ugkx2YmeWTI8yRbrl0o-uEouXiOup3Kj7ieN",
+      "folder": "posts\\The Dandys World Toon Q&A will be going [Ugkx2YmeWT]",
+      "json": "posts\\The Dandys World Toon Q&A will be going [Ugkx2YmeWT]\\Ugkx2YmeWTI8yRbrl0o-uEouXiOup3Kj7ieN.json",
+      "saved_at": "2026-08-26T14:18:45.807Z",
+      "archived_at": "2026-08-26T14:17:02.684Z",
+      "threads": 570,
+      "media_items": 1,
+      "source": "download",
+      "complete": true,
+      "discovered_at": "2026-10-07T12:42:35.686Z"
     },
     "Ugkxod6R1NBQAjtxu_yz6l4JxfaQ6qKAj8dn": {
       "id": "Ugkxod6R1NBQAjtxu_yz6l4JxfaQ6qKAj8dn",
@@ -104,6 +130,32 @@
       "source": "archive_scan",
       "complete": true
     },
+    "UgkxL4a4WdR4Q5xe0gFFK5MdKfntLmndfW2m": {
+      "id": "UgkxL4a4WdR4Q5xe0gFFK5MdKfntLmndfW2m",
+      "url": "https://www.youtube.com/post/UgkxL4a4WdR4Q5xe0gFFK5MdKfntLmndfW2m",
+      "folder": "posts\\New My Little Pony episode came out on [UgkxL4a4Wd]",
+      "json": "posts\\New My Little Pony episode came out on [UgkxL4a4Wd]\\UgkxL4a4WdR4Q5xe0gFFK5MdKfntLmndfW2m.json",
+      "saved_at": "2026-10-07T12:43:43.979Z",
+      "archived_at": "2026-10-07T12:43:39.341Z",
+      "threads": 25,
+      "media_items": 1,
+      "source": "download",
+      "complete": true,
+      "discovered_at": "2026-10-07T12:47:16.940Z"
+    },
+    "UgkxA3F4SRv4cI4NhhdNN_Ux96BIErIME3e3": {
+      "id": "UgkxA3F4SRv4cI4NhhdNN_Ux96BIErIME3e3",
+      "url": "https://www.youtube.com/post/UgkxA3F4SRv4cI4NhhdNN_Ux96BIErIME3e3",
+      "folder": "posts\\New My Little Pony episode came out on [UgkxA3F4SR]",
+      "json": "posts\\New My Little Pony episode came out on [UgkxA3F4SR]\\UgkxA3F4SRv4cI4NhhdNN_Ux96BIErIME3e3.json",
+      "saved_at": "2026-08-26T14:19:40.385Z",
+      "archived_at": "2026-08-26T14:19:35.548Z",
+      "threads": 26,
+      "media_items": 1,
+      "source": "download",
+      "complete": true,
+      "discovered_at": "2026-10-07T12:42:35.686Z"
+    },
     "Ugkx7Jp3ndJIfdf6GRF1rtHm_B1jsUij64jA": {
       "id": "Ugkx7Jp3ndJIfdf6GRF1rtHm_B1jsUij64jA",
       "url": "https://www.youtube.com/post/Ugkx7Jp3ndJIfdf6GRF1rtHm_B1jsUij64jA",
@@ -147,6 +199,19 @@
       "saved_at": "2026-04-04T14:27:20.812Z",
       "source": "archive_scan",
       "complete": true
+    },
+    "UgkxTkNDUc9RPk7vlHIMNfuy42cmwB2Zlto-": {
+      "id": "UgkxTkNDUc9RPk7vlHIMNfuy42cmwB2Zlto-",
+      "url": "https://www.youtube.com/post/UgkxTkNDUc9RPk7vlHIMNfuy42cmwB2Zlto-",
+      "folder": "posts\\NEW DANDYS WORLD EPISODE THIS FRIDAYYYY [UgkxTkNDUc]",
+      "json": "posts\\NEW DANDYS WORLD EPISODE THIS FRIDAYYYY [UgkxTkNDUc]\\UgkxTkNDUc9RPk7vlHIMNfuy42cmwB2Zlto-.json",
+      "saved_at": "2026-10-07T12:43:24.776Z",
+      "archived_at": "2026-10-07T12:42:45.440Z",
+      "threads": 207,
+      "media_items": 1,
+      "source": "download",
+      "complete": true,
+      "discovered_at": "2026-10-07T12:47:16.940Z"
     },
     "Ugkxiau64uje1YZE07tJtxroXEbt-oVgmcfF": {
       "id": "Ugkxiau64uje1YZE07tJtxroXEbt-oVgmcfF",
@@ -192,6 +257,19 @@
       "source": "archive_scan",
       "complete": true
     },
+    "Ugkxk7f1glKbZsn34mH_VWLiBMiqWVJHAUZp": {
+      "id": "Ugkxk7f1glKbZsn34mH_VWLiBMiqWVJHAUZp",
+      "url": "https://www.youtube.com/post/Ugkxk7f1glKbZsn34mH_VWLiBMiqWVJHAUZp",
+      "folder": "posts\\Meow New My Little pony episode came ou [Ugkxk7f1gl]",
+      "json": "posts\\Meow New My Little pony episode came ou [Ugkxk7f1gl]\\Ugkxk7f1glKbZsn34mH_VWLiBMiqWVJHAUZp.json",
+      "saved_at": "2026-10-07T12:42:44.572Z",
+      "archived_at": "2026-10-07T12:42:41.475Z",
+      "threads": 18,
+      "media_items": 1,
+      "source": "download",
+      "complete": true,
+      "discovered_at": "2026-10-07T12:47:16.940Z"
+    },
     "UgkxqJ4WTLulGF-rOyjsP9E3Y78QVKqO3uXW": {
       "id": "UgkxqJ4WTLulGF-rOyjsP9E3Y78QVKqO3uXW",
       "url": "https://www.youtube.com/post/UgkxqJ4WTLulGF-rOyjsP9E3Y78QVKqO3uXW",
@@ -202,6 +280,32 @@
       "saved_at": "2026-03-01T15:06:43.921Z",
       "source": "archive_scan",
       "complete": true
+    },
+    "UgkxiNbSYntL1jjuz8jLuxKj_x5koq7Fue4E": {
+      "id": "UgkxiNbSYntL1jjuz8jLuxKj_x5koq7Fue4E",
+      "url": "https://www.youtube.com/post/UgkxiNbSYntL1jjuz8jLuxKj_x5koq7Fue4E",
+      "folder": "posts\\In case anyone missed it a new My Littl [UgkxiNbSYn]",
+      "json": "posts\\In case anyone missed it a new My Littl [UgkxiNbSYn]\\UgkxiNbSYntL1jjuz8jLuxKj_x5koq7Fue4E.json",
+      "saved_at": "2026-10-07T12:42:40.436Z",
+      "archived_at": "2026-10-07T12:42:36.786Z",
+      "threads": 17,
+      "media_items": 1,
+      "source": "download",
+      "complete": true,
+      "discovered_at": "2026-10-07T12:47:16.940Z"
+    },
+    "UgkxPFFFgnz94v4HveVAbRz85TewRVVxwkZN": {
+      "id": "UgkxPFFFgnz94v4HveVAbRz85TewRVVxwkZN",
+      "url": "https://www.youtube.com/post/UgkxPFFFgnz94v4HveVAbRz85TewRVVxwkZN",
+      "folder": "posts\\In case anyone missed it a new Dandys W [UgkxPFFFgn]",
+      "json": "posts\\In case anyone missed it a new Dandys W [UgkxPFFFgn]\\UgkxPFFFgnz94v4HveVAbRz85TewRVVxwkZN.json",
+      "saved_at": "2026-08-26T14:19:34.716Z",
+      "archived_at": "2026-08-26T14:19:29.925Z",
+      "threads": 26,
+      "media_items": 1,
+      "source": "download",
+      "complete": true,
+      "discovered_at": "2026-10-07T12:42:35.686Z"
     },
     "Ugkxn06AL5Gy97aAcziyErIIi7pDbp8mD7uN": {
       "id": "Ugkxn06AL5Gy97aAcziyErIIi7pDbp8mD7uN",
@@ -214,6 +318,19 @@
       "source": "download",
       "complete": true,
       "discovered_at": "2026-08-26T14:17:01.722Z"
+    },
+    "UgkxvXSrmkYExtJholtzUbwJZ3GPVbV5tD4a": {
+      "id": "UgkxvXSrmkYExtJholtzUbwJZ3GPVbV5tD4a",
+      "url": "https://www.youtube.com/post/UgkxvXSrmkYExtJholtzUbwJZ3GPVbV5tD4a",
+      "folder": "posts\\If you missed it yesterday, new video w [UgkxvXSrmk]",
+      "json": "posts\\If you missed it yesterday, new video w [UgkxvXSrmk]\\UgkxvXSrmkYExtJholtzUbwJZ3GPVbV5tD4a.json",
+      "saved_at": "2026-08-26T14:19:46.833Z",
+      "archived_at": "2026-08-26T14:19:41.385Z",
+      "threads": 30,
+      "media_items": 1,
+      "source": "download",
+      "complete": true,
+      "discovered_at": "2026-10-07T12:42:35.686Z"
     },
     "UgkxfosvWRjHzaedfDZnSNn8HeaIA0Bwey7v": {
       "id": "UgkxfosvWRjHzaedfDZnSNn8HeaIA0Bwey7v",
@@ -281,6 +398,32 @@
       "source": "archive_scan",
       "complete": true
     },
+    "Ugkx5oS28thFj31HVvHivJyXj66OMBe28S29": {
+      "id": "Ugkx5oS28thFj31HVvHivJyXj66OMBe28S29",
+      "url": "https://www.youtube.com/post/Ugkx5oS28thFj31HVvHivJyXj66OMBe28S29",
+      "folder": "posts\\Dandy's World Halloween Special is prem [Ugkx5oS28t]",
+      "json": "posts\\Dandy's World Halloween Special is prem [Ugkx5oS28t]\\Ugkx5oS28thFj31HVvHivJyXj66OMBe28S29.json",
+      "saved_at": "2026-08-26T14:19:25.747Z",
+      "archived_at": "2026-08-26T14:19:22.941Z",
+      "threads": 16,
+      "media_items": 4,
+      "source": "download",
+      "complete": true,
+      "discovered_at": "2026-10-07T12:42:35.686Z"
+    },
+    "UgkxTOZ4RcveN74UwmCbLfWSgVB1UOLEnv_M": {
+      "id": "UgkxTOZ4RcveN74UwmCbLfWSgVB1UOLEnv_M",
+      "url": "https://www.youtube.com/post/UgkxTOZ4RcveN74UwmCbLfWSgVB1UOLEnv_M",
+      "folder": "posts\\Change of plans bitches. Unfortunately [UgkxTOZ4Rc]",
+      "json": "posts\\Change of plans bitches. Unfortunately [UgkxTOZ4Rc]\\UgkxTOZ4RcveN74UwmCbLfWSgVB1UOLEnv_M.json",
+      "saved_at": "2026-08-26T14:19:20.567Z",
+      "archived_at": "2026-08-26T14:18:46.682Z",
+      "threads": 186,
+      "media_items": 1,
+      "source": "download",
+      "complete": true,
+      "discovered_at": "2026-10-07T12:42:35.686Z"
+    },
     "UgkxCkeN9PgB0pGysQB-Q4ACucdE8WJr5Nvx": {
       "id": "UgkxCkeN9PgB0pGysQB-Q4ACucdE8WJr5Nvx",
       "url": "https://www.youtube.com/post/UgkxCkeN9PgB0pGysQB-Q4ACucdE8WJr5Nvx",
@@ -303,6 +446,32 @@
       "source": "archive_scan",
       "complete": true
     },
+    "UgkxpzdFp00YxXEMIlEiaqkXu85dU98pxImE": {
+      "id": "UgkxpzdFp00YxXEMIlEiaqkXu85dU98pxImE",
+      "url": "https://www.youtube.com/post/UgkxpzdFp00YxXEMIlEiaqkXu85dU98pxImE",
+      "folder": "posts\\A new Dandys World episode went up last [UgkxpzdFp0]",
+      "json": "posts\\A new Dandys World episode went up last [UgkxpzdFp0]\\UgkxpzdFp00YxXEMIlEiaqkXu85dU98pxImE.json",
+      "saved_at": "2026-10-07T12:43:38.395Z",
+      "archived_at": "2026-10-07T12:43:26.046Z",
+      "threads": 68,
+      "media_items": 1,
+      "source": "download",
+      "complete": true,
+      "discovered_at": "2026-10-07T12:47:16.940Z"
+    },
+    "Ugkxcf_TmSYxFPjZ6D79NfeXU6atBNgFJIAM": {
+      "id": "Ugkxcf_TmSYxFPjZ6D79NfeXU6atBNgFJIAM",
+      "url": "https://www.youtube.com/post/Ugkxcf_TmSYxFPjZ6D79NfeXU6atBNgFJIAM",
+      "folder": "posts\\A new Dandys World episode came out las [Ugkxcf_TmS]",
+      "json": "posts\\A new Dandys World episode came out las [Ugkxcf_TmS]\\Ugkxcf_TmSYxFPjZ6D79NfeXU6atBNgFJIAM.json",
+      "saved_at": "2026-10-07T12:44:06.238Z",
+      "archived_at": "2026-10-07T12:43:45.837Z",
+      "threads": 113,
+      "media_items": 4,
+      "source": "download",
+      "complete": true,
+      "discovered_at": "2026-10-07T12:47:16.940Z"
+    },
     "UgkxewHhdCzoc1mzUFT__YPKVckh8Zpoggh1": {
       "id": "UgkxewHhdCzoc1mzUFT__YPKVckh8Zpoggh1",
       "url": "https://www.youtube.com/post/UgkxewHhdCzoc1mzUFT__YPKVckh8Zpoggh1",
@@ -312,90 +481,6 @@
       "discovered_at": "2026-07-07T22:52:45.952Z",
       "saved_at": "2026-02-20T00:14:59.188Z",
       "source": "archive_scan",
-      "complete": true
-    },
-    "Ugkx2YmeWTI8yRbrl0o-uEouXiOup3Kj7ieN": {
-      "id": "Ugkx2YmeWTI8yRbrl0o-uEouXiOup3Kj7ieN",
-      "url": "https://www.youtube.com/post/Ugkx2YmeWTI8yRbrl0o-uEouXiOup3Kj7ieN",
-      "folder": "posts\\The Dandys World Toon Q&A will be going [Ugkx2YmeWT]",
-      "json": "posts\\The Dandys World Toon Q&A will be going [Ugkx2YmeWT]\\Ugkx2YmeWTI8yRbrl0o-uEouXiOup3Kj7ieN.json",
-      "saved_at": "2026-08-26T14:18:45.807Z",
-      "archived_at": "2026-08-26T14:18:45.807Z",
-      "threads": 570,
-      "media_items": 1,
-      "source": "download",
-      "complete": true
-    },
-    "UgkxTOZ4RcveN74UwmCbLfWSgVB1UOLEnv_M": {
-      "id": "UgkxTOZ4RcveN74UwmCbLfWSgVB1UOLEnv_M",
-      "url": "https://www.youtube.com/post/UgkxTOZ4RcveN74UwmCbLfWSgVB1UOLEnv_M",
-      "folder": "posts\\Change of plans bitches. Unfortunately [UgkxTOZ4Rc]",
-      "json": "posts\\Change of plans bitches. Unfortunately [UgkxTOZ4Rc]\\UgkxTOZ4RcveN74UwmCbLfWSgVB1UOLEnv_M.json",
-      "saved_at": "2026-08-26T14:19:20.567Z",
-      "archived_at": "2026-08-26T14:19:20.567Z",
-      "threads": 186,
-      "media_items": 1,
-      "source": "download",
-      "complete": true
-    },
-    "Ugkx5oS28thFj31HVvHivJyXj66OMBe28S29": {
-      "id": "Ugkx5oS28thFj31HVvHivJyXj66OMBe28S29",
-      "url": "https://www.youtube.com/post/Ugkx5oS28thFj31HVvHivJyXj66OMBe28S29",
-      "folder": "posts\\Dandy's World Halloween Special is prem [Ugkx5oS28t]",
-      "json": "posts\\Dandy's World Halloween Special is prem [Ugkx5oS28t]\\Ugkx5oS28thFj31HVvHivJyXj66OMBe28S29.json",
-      "saved_at": "2026-08-26T14:19:25.747Z",
-      "archived_at": "2026-08-26T14:19:25.747Z",
-      "threads": 16,
-      "media_items": 4,
-      "source": "download",
-      "complete": true
-    },
-    "UgkxnCSvY5IF8yjAO2Sct2xEaVpIiVC8mfIa": {
-      "id": "UgkxnCSvY5IF8yjAO2Sct2xEaVpIiVC8mfIa",
-      "url": "https://www.youtube.com/post/UgkxnCSvY5IF8yjAO2Sct2xEaVpIiVC8mfIa",
-      "folder": "posts\\The premiere for Dandy's World Hallowee [UgkxnCSvY5]",
-      "json": "posts\\The premiere for Dandy's World Hallowee [UgkxnCSvY5]\\UgkxnCSvY5IF8yjAO2Sct2xEaVpIiVC8mfIa.json",
-      "saved_at": "2026-08-26T14:19:29.127Z",
-      "archived_at": "2026-08-26T14:19:29.127Z",
-      "threads": 14,
-      "media_items": 1,
-      "source": "download",
-      "complete": true
-    },
-    "UgkxPFFFgnz94v4HveVAbRz85TewRVVxwkZN": {
-      "id": "UgkxPFFFgnz94v4HveVAbRz85TewRVVxwkZN",
-      "url": "https://www.youtube.com/post/UgkxPFFFgnz94v4HveVAbRz85TewRVVxwkZN",
-      "folder": "posts\\In case anyone missed it a new Dandys W [UgkxPFFFgn]",
-      "json": "posts\\In case anyone missed it a new Dandys W [UgkxPFFFgn]\\UgkxPFFFgnz94v4HveVAbRz85TewRVVxwkZN.json",
-      "saved_at": "2026-08-26T14:19:34.716Z",
-      "archived_at": "2026-08-26T14:19:34.716Z",
-      "threads": 26,
-      "media_items": 1,
-      "source": "download",
-      "complete": true
-    },
-    "UgkxA3F4SRv4cI4NhhdNN_Ux96BIErIME3e3": {
-      "id": "UgkxA3F4SRv4cI4NhhdNN_Ux96BIErIME3e3",
-      "url": "https://www.youtube.com/post/UgkxA3F4SRv4cI4NhhdNN_Ux96BIErIME3e3",
-      "folder": "posts\\New My Little Pony episode came out on [UgkxA3F4SR]",
-      "json": "posts\\New My Little Pony episode came out on [UgkxA3F4SR]\\UgkxA3F4SRv4cI4NhhdNN_Ux96BIErIME3e3.json",
-      "saved_at": "2026-08-26T14:19:40.385Z",
-      "archived_at": "2026-08-26T14:19:40.385Z",
-      "threads": 26,
-      "media_items": 1,
-      "source": "download",
-      "complete": true
-    },
-    "UgkxvXSrmkYExtJholtzUbwJZ3GPVbV5tD4a": {
-      "id": "UgkxvXSrmkYExtJholtzUbwJZ3GPVbV5tD4a",
-      "url": "https://www.youtube.com/post/UgkxvXSrmkYExtJholtzUbwJZ3GPVbV5tD4a",
-      "folder": "posts\\If you missed it yesterday, new video w [UgkxvXSrmk]",
-      "json": "posts\\If you missed it yesterday, new video w [UgkxvXSrmk]\\UgkxvXSrmkYExtJholtzUbwJZ3GPVbV5tD4a.json",
-      "saved_at": "2026-08-26T14:19:46.833Z",
-      "archived_at": "2026-08-26T14:19:46.833Z",
-      "threads": 30,
-      "media_items": 1,
-      "source": "download",
       "complete": true
     }
   }
